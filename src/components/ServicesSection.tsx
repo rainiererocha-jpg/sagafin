@@ -8,6 +8,7 @@ import {
   ArrowRight,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import advisorImage from "@/assets/rainiere-assessor.jpg";
 
 const services = [
   {
@@ -132,9 +133,9 @@ export function ServicesSection() {
                 <div className="absolute inset-0 bg-gradient-to-t from-gold/20 via-gold/5 to-transparent rounded-full blur-xl" />
                 <div className="relative w-full h-full rounded-full bg-secondary flex items-center justify-center border border-gold/20 overflow-hidden">
                   <img
-                    src="https://imgproxy.gamma.app/resize/quality:80/resizing_type:fit/width:1200/https://cdn.gamma.app/v7dhnukwj9d1hkf/e6d86b34ec4c4d36af5e2eb97badf1bf/original/WhatsApp-Image-2024-08-13-at-07.10.29-1.jpeg"
-                    alt="Rainiere Rocha"
-                    className="w-full h-full object-cover object-top"
+                    src={advisorImage}
+                    alt="Rainiere Rocha - Assessor de Investimentos"
+                    className="w-full h-full object-cover object-center"
                   />
                 </div>
               </div>
