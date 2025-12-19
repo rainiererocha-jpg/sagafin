@@ -54,19 +54,19 @@ export function ContactForm() {
   };
 
   return (
-    <section id="contato" className="py-20 bg-gradient-hero">
+    <section id="contato" className="py-24 bg-secondary/30">
       <div className="container mx-auto px-4">
         <div className="grid lg:grid-cols-2 gap-12 items-start">
           {/* Contact Info */}
-          <div className="text-primary-foreground">
-            <span className="inline-block text-gold font-semibold text-sm tracking-wider uppercase mb-3">
+          <div>
+            <span className="inline-block text-gold font-semibold text-sm tracking-widest uppercase mb-4">
               Entre em Contato
             </span>
-            <h2 className="text-3xl md:text-4xl font-bold mb-6">
+            <h2 className="text-4xl md:text-5xl font-serif text-foreground mb-6">
               Pronto para começar sua{" "}
               <span className="text-gradient-gold">jornada financeira?</span>
             </h2>
-            <p className="text-primary-foreground/80 mb-8 leading-relaxed">
+            <p className="text-muted-foreground mb-8 leading-relaxed">
               Agende uma consultoria gratuita e descubra como podemos ajudar
               você a alcançar seus objetivos financeiros com estratégias
               personalizadas.
@@ -74,39 +74,39 @@ export function ContactForm() {
 
             <div className="space-y-4 mb-8">
               <div className="flex items-center gap-4">
-                <div className="w-12 h-12 rounded-lg bg-gold/20 flex items-center justify-center">
+                <div className="w-12 h-12 rounded-xl bg-gold/10 flex items-center justify-center">
                   <Phone className="w-5 h-5 text-gold" />
                 </div>
                 <div>
-                  <p className="text-sm text-primary-foreground/60">WhatsApp</p>
-                  <p className="font-semibold">(11) 99999-9999</p>
+                  <p className="text-sm text-muted-foreground">WhatsApp</p>
+                  <p className="font-semibold text-foreground">(11) 99999-9999</p>
                 </div>
               </div>
               <div className="flex items-center gap-4">
-                <div className="w-12 h-12 rounded-lg bg-gold/20 flex items-center justify-center">
+                <div className="w-12 h-12 rounded-xl bg-gold/10 flex items-center justify-center">
                   <Mail className="w-5 h-5 text-gold" />
                 </div>
                 <div>
-                  <p className="text-sm text-primary-foreground/60">E-mail</p>
-                  <p className="font-semibold">rainiere.rocha@xpi.com.br</p>
+                  <p className="text-sm text-muted-foreground">E-mail</p>
+                  <p className="font-semibold text-foreground">rainiere.rocha@xpi.com.br</p>
                 </div>
               </div>
               <div className="flex items-center gap-4">
-                <div className="w-12 h-12 rounded-lg bg-gold/20 flex items-center justify-center">
+                <div className="w-12 h-12 rounded-xl bg-gold/10 flex items-center justify-center">
                   <MapPin className="w-5 h-5 text-gold" />
                 </div>
                 <div>
-                  <p className="text-sm text-primary-foreground/60">
+                  <p className="text-sm text-muted-foreground">
                     Atendimento
                   </p>
-                  <p className="font-semibold">Online para todo o Brasil</p>
+                  <p className="font-semibold text-foreground">Online para todo o Brasil</p>
                 </div>
               </div>
             </div>
 
             {/* Benefits */}
-            <div className="bg-navy-medium/50 rounded-xl p-6 border border-navy-light/20">
-              <h4 className="font-semibold mb-4 flex items-center gap-2">
+            <div className="bg-card/50 backdrop-blur-sm rounded-xl p-6 border border-border">
+              <h4 className="font-semibold text-foreground mb-4 flex items-center gap-2">
                 <Calendar className="w-5 h-5 text-gold" />
                 O que esperar da consultoria:
               </h4>
@@ -119,7 +119,7 @@ export function ContactForm() {
                 ].map((item, index) => (
                   <li
                     key={index}
-                    className="flex items-start gap-2 text-sm text-primary-foreground/80"
+                    className="flex items-start gap-2 text-sm text-muted-foreground"
                   >
                     <CheckCircle2 className="w-4 h-4 text-gold shrink-0 mt-0.5" />
                     {item}
@@ -130,8 +130,8 @@ export function ContactForm() {
           </div>
 
           {/* Form */}
-          <div className="bg-card rounded-2xl p-8 shadow-elevated">
-            <h3 className="text-xl font-bold text-foreground mb-6">
+          <div className="bg-card/50 backdrop-blur-sm rounded-2xl p-8 border border-border">
+            <h3 className="text-xl font-semibold text-foreground mb-6 font-sans">
               Solicite uma Consultoria
             </h3>
             <form onSubmit={handleSubmit} className="space-y-5">
@@ -146,6 +146,7 @@ export function ContactForm() {
                     setFormData({ ...formData, name: e.target.value })
                   }
                   required
+                  className="bg-background/50 border-border"
                 />
               </div>
 
@@ -162,6 +163,7 @@ export function ContactForm() {
                       setFormData({ ...formData, email: e.target.value })
                     }
                     required
+                    className="bg-background/50 border-border"
                   />
                 </div>
                 <div>
@@ -176,6 +178,7 @@ export function ContactForm() {
                       setFormData({ ...formData, phone: e.target.value })
                     }
                     required
+                    className="bg-background/50 border-border"
                   />
                 </div>
               </div>
@@ -191,7 +194,7 @@ export function ContactForm() {
                   }
                   required
                 >
-                  <SelectTrigger>
+                  <SelectTrigger className="bg-background/50 border-border">
                     <SelectValue placeholder="Selecione uma faixa" />
                   </SelectTrigger>
                   <SelectContent>
@@ -221,12 +224,13 @@ export function ContactForm() {
                     setFormData({ ...formData, message: e.target.value })
                   }
                   rows={4}
+                  className="bg-background/50 border-border"
                 />
               </div>
 
               <Button
                 type="submit"
-                variant="hero"
+                variant="gold"
                 className="w-full"
                 disabled={isSubmitting}
               >

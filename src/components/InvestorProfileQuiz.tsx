@@ -105,7 +105,7 @@ const profiles: Record<Profile, ProfileResult> = {
       { asset: "Renda Variável", percentage: 10 },
     ],
     icon: Shield,
-    color: "text-blue-500",
+    color: "text-blue-400",
   },
   moderado: {
     type: "moderado",
@@ -131,7 +131,7 @@ const profiles: Record<Profile, ProfileResult> = {
       { asset: "Renda Variável", percentage: 60 },
     ],
     icon: Rocket,
-    color: "text-emerald-500",
+    color: "text-emerald-400",
   },
 };
 
@@ -177,18 +177,18 @@ export function InvestorProfileQuiz() {
       <div className="max-w-2xl mx-auto">
         <div className="text-center mb-8">
           <div
-            className={`inline-flex items-center justify-center w-20 h-20 rounded-full bg-card shadow-lg mb-4 ${profile.color}`}
+            className={`inline-flex items-center justify-center w-20 h-20 rounded-full bg-card border border-border mb-4 ${profile.color}`}
           >
             <ProfileIcon className="w-10 h-10" />
           </div>
-          <h3 className="text-2xl md:text-3xl font-bold text-foreground mb-2">
+          <h3 className="text-2xl md:text-3xl font-serif text-foreground mb-2">
             {profile.title}
           </h3>
           <p className="text-muted-foreground">{profile.description}</p>
         </div>
 
-        <div className="bg-card rounded-xl p-6 shadow-card border border-border/50 mb-6">
-          <h4 className="font-semibold text-foreground mb-4">
+        <div className="bg-card/50 backdrop-blur-sm rounded-xl p-6 border border-border mb-6">
+          <h4 className="font-semibold text-foreground mb-4 font-sans">
             Alocação Sugerida
           </h4>
           <div className="space-y-4">
@@ -200,7 +200,7 @@ export function InvestorProfileQuiz() {
                     {item.percentage}%
                   </span>
                 </div>
-                <div className="h-3 bg-muted rounded-full overflow-hidden">
+                <div className="h-3 bg-secondary rounded-full overflow-hidden">
                   <div
                     className="h-full bg-gradient-gold rounded-full transition-all duration-500"
                     style={{ width: `${item.percentage}%` }}
@@ -211,7 +211,7 @@ export function InvestorProfileQuiz() {
           </div>
         </div>
 
-        <div className="bg-navy-deep/5 rounded-xl p-6 border border-navy-deep/10 mb-6">
+        <div className="bg-secondary/50 rounded-xl p-6 border border-border mb-6">
           <div className="flex items-start gap-3">
             <CheckCircle2 className="w-5 h-5 text-gold shrink-0 mt-0.5" />
             <p className="text-sm text-muted-foreground">
@@ -223,10 +223,10 @@ export function InvestorProfileQuiz() {
         </div>
 
         <div className="flex flex-col sm:flex-row gap-4">
-          <Button variant="hero" className="flex-1">
+          <Button variant="gold" className="flex-1">
             Agendar Consultoria Personalizada
           </Button>
-          <Button variant="navyOutline" onClick={resetQuiz} className="flex-1">
+          <Button variant="outline" onClick={resetQuiz} className="flex-1 border-border hover:bg-secondary">
             <RotateCcw className="w-4 h-4 mr-2" />
             Refazer Quiz
           </Button>
@@ -252,7 +252,7 @@ export function InvestorProfileQuiz() {
 
       {/* Question */}
       <div className="text-center mb-8">
-        <h3 className="text-xl md:text-2xl font-bold text-foreground">
+        <h3 className="text-xl md:text-2xl font-serif text-foreground">
           {question.question}
         </h3>
       </div>
@@ -263,7 +263,7 @@ export function InvestorProfileQuiz() {
           <button
             key={index}
             onClick={() => handleAnswer(option.points)}
-            className="w-full text-left p-5 rounded-xl border-2 border-border bg-card hover:border-gold hover:bg-gold/5 transition-all duration-200 group"
+            className="w-full text-left p-5 rounded-xl border-2 border-border bg-card/50 hover:border-gold/50 hover:bg-gold/5 transition-all duration-200 group"
           >
             <div className="flex items-center justify-between">
               <span className="text-foreground font-medium group-hover:text-gold transition-colors">

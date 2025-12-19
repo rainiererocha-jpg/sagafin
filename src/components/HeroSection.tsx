@@ -1,80 +1,117 @@
-import { CompoundInterestSimulator } from "./CompoundInterestSimulator";
-import { ArrowDown, Shield, Award, Users } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { ArrowDown, Phone, Play } from "lucide-react";
 
 export function HeroSection() {
   return (
     <section
       id="hero"
-      className="relative min-h-screen bg-gradient-hero overflow-hidden pt-24 pb-16"
+      className="relative min-h-screen bg-background overflow-hidden pt-24 pb-16"
     >
-      {/* Background Pattern */}
-      <div className="absolute inset-0 bg-hero-pattern opacity-30" />
+      {/* Subtle Background Gradient */}
+      <div className="absolute inset-0 bg-gradient-to-b from-background via-background to-secondary/20" />
       
-      {/* Decorative Elements */}
-      <div className="absolute top-1/4 right-0 w-96 h-96 bg-gold/5 rounded-full blur-3xl" />
-      <div className="absolute bottom-1/4 left-0 w-80 h-80 bg-gold/3 rounded-full blur-3xl" />
+      {/* Gold Accent Glow */}
+      <div className="absolute top-1/3 right-1/4 w-[600px] h-[600px] bg-gold/5 rounded-full blur-[120px]" />
+      <div className="absolute bottom-1/4 left-1/4 w-[400px] h-[400px] bg-gold/3 rounded-full blur-[100px]" />
 
       <div className="container mx-auto px-4 relative z-10">
-        {/* Hero Content */}
-        <div className="text-center max-w-4xl mx-auto mb-12">
-          <div className="inline-flex items-center gap-2 bg-gold/10 border border-gold/30 rounded-full px-4 py-2 mb-6">
-            <Shield className="w-4 h-4 text-gold" />
-            <span className="text-sm text-gold font-medium">
-              Assessor Credenciado XP Investimentos
-            </span>
-          </div>
-          
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-primary-foreground mb-6 leading-tight">
-            Transforme sua relação com o{" "}
-            <span className="text-gradient-gold">dinheiro</span>
-          </h1>
-          
-          <p className="text-lg md:text-xl text-primary-foreground/70 max-w-2xl mx-auto mb-8">
-            Assessoria de investimentos personalizada para quem busca rentabilidade 
-            superior com segurança. Descubra quanto seu patrimônio pode crescer.
-          </p>
-
-          {/* Trust Badges */}
-          <div className="flex flex-wrap justify-center gap-6 mb-12">
-            <div className="flex items-center gap-2 text-primary-foreground/60">
-              <Award className="w-5 h-5 text-gold" />
-              <span className="text-sm">+10 anos de mercado</span>
-            </div>
-            <div className="flex items-center gap-2 text-primary-foreground/60">
-              <Users className="w-5 h-5 text-gold" />
-              <span className="text-sm">+500 clientes atendidos</span>
-            </div>
-            <div className="flex items-center gap-2 text-primary-foreground/60">
-              <Shield className="w-5 h-5 text-gold" />
-              <span className="text-sm">R$ 200M+ sob assessoria</span>
-            </div>
-          </div>
-        </div>
-
-        {/* Simulator */}
-        <div
-          id="simulador"
-          className="max-w-5xl mx-auto bg-card/95 backdrop-blur-md rounded-2xl p-6 md:p-8 shadow-elevated border border-border/50"
-        >
-          <div className="text-center mb-8">
-            <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-2">
-              Simulador de Juros Compostos
-            </h2>
-            <p className="text-muted-foreground">
-              Veja o poder dos juros compostos trabalhando para você
+        <div className="grid lg:grid-cols-2 gap-12 lg:gap-8 items-center min-h-[80vh]">
+          {/* Left Content */}
+          <div className="order-2 lg:order-1 text-center lg:text-left">
+            {/* Title with Serif Font */}
+            <h1 className="text-5xl md:text-6xl lg:text-7xl font-serif text-foreground mb-4 leading-[1.1]">
+              RAINIERE
+            </h1>
+            <h1 className="text-5xl md:text-6xl lg:text-7xl font-serif text-foreground mb-6 leading-[1.1]">
+              ROCHA
+            </h1>
+            
+            {/* Subtitle with Gold Italic */}
+            <p className="text-xl md:text-2xl font-serif italic text-gold mb-8">
+              Assessor de Investimentos
             </p>
+            
+            {/* Main Tagline */}
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-serif text-foreground/90 mb-6 leading-tight">
+              O arquiteto da sua{" "}
+              <span className="text-gradient-gold">prosperidade financeira</span>
+            </h2>
+            
+            {/* Description */}
+            <p className="text-lg text-muted-foreground max-w-xl mx-auto lg:mx-0 mb-10">
+              Com mais de uma década de experiência no mercado financeiro, transformo 
+              objetivos em estratégias personalizadas para o crescimento do seu patrimônio.
+            </p>
+
+            {/* CTA Buttons */}
+            <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+              <Button variant="gold" size="lg" className="text-base px-8">
+                <Play className="w-4 h-4 mr-2" />
+                Saiba Mais
+              </Button>
+              <Button 
+                variant="outline" 
+                size="lg" 
+                className="text-base px-8 border-gold/30 text-foreground hover:bg-gold/10 hover:border-gold/50"
+              >
+                <Phone className="w-4 h-4 mr-2" />
+                Ligar Agora
+              </Button>
+            </div>
+
+            {/* Trust Badges */}
+            <div className="flex flex-wrap justify-center lg:justify-start gap-8 mt-12">
+              <div className="text-center lg:text-left">
+                <p className="text-3xl font-bold text-gold">+10</p>
+                <p className="text-sm text-muted-foreground">Anos de Mercado</p>
+              </div>
+              <div className="text-center lg:text-left">
+                <p className="text-3xl font-bold text-gold">+500</p>
+                <p className="text-sm text-muted-foreground">Clientes Atendidos</p>
+              </div>
+              <div className="text-center lg:text-left">
+                <p className="text-3xl font-bold text-gold">R$ 200M+</p>
+                <p className="text-sm text-muted-foreground">Sob Assessoria</p>
+              </div>
+            </div>
           </div>
-          
-          <CompoundInterestSimulator />
+
+          {/* Right Content - Photo */}
+          <div className="order-1 lg:order-2 flex justify-center lg:justify-end">
+            <div className="relative">
+              {/* Background Glow Effect */}
+              <div className="absolute inset-0 bg-gradient-to-t from-gold/20 via-gold/5 to-transparent rounded-3xl blur-2xl scale-110" />
+              
+              {/* Photo Container */}
+              <div className="relative w-[300px] md:w-[400px] lg:w-[450px] aspect-[3/4] rounded-3xl overflow-hidden border-glow glow-gold">
+                <img
+                  src="https://imgproxy.gamma.app/resize/quality:80/resizing_type:fit/width:1200/https://cdn.gamma.app/v7dhnukwj9d1hkf/e6d86b34ec4c4d36af5e2eb97badf1bf/original/WhatsApp-Image-2024-08-13-at-07.10.29-1.jpeg"
+                  alt="Rainiere Rocha - Assessor de Investimentos XP"
+                  className="w-full h-full object-cover object-top"
+                />
+                
+                {/* Overlay Gradient */}
+                <div className="absolute inset-0 bg-gradient-to-t from-background/60 via-transparent to-transparent" />
+                
+                {/* XP Badge */}
+                <div className="absolute bottom-6 left-6 right-6">
+                  <div className="bg-background/80 backdrop-blur-md rounded-xl px-4 py-3 border border-gold/20">
+                    <p className="text-gold font-semibold text-sm">Credenciado XP Investimentos</p>
+                    <p className="text-foreground/70 text-xs">Assessoria Personalizada Premium</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* Scroll Indicator */}
-        <div className="flex justify-center mt-12">
+        <div className="flex justify-center mt-8">
           <a
-            href="#perfil"
-            className="flex flex-col items-center gap-2 text-primary-foreground/50 hover:text-gold transition-colors"
+            href="#saga"
+            className="flex flex-col items-center gap-2 text-muted-foreground hover:text-gold transition-colors"
           >
-            <span className="text-sm">Descubra seu perfil</span>
+            <span className="text-sm">Conheça a Saga</span>
             <ArrowDown className="w-5 h-5 animate-bounce" />
           </a>
         </div>
