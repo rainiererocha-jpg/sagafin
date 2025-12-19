@@ -22,7 +22,7 @@ export function MarketTicker() {
   const duplicatedData = [...marketData, ...marketData];
 
   return (
-    <div className="w-full bg-navy-deep overflow-hidden py-2.5 border-b border-navy-medium/50">
+    <div className="w-full bg-background overflow-hidden py-2.5 border-b border-border/30">
       <div className="ticker-animation flex items-center gap-8 whitespace-nowrap">
         {duplicatedData.map((item, index) => (
           <div
@@ -30,8 +30,8 @@ export function MarketTicker() {
             className="flex items-center gap-2 text-sm"
           >
             <span className="text-gold font-semibold">{item.symbol}</span>
-            <span className="text-primary-foreground/80">{item.name}</span>
-            <span className="text-primary-foreground font-medium">
+            <span className="text-foreground/60">{item.name}</span>
+            <span className="text-foreground font-medium">
               {item.value}
             </span>
             <span

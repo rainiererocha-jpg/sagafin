@@ -2,19 +2,19 @@ import { Shield, ExternalLink } from "lucide-react";
 
 export function Footer() {
   return (
-    <footer className="bg-navy-deep py-12">
+    <footer className="bg-background py-12 border-t border-border">
       <div className="container mx-auto px-4">
         <div className="grid md:grid-cols-4 gap-8 mb-8">
           {/* Brand */}
           <div className="md:col-span-2">
-            <div className="flex items-center gap-2 mb-4">
-              <div className="w-10 h-10 rounded-lg bg-gradient-gold flex items-center justify-center">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-11 h-11 rounded-xl bg-gradient-gold flex items-center justify-center shadow-gold">
                 <span className="text-accent-foreground font-bold text-lg">
                   SF
                 </span>
               </div>
               <div>
-                <p className="text-primary-foreground font-bold text-lg">
+                <p className="text-foreground font-bold text-lg font-serif">
                   Saga Financeira
                 </p>
                 <p className="text-gold text-xs font-medium">
@@ -22,7 +22,7 @@ export function Footer() {
                 </p>
               </div>
             </div>
-            <p className="text-primary-foreground/60 text-sm max-w-sm leading-relaxed">
+            <p className="text-muted-foreground text-sm max-w-sm leading-relaxed">
               Assessoria de investimentos credenciada à XP Investimentos,
               oferecendo soluções personalizadas para construção e proteção do
               seu patrimônio.
@@ -31,21 +31,21 @@ export function Footer() {
 
           {/* Quick Links */}
           <div>
-            <h4 className="font-semibold text-primary-foreground mb-4">
+            <h4 className="font-semibold text-foreground mb-4 font-sans">
               Links Rápidos
             </h4>
             <ul className="space-y-2">
               {[
+                { label: "A Saga", href: "#saga" },
                 { label: "Simulador", href: "#simulador" },
                 { label: "Perfil de Investidor", href: "#perfil" },
-                { label: "Renda Fixa", href: "#renda-fixa" },
-                { label: "Sobre", href: "#sobre" },
+                { label: "Serviços", href: "#sobre" },
                 { label: "Contato", href: "#contato" },
               ].map((link) => (
                 <li key={link.href}>
                   <a
                     href={link.href}
-                    className="text-primary-foreground/60 hover:text-gold transition-colors text-sm"
+                    className="text-muted-foreground hover:text-gold transition-colors text-sm"
                   >
                     {link.label}
                   </a>
@@ -56,12 +56,12 @@ export function Footer() {
 
           {/* Legal */}
           <div>
-            <h4 className="font-semibold text-primary-foreground mb-4">Legal</h4>
+            <h4 className="font-semibold text-foreground mb-4 font-sans">Legal</h4>
             <ul className="space-y-2">
               <li>
                 <a
                   href="#"
-                  className="text-primary-foreground/60 hover:text-gold transition-colors text-sm"
+                  className="text-muted-foreground hover:text-gold transition-colors text-sm"
                 >
                   Termos de Uso
                 </a>
@@ -69,7 +69,7 @@ export function Footer() {
               <li>
                 <a
                   href="#"
-                  className="text-primary-foreground/60 hover:text-gold transition-colors text-sm"
+                  className="text-muted-foreground hover:text-gold transition-colors text-sm"
                 >
                   Política de Privacidade
                 </a>
@@ -79,7 +79,7 @@ export function Footer() {
                   href="https://www.xpi.com.br"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-primary-foreground/60 hover:text-gold transition-colors text-sm inline-flex items-center gap-1"
+                  className="text-muted-foreground hover:text-gold transition-colors text-sm inline-flex items-center gap-1"
                 >
                   XP Investimentos
                   <ExternalLink className="w-3 h-3" />
@@ -90,10 +90,10 @@ export function Footer() {
         </div>
 
         {/* Disclaimer */}
-        <div className="border-t border-navy-medium/30 pt-6">
-          <div className="flex items-start gap-3 bg-navy-medium/30 rounded-lg p-4 mb-6">
+        <div className="border-t border-border pt-6">
+          <div className="flex items-start gap-3 bg-secondary/50 rounded-xl p-4 mb-6">
             <Shield className="w-5 h-5 text-gold shrink-0 mt-0.5" />
-            <p className="text-xs text-primary-foreground/50 leading-relaxed">
+            <p className="text-xs text-muted-foreground leading-relaxed">
               A XP Investimentos CCTVM S/A, inscrita sob o CNPJ:
               02.332.886/0001-04, é uma instituição financeira autorizada a
               funcionar pelo Banco Central do Brasil. Este site não constitui
@@ -104,11 +104,11 @@ export function Footer() {
           </div>
 
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-            <p className="text-xs text-primary-foreground/40">
+            <p className="text-xs text-muted-foreground">
               © {new Date().getFullYear()} Saga Financeira. Todos os direitos
               reservados.
             </p>
-            <p className="text-xs text-primary-foreground/40">
+            <p className="text-xs text-muted-foreground">
               Desenvolvido com 💛 para sua jornada financeira
             </p>
           </div>

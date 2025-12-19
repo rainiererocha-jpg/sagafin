@@ -29,17 +29,17 @@ const testimonials = [
 
 export function TestimonialsSection() {
   return (
-    <section className="py-20 bg-background">
+    <section className="py-24 bg-background">
       <div className="container mx-auto px-4">
         <div className="text-center max-w-3xl mx-auto mb-16">
-          <span className="inline-block text-gold font-semibold text-sm tracking-wider uppercase mb-3">
+          <span className="inline-block text-gold font-semibold text-sm tracking-widest uppercase mb-4">
             Depoimentos
           </span>
-          <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
+          <h2 className="text-4xl md:text-5xl font-serif text-foreground mb-6">
             O que nossos clientes{" "}
             <span className="text-gradient-gold">dizem</span>
           </h2>
-          <p className="text-muted-foreground text-lg">
+          <p className="text-lg text-muted-foreground">
             Histórias reais de investidores que transformaram suas finanças.
           </p>
         </div>
@@ -48,9 +48,9 @@ export function TestimonialsSection() {
           {testimonials.map((testimonial, index) => (
             <div
               key={index}
-              className="bg-card rounded-xl p-6 shadow-card border border-border/50 relative"
+              className="bg-card/50 backdrop-blur-sm rounded-2xl p-6 border border-border relative hover:border-gold/30 transition-all duration-300"
             >
-              <Quote className="absolute top-6 right-6 w-8 h-8 text-gold/20" />
+              <Quote className="absolute top-6 right-6 w-8 h-8 text-gold/10" />
               
               <div className="flex items-center gap-1 mb-4">
                 {[...Array(testimonial.rating)].map((_, i) => (
@@ -66,7 +66,7 @@ export function TestimonialsSection() {
               </p>
               
               <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-full bg-gradient-navy flex items-center justify-center text-primary-foreground font-bold">
+                <div className="w-12 h-12 rounded-full bg-gold/10 border border-gold/20 flex items-center justify-center text-gold font-bold">
                   {testimonial.initials}
                 </div>
                 <div>
