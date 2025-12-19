@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { ArrowDown, Phone, Play } from "lucide-react";
+import heroImage from "@/assets/rainiere-hero.jpg";
 
 export function HeroSection() {
   return (
@@ -83,11 +84,11 @@ export function HeroSection() {
               <div className="absolute inset-0 bg-gradient-to-t from-gold/20 via-gold/5 to-transparent rounded-3xl blur-2xl scale-110" />
               
               {/* Photo Container */}
-              <div className="relative w-[300px] md:w-[400px] lg:w-[450px] aspect-[3/4] rounded-3xl overflow-hidden border-glow glow-gold">
+              <div className="relative w-[300px] md:w-[400px] lg:w-[500px] aspect-[4/3] rounded-3xl overflow-hidden border-glow glow-gold">
                 <img
-                  src="https://imgproxy.gamma.app/resize/quality:80/resizing_type:fit/width:1200/https://cdn.gamma.app/v7dhnukwj9d1hkf/e6d86b34ec4c4d36af5e2eb97badf1bf/original/WhatsApp-Image-2024-08-13-at-07.10.29-1.jpeg"
+                  src={heroImage}
                   alt="Rainiere Rocha - Assessor de Investimentos XP"
-                  className="w-full h-full object-cover object-top"
+                  className="w-full h-full object-cover object-center"
                 />
                 
                 {/* Overlay Gradient */}
