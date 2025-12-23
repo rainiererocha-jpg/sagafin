@@ -1,13 +1,8 @@
 import { Button } from "@/components/ui/button";
 import { ArrowDown, Phone, Play } from "lucide-react";
 import heroImage from "@/assets/rainiere-hero.jpg";
-
 export function HeroSection() {
-  return (
-    <section
-      id="hero"
-      className="relative min-h-screen bg-background overflow-hidden pt-24 pb-16"
-    >
+  return <section id="hero" className="relative min-h-screen bg-background overflow-hidden pt-24 pb-16">
       {/* Subtle Background Gradient */}
       <div className="absolute inset-0 bg-gradient-to-b from-background via-background to-secondary/20" />
       
@@ -39,10 +34,9 @@ export function HeroSection() {
             </h2>
             
             {/* Description */}
-            <p className="text-lg text-muted-foreground max-w-xl mx-auto lg:mx-0 mb-10">
-              Com mais de uma década de experiência no mercado financeiro, transformo 
-              objetivos em estratégias personalizadas para o crescimento do seu patrimônio.
-            </p>
+            <p className="text-muted-foreground max-w-xl mx-auto lg:mx-0 mb-10 text-base text-center font-medium">Imagine-se em uma jornada épica. A sua missão é conquistar a tão sonhada liberdade financeira. O caminho é repleto de desafios: mercados voláteis, decisões complexas e um futuro incerto. Nesta jornada, você não está sozinho, terá como um guia a expertise do seu assessor de investimentos.
+
+Assim como um habilidoso estrategista em um jogo de xadrez, o assessor de investimentos analisa cada movimento do mercado, antecipa tendências e protege seus ativos de ameaças invisíveis. Com uma mistura de conhecimento profundo, intuição afiada e tecnologia de ponta, ele transforma números frios em oportunidades quentes.</p>
 
             {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
@@ -50,11 +44,7 @@ export function HeroSection() {
                 <Play className="w-4 h-4 mr-2" />
                 Saiba Mais
               </Button>
-              <Button 
-                variant="outline" 
-                size="lg" 
-                className="text-base px-8 border-gold/30 text-foreground hover:bg-gold/10 hover:border-gold/50"
-              >
+              <Button variant="outline" size="lg" className="text-base px-8 border-gold/30 text-foreground hover:bg-gold/10 hover:border-gold/50">
                 <Phone className="w-4 h-4 mr-2" />
                 Ligar Agora
               </Button>
@@ -85,11 +75,7 @@ export function HeroSection() {
               
               {/* Photo Container */}
               <div className="relative w-[300px] md:w-[400px] lg:w-[500px] aspect-[4/3] rounded-3xl overflow-hidden border-glow glow-gold">
-                <img
-                  src={heroImage}
-                  alt="Rainiere Rocha - Assessor de Investimentos XP"
-                  className="w-full h-full object-cover object-center"
-                />
+                <img src={heroImage} alt="Rainiere Rocha - Assessor de Investimentos XP" className="w-full h-full object-cover object-center" />
                 
                 {/* Overlay Gradient */}
                 <div className="absolute inset-0 bg-gradient-to-t from-background/60 via-transparent to-transparent" />
@@ -108,15 +94,11 @@ export function HeroSection() {
 
         {/* Scroll Indicator */}
         <div className="flex justify-center mt-8">
-          <a
-            href="#saga"
-            className="flex flex-col items-center gap-2 text-muted-foreground hover:text-gold transition-colors"
-          >
+          <a href="#saga" className="flex flex-col items-center gap-2 text-muted-foreground hover:text-gold transition-colors">
             <span className="text-sm">Conheça a Saga</span>
             <ArrowDown className="w-5 h-5 animate-bounce" />
           </a>
         </div>
       </div>
-    </section>
-  );
+    </section>;
 }
