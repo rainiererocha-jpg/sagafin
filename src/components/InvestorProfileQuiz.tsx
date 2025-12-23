@@ -9,6 +9,8 @@ import {
   RotateCcw,
   CheckCircle2,
 } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { ScaleIn } from "@/components/ui/motion";
 
 interface Question {
   id: number;
@@ -174,26 +176,39 @@ export function InvestorProfileQuiz() {
     const ProfileIcon = profile.icon;
 
     return (
-      <div className="max-w-2xl mx-auto">
+      <ScaleIn className="max-w-2xl mx-auto">
         <div className="text-center mb-8">
-          <div
+          <motion.div
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{ type: "spring", stiffness: 200, damping: 15 }}
             className={`inline-flex items-center justify-center w-20 h-20 rounded-full bg-card border border-border mb-4 ${profile.color}`}
           >
             <ProfileIcon className="w-10 h-10" />
-          </div>
+          </motion.div>
           <h3 className="text-2xl md:text-3xl font-serif text-foreground mb-2">
             {profile.title}
           </h3>
           <p className="text-muted-foreground">{profile.description}</p>
         </div>
 
-        <div className="bg-card/50 backdrop-blur-sm rounded-xl p-6 border border-border mb-6">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+          className="bg-card/50 backdrop-blur-sm rounded-xl p-6 border border-border mb-6"
+        >
           <h4 className="font-semibold text-foreground mb-4 font-sans">
             Alocação Sugerida
           </h4>
           <div className="space-y-4">
-            {profile.allocation.map((item) => (
-              <div key={item.asset}>
+            {profile.allocation.map((item, index) => (
+              <motion.div
+                key={item.asset}
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.3 + index * 0.1 }}
+              >
                 <div className="flex justify-between text-sm mb-1">
                   <span className="text-foreground">{item.asset}</span>
                   <span className="font-semibold text-gold">
@@ -201,15 +216,17 @@ export function InvestorProfileQuiz() {
                   </span>
                 </div>
                 <div className="h-3 bg-secondary rounded-full overflow-hidden">
-                  <div
-                    className="h-full bg-gradient-gold rounded-full transition-all duration-500"
-                    style={{ width: `${item.percentage}%` }}
+                  <motion.div
+                    initial={{ width: 0 }}
+                    animate={{ width: `${item.percentage}%` }}
+                    transition={{ delay: 0.5 + index * 0.1, duration: 0.5 }}
+                    className="h-full bg-gradient-gold rounded-full"
                   />
                 </div>
-              </div>
+              </motion.div>
             ))}
           </div>
-        </div>
+        </motion.div>
 
         <div className="bg-secondary/50 rounded-xl p-6 border border-border mb-6">
           <div className="flex items-start gap-3">
@@ -231,7 +248,7 @@ export function InvestorProfileQuiz() {
             Refazer Quiz
           </Button>
         </div>
-      </div>
+      </ScaleIn>
     );
   }
 
@@ -251,29 +268,42 @@ export function InvestorProfileQuiz() {
       </div>
 
       {/* Question */}
-      <div className="text-center mb-8">
-        <h3 className="text-xl md:text-2xl font-serif text-foreground">
-          {question.question}
-        </h3>
-      </div>
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={currentQuestion}
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          exit={{ opacity: 0, x: -20 }}
+          transition={{ duration: 0.3 }}
+        >
+          <div className="text-center mb-8">
+            <h3 className="text-xl md:text-2xl font-serif text-foreground">
+              {question.question}
+            </h3>
+          </div>
 
-      {/* Options */}
-      <div className="space-y-3">
-        {question.options.map((option, index) => (
-          <button
-            key={index}
-            onClick={() => handleAnswer(option.points)}
-            className="w-full text-left p-5 rounded-xl border-2 border-border bg-card/50 hover:border-gold/50 hover:bg-gold/5 transition-all duration-200 group"
-          >
-            <div className="flex items-center justify-between">
-              <span className="text-foreground font-medium group-hover:text-gold transition-colors">
-                {option.text}
-              </span>
-              <ArrowRight className="w-5 h-5 text-muted-foreground group-hover:text-gold group-hover:translate-x-1 transition-all" />
-            </div>
-          </button>
-        ))}
-      </div>
+          {/* Options */}
+          <div className="space-y-3">
+            {question.options.map((option, index) => (
+              <motion.button
+                key={index}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.1 }}
+                onClick={() => handleAnswer(option.points)}
+                className="w-full text-left p-5 rounded-xl border-2 border-border bg-card/50 hover:border-gold/50 hover:bg-gold/5 transition-all duration-200 group"
+              >
+                <div className="flex items-center justify-between">
+                  <span className="text-foreground font-medium group-hover:text-gold transition-colors">
+                    {option.text}
+                  </span>
+                  <ArrowRight className="w-5 h-5 text-muted-foreground group-hover:text-gold group-hover:translate-x-1 transition-all" />
+                </div>
+              </motion.button>
+            ))}
+          </div>
+        </motion.div>
+      </AnimatePresence>
     </div>
   );
 }

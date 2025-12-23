@@ -11,6 +11,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { TrendingUp, Calculator, Calendar, Percent } from "lucide-react";
+import { FadeInUp, SlideInLeft, SlideInRight } from "@/components/ui/motion";
 
 const formatCurrency = (value: number): string => {
   return new Intl.NumberFormat("pt-BR", {
@@ -61,10 +62,10 @@ export function CompoundInterestSimulator() {
   const totalEarnings = finalValue.earnings;
 
   return (
-    <div className="w-full">
+    <FadeInUp className="w-full">
       <div className="grid lg:grid-cols-2 gap-8 items-start">
         {/* Controls */}
-        <div className="space-y-6">
+        <SlideInLeft className="space-y-6">
           {/* Initial Amount */}
           <div className="bg-card/50 backdrop-blur-sm rounded-xl p-5 border border-border/50">
             <div className="flex items-center gap-2 mb-3">
@@ -162,10 +163,10 @@ export function CompoundInterestSimulator() {
               />
             </div>
           </div>
-        </div>
+        </SlideInLeft>
 
         {/* Results */}
-        <div className="space-y-6">
+        <SlideInRight className="space-y-6">
           {/* Summary Cards */}
           <div className="grid grid-cols-2 gap-4">
             <div className="bg-gradient-navy rounded-xl p-5 text-center shadow-elevated">
@@ -277,8 +278,8 @@ export function CompoundInterestSimulator() {
           <Button variant="hero" className="w-full">
             Quero uma Estratégia Personalizada
           </Button>
-        </div>
+        </SlideInRight>
       </div>
-    </div>
+    </FadeInUp>
   );
 }

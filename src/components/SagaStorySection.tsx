@@ -1,4 +1,6 @@
 import { Target, Lightbulb, TrendingUp, Crown } from "lucide-react";
+import { motion } from "framer-motion";
+import { FadeInUp, staggerItem, defaultTransition, defaultViewport } from "@/components/ui/motion";
 
 const sagaSteps = [
   {
@@ -39,7 +41,7 @@ export function SagaStorySection() {
       
       <div className="container mx-auto px-4 relative z-10">
         {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-16">
+        <FadeInUp className="text-center max-w-3xl mx-auto mb-16">
           <span className="inline-block text-gold font-semibold text-sm tracking-widest uppercase mb-4">
             A Jornada
           </span>
@@ -51,13 +53,29 @@ export function SagaStorySection() {
             Uma metodologia comprovada que transforma sonhos financeiros em 
             conquistas reais, passo a passo.
           </p>
-        </div>
+        </FadeInUp>
 
         {/* Story Cards */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <motion.div
+          initial="initial"
+          whileInView="animate"
+          viewport={defaultViewport}
+          variants={{
+            initial: {},
+            animate: {
+              transition: {
+                staggerChildren: 0.15,
+                delayChildren: 0.1,
+              },
+            },
+          }}
+          className="grid md:grid-cols-2 lg:grid-cols-4 gap-6"
+        >
           {sagaSteps.map((step, index) => (
-            <div
+            <motion.div
               key={step.number}
+              variants={staggerItem}
+              transition={{ duration: 0.6, ease: "easeOut" }}
               className="group relative bg-card/50 backdrop-blur-sm rounded-2xl p-6 border border-border hover:border-gold/30 transition-all duration-500 hover:shadow-gold"
             >
               {/* Number Badge */}
@@ -86,9 +104,9 @@ export function SagaStorySection() {
               {index < sagaSteps.length - 1 && (
                 <div className="hidden lg:block absolute top-1/2 -right-3 w-6 h-px bg-gradient-to-r from-gold/30 to-transparent" />
               )}
-            </div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       </div>
     </section>
   );

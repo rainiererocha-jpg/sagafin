@@ -1,4 +1,6 @@
 import { Star, Quote } from "lucide-react";
+import { motion } from "framer-motion";
+import { FadeInUp, staggerItem, defaultTransition, defaultViewport } from "@/components/ui/motion";
 
 const testimonials = [
   {
@@ -31,7 +33,7 @@ export function TestimonialsSection() {
   return (
     <section className="py-24 bg-background">
       <div className="container mx-auto px-4">
-        <div className="text-center max-w-3xl mx-auto mb-16">
+        <FadeInUp className="text-center max-w-3xl mx-auto mb-16">
           <span className="inline-block text-gold font-semibold text-sm tracking-widest uppercase mb-4">
             Depoimentos
           </span>
@@ -42,12 +44,28 @@ export function TestimonialsSection() {
           <p className="text-lg text-muted-foreground">
             Histórias reais de investidores que transformaram suas finanças.
           </p>
-        </div>
+        </FadeInUp>
 
-        <div className="grid md:grid-cols-3 gap-6">
+        <motion.div
+          initial="initial"
+          whileInView="animate"
+          viewport={defaultViewport}
+          variants={{
+            initial: {},
+            animate: {
+              transition: {
+                staggerChildren: 0.15,
+                delayChildren: 0.1,
+              },
+            },
+          }}
+          className="grid md:grid-cols-3 gap-6"
+        >
           {testimonials.map((testimonial, index) => (
-            <div
+            <motion.div
               key={index}
+              variants={staggerItem}
+              transition={{ duration: 0.6, ease: "easeOut" }}
               className="bg-card/50 backdrop-blur-sm rounded-2xl p-6 border border-border relative hover:border-gold/30 transition-all duration-300"
             >
               <Quote className="absolute top-6 right-6 w-8 h-8 text-gold/10" />
@@ -78,9 +96,9 @@ export function TestimonialsSection() {
                   </p>
                 </div>
               </div>
-            </div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       </div>
     </section>
   );
