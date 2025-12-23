@@ -60,9 +60,7 @@ Será o primeiro capítulo da sua nova história de sucesso financeiro. Bons fut
                 </div>
               </div>
               <div className="flex items-center gap-4">
-                <div className="w-12 h-12 rounded-xl bg-gold/10 flex items-center justify-center">
-                  <Mail className="w-5 h-5 text-gold" />
-                </div>
+                
                 <div>
                   <p className="text-sm text-muted-foreground">E-mail</p>
                   <p className="font-semibold text-foreground">O que esperar da assessoria:O que esperar da consultoria:Análise completa do seu perfil de investidorDiagnóstico da sua carteira atualSugestões de produtos adequados ao seu objetivoSem compromisso - totalmente gratuita</p>
