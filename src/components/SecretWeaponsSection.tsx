@@ -6,6 +6,8 @@ import {
   BarChart3, 
   BookOpen 
 } from "lucide-react";
+import { motion } from "framer-motion";
+import { FadeInUp, staggerItem, defaultTransition, defaultViewport } from "@/components/ui/motion";
 
 const weapons = [
   {
@@ -55,7 +57,7 @@ export function SecretWeaponsSection() {
       
       <div className="container mx-auto px-4 relative z-10">
         {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-16">
+        <FadeInUp className="text-center max-w-3xl mx-auto mb-16">
           <span className="inline-block text-gold font-semibold text-sm tracking-widest uppercase mb-4">
             Diferenciais
           </span>
@@ -67,13 +69,29 @@ export function SecretWeaponsSection() {
             As ferramentas e metodologias exclusivas que utilizamos para 
             potencializar os resultados do seu patrimônio.
           </p>
-        </div>
+        </FadeInUp>
 
         {/* Weapons Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-5xl mx-auto">
+        <motion.div
+          initial="initial"
+          whileInView="animate"
+          viewport={defaultViewport}
+          variants={{
+            initial: {},
+            animate: {
+              transition: {
+                staggerChildren: 0.1,
+                delayChildren: 0.1,
+              },
+            },
+          }}
+          className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-5xl mx-auto"
+        >
           {weapons.map((weapon, index) => (
-            <div
+            <motion.div
               key={index}
+              variants={staggerItem}
+              transition={{ duration: 0.6, ease: "easeOut" }}
               className="group flex items-start gap-4 p-6 rounded-2xl bg-card/30 backdrop-blur-sm border border-border hover:border-gold/30 transition-all duration-300 hover:shadow-gold"
             >
               {/* Icon Container */}
@@ -90,9 +108,9 @@ export function SecretWeaponsSection() {
                   {weapon.description}
                 </p>
               </div>
-            </div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       </div>
     </section>
   );

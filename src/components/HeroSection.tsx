@@ -1,8 +1,11 @@
 import { Button } from "@/components/ui/button";
 import { ArrowDown, Phone, Play } from "lucide-react";
 import heroImage from "@/assets/rainiere-hero.jpg";
+import { HeroSlideLeft, HeroSlideRight, HeroFadeIn } from "@/components/ui/motion";
+
 export function HeroSection() {
-  return <section id="hero" className="relative min-h-screen bg-background overflow-hidden pt-24 pb-16">
+  return (
+    <section id="hero" className="relative min-h-screen bg-background overflow-hidden pt-24 pb-16">
       {/* Subtle Background Gradient */}
       <div className="absolute inset-0 bg-gradient-to-b from-background via-background to-secondary/20" />
       
@@ -13,7 +16,7 @@ export function HeroSection() {
       <div className="container mx-auto px-4 relative z-10">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-8 items-center min-h-[80vh]">
           {/* Left Content */}
-          <div className="order-2 lg:order-1 text-center lg:text-left">
+          <HeroSlideLeft delay={0.2} className="order-2 lg:order-1 text-center lg:text-left">
             {/* Title with Serif Font */}
             <h1 className="text-5xl md:text-6xl lg:text-7xl font-serif text-foreground mb-4 leading-[1.1]">
               RAINIERE
@@ -34,9 +37,11 @@ export function HeroSection() {
             </h2>
             
             {/* Description */}
-            <p className="text-muted-foreground max-w-xl mx-auto lg:mx-0 mb-10 text-base text-center font-medium">Imagine-se em uma jornada épica. A sua missão é conquistar a tão sonhada liberdade financeira. O caminho é repleto de desafios: mercados voláteis, decisões complexas e um futuro incerto. Nesta jornada, você não está sozinho, terá como um guia a expertise do seu assessor de investimentos.
+            <p className="text-muted-foreground max-w-xl mx-auto lg:mx-0 mb-10 text-base text-center font-medium">
+              Imagine-se em uma jornada épica. A sua missão é conquistar a tão sonhada liberdade financeira. O caminho é repleto de desafios: mercados voláteis, decisões complexas e um futuro incerto. Nesta jornada, você não está sozinho, terá como um guia a expertise do seu assessor de investimentos.
 
-Assim como um habilidoso estrategista em um jogo de xadrez, o assessor de investimentos analisa cada movimento do mercado, antecipa tendências e protege seus ativos de ameaças invisíveis. Com uma mistura de conhecimento profundo, intuição afiada e tecnologia de ponta, ele transforma números frios em oportunidades quentes.</p>
+              Assim como um habilidoso estrategista em um jogo de xadrez, o assessor de investimentos analisa cada movimento do mercado, antecipa tendências e protege seus ativos de ameaças invisíveis. Com uma mistura de conhecimento profundo, intuição afiada e tecnologia de ponta, ele transforma números frios em oportunidades quentes.
+            </p>
 
             {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
@@ -53,13 +58,11 @@ Assim como um habilidoso estrategista em um jogo de xadrez, o assessor de invest
             {/* Trust Badges */}
             <div className="flex flex-wrap justify-center lg:justify-start gap-8 mt-12">
               <div className="text-center lg:text-left">
-                <p className="text-3xl font-bold text-gold">
-              </p>
+                <p className="text-3xl font-bold text-gold"></p>
                 <p className="text-sm text-muted-foreground">Anos de ercado</p>
               </div>
               <div className="text-center lg:text-left">
-                <p className="text-3xl font-bold text-gold">
-              </p>
+                <p className="text-3xl font-bold text-gold"></p>
                 <p className="text-sm text-muted-foreground">Clientes Atendidos</p>
               </div>
               <div className="text-center lg:text-left">
@@ -67,10 +70,10 @@ Assim como um habilidoso estrategista em um jogo de xadrez, o assessor de invest
                 <p className="text-sm text-muted-foreground">Sob Assessoria</p>
               </div>
             </div>
-          </div>
+          </HeroSlideLeft>
 
           {/* Right Content - Photo */}
-          <div className="order-1 lg:order-2 flex justify-center lg:justify-end">
+          <HeroSlideRight delay={0.4} className="order-1 lg:order-2 flex justify-center lg:justify-end">
             <div className="relative">
               {/* Background Glow Effect */}
               <div className="absolute inset-0 bg-gradient-to-t from-gold/20 via-gold/5 to-transparent rounded-3xl blur-2xl scale-110" />
@@ -91,16 +94,17 @@ Assim como um habilidoso estrategista em um jogo de xadrez, o assessor de invest
                 </div>
               </div>
             </div>
-          </div>
+          </HeroSlideRight>
         </div>
 
         {/* Scroll Indicator */}
-        <div className="flex justify-center mt-8">
+        <HeroFadeIn delay={1} className="flex justify-center mt-8">
           <a href="#saga" className="flex flex-col items-center gap-2 text-muted-foreground hover:text-gold transition-colors">
             <span className="text-sm">Conheça a Saga</span>
             <ArrowDown className="w-5 h-5 animate-bounce" />
           </a>
-        </div>
+        </HeroFadeIn>
       </div>
-    </section>;
+    </section>
+  );
 }
