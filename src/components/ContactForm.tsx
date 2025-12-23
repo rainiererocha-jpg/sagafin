@@ -90,6 +90,7 @@ export function ContactForm() {
             {/* Benefits */}
             <div className="bg-card/50 backdrop-blur-sm rounded-xl p-6 border border-border">
               <h4 className="font-semibold text-foreground mb-4 flex items-center gap-2">
+                O que esperar da assessoria:
                 <Calendar className="w-5 h-5 text-gold" />
                 O que esperar da consultoria:
               </h4>
