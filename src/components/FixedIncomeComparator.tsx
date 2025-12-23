@@ -2,24 +2,14 @@ import { useState, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-  Cell,
-} from "recharts";
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from "recharts";
 import { TrendingUp, AlertCircle, CheckCircle2 } from "lucide-react";
-
 const formatCurrency = (value: number): string => {
   return new Intl.NumberFormat("pt-BR", {
     style: "currency",
     currency: "BRL",
     minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
+    maximumFractionDigits: 2
   }).format(value);
 };
 
@@ -34,7 +24,6 @@ const getIRRate = (months: number): number => {
   if (months <= 24) return 0.175;
   return 0.15;
 };
-
 interface InvestmentResult {
   name: string;
   grossReturn: number;
@@ -44,7 +33,6 @@ interface InvestmentResult {
   isExempt: boolean;
   rate: string;
 }
-
 export function FixedIncomeComparator() {
   const [amount, setAmount] = useState(50000);
   const [months, setMonths] = useState(12);
@@ -57,75 +45,62 @@ export function FixedIncomeComparator() {
 
     // Poupança
     const poupancaGross = amount * Math.pow(1 + POUPANCA_RATE / 100, years) - amount;
-    
+
     // CDB
-    const cdbAnnualRate = (CDI_RATE * cdbRate) / 100 / 100;
+    const cdbAnnualRate = CDI_RATE * cdbRate / 100 / 100;
     const cdbGross = amount * Math.pow(1 + cdbAnnualRate, years) - amount;
     const cdbTaxes = cdbGross * irRate;
     const cdbNet = cdbGross - cdbTaxes;
 
     // LCI
-    const lciAnnualRate = (CDI_RATE * lciRate) / 100 / 100;
+    const lciAnnualRate = CDI_RATE * lciRate / 100 / 100;
     const lciGross = amount * Math.pow(1 + lciAnnualRate, years) - amount;
 
     // LCA (same as LCI for simulation)
-    const lcaAnnualRate = (CDI_RATE * (lciRate - 2)) / 100 / 100;
+    const lcaAnnualRate = CDI_RATE * (lciRate - 2) / 100 / 100;
     const lcaGross = amount * Math.pow(1 + lcaAnnualRate, years) - amount;
-
-    return [
-      {
-        name: "Poupança",
-        grossReturn: poupancaGross,
-        netReturn: poupancaGross,
-        taxes: 0,
-        finalValue: amount + poupancaGross,
-        isExempt: true,
-        rate: `${POUPANCA_RATE.toFixed(2)}% a.a.`,
-      },
-      {
-        name: "CDB",
-        grossReturn: cdbGross,
-        netReturn: cdbNet,
-        taxes: cdbTaxes,
-        finalValue: amount + cdbNet,
-        isExempt: false,
-        rate: `${cdbRate}% CDI`,
-      },
-      {
-        name: "LCI",
-        grossReturn: lciGross,
-        netReturn: lciGross,
-        taxes: 0,
-        finalValue: amount + lciGross,
-        isExempt: true,
-        rate: `${lciRate}% CDI`,
-      },
-      {
-        name: "LCA",
-        grossReturn: lcaGross,
-        netReturn: lcaGross,
-        taxes: 0,
-        finalValue: amount + lcaGross,
-        isExempt: true,
-        rate: `${lciRate - 2}% CDI`,
-      },
-    ];
+    return [{
+      name: "Poupança",
+      grossReturn: poupancaGross,
+      netReturn: poupancaGross,
+      taxes: 0,
+      finalValue: amount + poupancaGross,
+      isExempt: true,
+      rate: `${POUPANCA_RATE.toFixed(2)}% a.a.`
+    }, {
+      name: "CDB",
+      grossReturn: cdbGross,
+      netReturn: cdbNet,
+      taxes: cdbTaxes,
+      finalValue: amount + cdbNet,
+      isExempt: false,
+      rate: `${cdbRate}% CDI`
+    }, {
+      name: "LCI",
+      grossReturn: lciGross,
+      netReturn: lciGross,
+      taxes: 0,
+      finalValue: amount + lciGross,
+      isExempt: true,
+      rate: `${lciRate}% CDI`
+    }, {
+      name: "LCA",
+      grossReturn: lcaGross,
+      netReturn: lcaGross,
+      taxes: 0,
+      finalValue: amount + lcaGross,
+      isExempt: true,
+      rate: `${lciRate - 2}% CDI`
+    }];
   }, [amount, months, cdbRate, lciRate]);
-
-  const chartData = results.map((r) => ({
+  const chartData = results.map(r => ({
     name: r.name,
     rendimento: r.netReturn,
-    imposto: r.taxes,
+    imposto: r.taxes
   }));
-
-  const bestOption = results.reduce((prev, current) =>
-    prev.netReturn > current.netReturn ? prev : current
-  );
-
+  const bestOption = results.reduce((prev, current) => prev.netReturn > current.netReturn ? prev : current);
   const poupancaLoss = results[0].netReturn - bestOption.netReturn;
-
-  return (
-    <div className="space-y-8">
+  return <div className="space-y-8">
       {/* Controls */}
       <div className="grid md:grid-cols-3 gap-6">
         <div className="bg-card rounded-xl p-5 shadow-card border border-border/50">
@@ -135,13 +110,7 @@ export function FixedIncomeComparator() {
           <p className="text-2xl font-bold text-gold mb-3">
             {formatCurrency(amount)}
           </p>
-          <Slider
-            value={[amount]}
-            onValueChange={(value) => setAmount(value[0])}
-            min={1000}
-            max={500000}
-            step={1000}
-          />
+          <Slider value={[amount]} onValueChange={value => setAmount(value[0])} min={1000} max={500000} step={1000} />
           <div className="flex justify-between text-xs text-muted-foreground mt-2">
             <span>R$ 1.000</span>
             <span>R$ 500.000</span>
@@ -153,13 +122,7 @@ export function FixedIncomeComparator() {
             Prazo
           </label>
           <p className="text-2xl font-bold text-gold mb-3">{months} meses</p>
-          <Slider
-            value={[months]}
-            onValueChange={(value) => setMonths(value[0])}
-            min={3}
-            max={60}
-            step={1}
-          />
+          <Slider value={[months]} onValueChange={value => setMonths(value[0])} min={3} max={60} step={1} />
           <div className="flex justify-between text-xs text-muted-foreground mt-2">
             <span>3 meses</span>
             <span>60 meses</span>
@@ -171,19 +134,12 @@ export function FixedIncomeComparator() {
             Taxa CDB (% CDI)
           </label>
           <p className="text-2xl font-bold text-gold mb-3">{cdbRate}%</p>
-          <Slider
-            value={[cdbRate]}
-            onValueChange={(value) => setCdbRate(value[0])}
-            min={90}
-            max={130}
-            step={1}
-          />
+          <Slider value={[cdbRate]} onValueChange={value => setCdbRate(value[0])} min={90} max={130} step={1} />
         </div>
       </div>
 
       {/* Alert */}
-      {poupancaLoss > 0 && (
-        <div className="bg-destructive/10 border border-destructive/30 rounded-xl p-4 flex items-start gap-3">
+      {poupancaLoss > 0 && <div className="bg-destructive/10 border border-destructive/30 rounded-xl p-4 flex items-start gap-3">
           <AlertCircle className="w-5 h-5 text-destructive shrink-0 mt-0.5" />
           <div>
             <p className="font-semibold text-destructive">
@@ -198,8 +154,7 @@ export function FixedIncomeComparator() {
               comparado ao {bestOption.name}.
             </p>
           </div>
-        </div>
-      )}
+        </div>}
 
       {/* Results Table */}
       <div className="bg-card rounded-xl shadow-card border border-border/50 overflow-hidden">
@@ -228,28 +183,18 @@ export function FixedIncomeComparator() {
               </tr>
             </thead>
             <tbody>
-              {results.map((result, index) => (
-                <tr
-                  key={result.name}
-                  className={`border-t border-border/50 ${
-                    result.name === bestOption.name ? "bg-gold/5" : ""
-                  }`}
-                >
+              {results.map((result, index) => <tr key={result.name} className={`border-t border-border/50 ${result.name === bestOption.name ? "bg-gold/5" : ""}`}>
                   <td className="p-4">
                     <div className="flex items-center gap-2">
                       <span className="font-medium text-foreground">
                         {result.name}
                       </span>
-                      {result.name === bestOption.name && (
-                        <span className="text-xs bg-gold text-accent-foreground px-2 py-0.5 rounded-full font-semibold">
+                      {result.name === bestOption.name && <span className="text-xs bg-gold text-accent-foreground px-2 py-0.5 rounded-full font-semibold">
                           Melhor
-                        </span>
-                      )}
-                      {result.isExempt && (
-                        <span className="text-xs bg-emerald-500/20 text-emerald-600 px-2 py-0.5 rounded-full">
+                        </span>}
+                      {result.isExempt && <span className="text-xs bg-emerald-500/20 text-emerald-600 px-2 py-0.5 rounded-full">
                           Isento IR
-                        </span>
-                      )}
+                        </span>}
                     </div>
                   </td>
                   <td className="p-4 text-right text-muted-foreground">
@@ -267,8 +212,7 @@ export function FixedIncomeComparator() {
                   <td className="p-4 text-right font-bold text-gold">
                     {formatCurrency(result.finalValue)}
                   </td>
-                </tr>
-              ))}
+                </tr>)}
             </tbody>
           </table>
         </div>
@@ -276,47 +220,8 @@ export function FixedIncomeComparator() {
 
       {/* Chart */}
       <div className="bg-card rounded-xl p-6 shadow-card border border-border/50">
-        <h4 className="font-semibold text-foreground mb-4">
-          Comparativo de Rendimentos
-        </h4>
-        <div className="h-[280px]">
-          <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={chartData} layout="vertical">
-              <CartesianGrid strokeDasharray="3 3" opacity={0.1} />
-              <XAxis
-                type="number"
-                tickFormatter={(value) => `R$ ${(value / 1000).toFixed(1)}k`}
-                tick={{ fontSize: 11, fill: "#6b7280" }}
-              />
-              <YAxis
-                type="category"
-                dataKey="name"
-                tick={{ fontSize: 12, fill: "#6b7280" }}
-                width={80}
-              />
-              <Tooltip
-                formatter={(value: number, name: string) => [
-                  formatCurrency(value),
-                  name === "rendimento" ? "Rendimento Líquido" : "Imposto",
-                ]}
-                contentStyle={{
-                  backgroundColor: "#1a2744",
-                  border: "none",
-                  borderRadius: "8px",
-                  color: "#fff",
-                }}
-              />
-              <Bar dataKey="rendimento" stackId="a" radius={[0, 4, 4, 0]}>
-                {chartData.map((entry, index) => (
-                  <Cell
-                    key={`cell-${index}`}
-                    fill={entry.name === bestOption.name ? "#d4a826" : "#1a2744"}
-                  />
-                ))}
-              </Bar>
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
+        
+        
       </div>
 
       {/* CTA */}
@@ -329,6 +234,5 @@ export function FixedIncomeComparator() {
           Falar com Especialista em Renda Fixa
         </Button>
       </div>
-    </div>
-  );
+    </div>;
 }

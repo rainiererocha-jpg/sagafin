@@ -53,11 +53,13 @@ Assim como um habilidoso estrategista em um jogo de xadrez, o assessor de invest
             {/* Trust Badges */}
             <div className="flex flex-wrap justify-center lg:justify-start gap-8 mt-12">
               <div className="text-center lg:text-left">
-                <p className="text-3xl font-bold text-gold">+10</p>
-                <p className="text-sm text-muted-foreground">Anos de Mercado</p>
+                <p className="text-3xl font-bold text-gold">
+              </p>
+                <p className="text-sm text-muted-foreground">Anos de ercado</p>
               </div>
               <div className="text-center lg:text-left">
-                <p className="text-3xl font-bold text-gold">+500</p>
+                <p className="text-3xl font-bold text-gold">
+              </p>
                 <p className="text-sm text-muted-foreground">Clientes Atendidos</p>
               </div>
               <div className="text-center lg:text-left">
