@@ -44,10 +44,7 @@ export function ContactForm() {
             <span className="inline-block text-gold font-semibold text-sm tracking-widest uppercase mb-4">
               Entre em Contato
             </span>
-            <h2 className="text-4xl md:text-5xl font-serif text-foreground mb-6">
-              Pronto para começar sua{" "}
-              <span className="text-gradient-gold">jornada financeira?</span>
-            </h2>
+            
             <p className="text-muted-foreground mb-8 leading-relaxed text-base font-normal">Caro desbravador das finanças, chegou a hora de dar o próximo passo em sua jornada para independência financeira. Convido você para uma reunião onde poderemos explorar juntos o mapa do seu futuro financeiro.
 
 Será o primeiro capítulo da sua nova história de sucesso financeiro. Bons futuros investimentos começam agora!</p>
@@ -68,11 +65,7 @@ Será o primeiro capítulo da sua nova história de sucesso financeiro. Bons fut
                 </div>
                 <div>
                   <p className="text-sm text-muted-foreground">E-mail</p>
-                  <p className="font-semibold text-foreground">O que esperar da assessoria:
-Análise completa do seu perfil de investidor
-Diagnóstico da sua carteira atual
-Sugestões de produtos adequados ao seu objetivo
-Sem compromisso - totalmente gratuita</p>
+                  <p className="font-semibold text-foreground">O que esperar da assessoria:O que esperar da consultoria:Análise completa do seu perfil de investidorDiagnóstico da sua carteira atualSugestões de produtos adequados ao seu objetivoSem compromisso - totalmente gratuita</p>
                 </div>
               </div>
               <div className="flex items-center gap-4">
