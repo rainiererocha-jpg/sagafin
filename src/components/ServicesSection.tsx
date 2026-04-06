@@ -105,7 +105,8 @@ export function ServicesSection() {
                   Rainiere Rocha
                 </h3>
                 <p className="text-muted-foreground mb-6 leading-relaxed">
-                  A verdadeira assessoria de investimentos vai além da escolha de ativos; trata-se de arquitetar um plano de vida resiliente. Um bom especialista, atua na intersecção entre o gerenciamento de risco rigoroso e a busca por oportunidades em derivativos e produtos de crédito. Através da XP Investimentos, ofereço aos meus clientes uma análise de viabilidade honesta. Seja no planejamento financeiro pessoal ou na estruturação de garantias para o futuro, meu objetivo é transformar complexidade técnica em segurança e crescimento patrimonial sustentável.
+                  Sou assessor de investimentos credenciado à XP Investimentos, especializado em assessoria, consórcios, crédito, derivativos, planejamento patrimonial e gestão de risco. Atendo clientes em Goiânia e em todo o Brasil com acompanhamento personalizado, análise honesta e estratégias sob medida para cada perfil. Meu objetivo é transformar a complexidade do mercado financeiro em segurança e crescimento patrimonial sustentável para você e sua família.
+
                 </p>
                 <div className="grid grid-cols-3 gap-4 mb-8">
                   <div className="text-center p-4 bg-background/50 rounded-xl">
@@ -139,7 +140,7 @@ export function ServicesSection() {
                     <img 
                       src={advisorImage} 
                       alt="Rainiere Rocha - Assessor de Investimentos" 
-                      className="w-full h-full object-cover object-center" 
+                      className="w-full h-full object-cover object-center" loading="lazy" 
                     />
                   </div>
                 </div>

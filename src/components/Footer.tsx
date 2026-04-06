@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { Shield, ExternalLink } from "lucide-react";
 
 export function Footer() {
@@ -8,10 +9,8 @@ export function Footer() {
           {/* Brand */}
           <div className="md:col-span-2">
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-11 h-11 rounded-xl bg-gradient-gold flex items-center justify-center shadow-gold">
-                <span className="text-accent-foreground font-bold text-lg">
-                  SF
-                </span>
+              <div className="w-11 h-11 rounded-xl overflow-hidden shadow-gold">
+                <img src="/rr-monogram-logo.png" alt="Rainiere Rocha" className="w-full h-full object-cover" loading="lazy" />
               </div>
               <div>
                 <p className="text-foreground font-bold text-lg font-serif">
@@ -39,7 +38,8 @@ export function Footer() {
                 { label: "A Saga", href: "#saga" },
                 { label: "Simulador", href: "#simulador" },
                 { label: "Perfil de Investidor", href: "#perfil" },
-                { label: "Serviços", href: "#sobre" },
+                { label: "Serviços", href: "/servicos" },
+                { label: "Blog", href: "/blog" },
                 { label: "Contato", href: "#contato" },
               ].map((link) => (
                 <li key={link.href}>

@@ -5,6 +5,10 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { Phone, Mail, MapPin, Send, Calendar, CheckCircle2 } from "lucide-react";
+import { supabase } from "@/lib/supabase";
+
+const WA_URL = "https://wa.me/5562994160930?text=Ol%C3%A1%20Rainiere%2C%20gostaria%20de%20agendar%20uma%20consultoria.";
+
 export function ContactForm() {
   const {
     toast
@@ -21,20 +25,36 @@ export function ContactForm() {
     e.preventDefault();
     setIsSubmitting(true);
 
-    // Simulate form submission
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    toast({
-      title: "Mensagem enviada com sucesso!",
-      description: "Entraremos em contato em até 24 horas úteis."
-    });
-    setFormData({
-      name: "",
-      email: "",
-      phone: "",
-      investmentRange: "",
-      message: ""
-    });
-    setIsSubmitting(false);
+    try {
+      if (supabase) {
+        const { error } = await supabase.from("leads").insert({
+          name: formData.name, email: formData.email, phone: formData.phone,
+          investment_range: formData.investmentRange, message: formData.message, source: "site",
+        });
+        if (error) throw error;
+      }
+      const accessKey = (import.meta as any).env?.VITE_WEB3FORMS_KEY || "";
+      if (accessKey) {
+        await fetch("https://api.web3forms.com/submit", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            access_key: accessKey,
+            subject: `Novo lead: ${formData.name} - ${formData.investmentRange}`,
+            from_name: "Saga Financeira",
+            name: formData.name, email: formData.email, phone: formData.phone,
+            investment_range: formData.investmentRange, message: formData.message || "-",
+          }),
+        });
+      }
+      toast({ title: "Mensagem enviada!", description: "Rainiere entrará em contato em até 24 horas." });
+      setFormData({ name: "", email: "", phone: "", investmentRange: "", message: "" });
+    } catch (err) {
+      console.error(err);
+      toast({ title: "Erro ao enviar", description: "Tente pelo WhatsApp.", variant: "destructive" });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
   return <section id="contato" className="py-24 bg-secondary/30">
       <div className="container mx-auto px-4">

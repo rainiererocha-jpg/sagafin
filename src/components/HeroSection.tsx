@@ -82,7 +82,7 @@ export function HeroSection() {
               
               {/* Photo Container */}
               <div className="relative w-[300px] md:w-[400px] lg:w-[500px] aspect-[4/3] rounded-3xl overflow-hidden border-glow glow-gold">
-                <img src={heroImage} alt="Rainiere Rocha - Assessor de Investimentos XP" className="w-full h-full object-cover object-center" />
+                <img src={heroImage} alt="Rainiere Rocha - Assessor de Investimentos XP" className="w-full h-full object-cover object-center" loading="eager" />
                 
                 {/* Overlay Gradient */}
                 <div className="absolute inset-0 bg-gradient-to-t from-background/60 via-transparent to-transparent" />
