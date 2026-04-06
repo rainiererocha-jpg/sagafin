@@ -60,10 +60,12 @@ Será o primeiro capítulo da sua nova história de sucesso financeiro. Bons fut
                 </div>
               </div>
               <div className="flex items-center gap-4">
-                
+                <div className="w-12 h-12 rounded-xl bg-gold/10 flex items-center justify-center">
+                  <Mail className="w-5 h-5 text-gold" />
+                </div>
                 <div>
                   <p className="text-sm text-muted-foreground">E-mail</p>
-                  <p className="font-semibold text-foreground">O que esperar da assessoria:O que esperar da consultoria:Análise completa do seu perfil de investidorDiagnóstico da sua carteira atualSugestões de produtos adequados ao seu objetivoSem compromisso - totalmente gratuita</p>
+                  <p className="font-semibold text-foreground">rainiere@sagafinanceira.com.br</p>
                 </div>
               </div>
               <div className="flex items-center gap-4">
@@ -81,8 +83,9 @@ Será o primeiro capítulo da sua nova história de sucesso financeiro. Bons fut
 
             {/* Benefits */}
             <div className="bg-card/50 backdrop-blur-sm rounded-xl p-6 border border-border">
-              <h4 className="font-semibold text-foreground mb-4 flex items-center gap-2">O que esperar da assessoria:<Calendar className="w-5 h-5 text-gold" />
-                O que esperar da consultoria:
+              <h4 className="font-semibold text-foreground mb-4 flex items-center gap-2">
+                <Calendar className="w-5 h-5 text-gold" />
+                O que esperar da assessoria:
               </h4>
               <ul className="space-y-3">
                 {["Análise completa do seu perfil de investidor", "Diagnóstico da sua carteira atual", "Sugestões de produtos adequados ao seu objetivo", "Sem compromisso - totalmente gratuita"].map((item, index) => <li key={index} className="flex items-start gap-2 text-sm text-muted-foreground">
@@ -168,7 +171,7 @@ Será o primeiro capítulo da sua nova história de sucesso financeiro. Bons fut
               <Button type="submit" variant="gold" className="w-full" disabled={isSubmitting}>
                 {isSubmitting ? "Enviando..." : <>
                     <Send className="w-4 h-4 mr-2" />
-                    Solicitar Consultoria Gratuita
+                    Solicitar Assessoria Gratuita
                   </>}
               </Button>
 
