@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { ArrowDown, Phone, Play } from "lucide-react";
+import { ArrowDown, Phone } from "lucide-react";
 import heroImage from "@/assets/rainiere-hero.jpg";
 import { HeroSlideLeft, HeroSlideRight, HeroFadeIn } from "@/components/ui/motion";
 
@@ -37,32 +37,34 @@ export function HeroSection() {
             </h2>
             
             {/* Description */}
-            <p className="text-muted-foreground max-w-xl mx-auto lg:mx-0 mb-10 text-base text-center font-medium">
-              Imagine-se em uma jornada épica. A sua missão é conquistar a tão sonhada liberdade financeira. O caminho é repleto de desafios: mercados voláteis, decisões complexas e um futuro incerto. Nesta jornada, você não está sozinho, terá como um guia a expertise do seu assessor de investimentos.
-
-              Assim como um habilidoso estrategista em um jogo de xadrez, o assessor de investimentos analisa cada movimento do mercado, antecipa tendências e protege seus ativos de ameaças invisíveis. Com uma mistura de conhecimento profundo, intuição afiada e tecnologia de ponta, ele transforma números frios em oportunidades quentes.
+            <p className="text-muted-foreground max-w-xl mx-auto lg:mx-0 mb-10 text-base lg:text-left font-medium leading-relaxed">
+              Assessoria de investimentos personalizada com estratégia, tecnologia e visão de longo prazo. Proteja e multiplique seu patrimônio com quem entende do mercado.
             </p>
 
             {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-              <Button variant="gold" size="lg" className="text-base px-8">
-                <Play className="w-4 h-4 mr-2" />
-                Saiba Mais
-              </Button>
-              <Button variant="outline" size="lg" className="text-base px-8 border-gold/30 text-foreground hover:bg-gold/10 hover:border-gold/50">
-                <Phone className="w-4 h-4 mr-2" />
-                Ligar Agora
-              </Button>
+              <a href="https://wa.me/5562994160930?text=Ol%C3%A1%20Rainiere%2C%20gostaria%20de%20agendar%20uma%20assessoria." target="_blank" rel="noopener noreferrer">
+                <Button variant="gold" size="lg" className="text-base px-8">
+                  <Phone className="w-4 h-4 mr-2" />
+                  Agende sua Assessoria
+                </Button>
+              </a>
+              <a href="https://wa.me/5562994160930" target="_blank" rel="noopener noreferrer">
+                <Button variant="outline" size="lg" className="text-base px-8 border-gold/30 text-foreground hover:bg-gold/10 hover:border-gold/50">
+                  <Phone className="w-4 h-4 mr-2" />
+                  Fale pelo WhatsApp
+                </Button>
+              </a>
             </div>
 
             {/* Trust Badges */}
             <div className="flex flex-wrap justify-center lg:justify-start gap-8 mt-12">
               <div className="text-center lg:text-left">
-                <p className="text-3xl font-bold text-gold"></p>
-                <p className="text-sm text-muted-foreground">Anos de ercado</p>
+                <p className="text-3xl font-bold text-gold">10+</p>
+                <p className="text-sm text-muted-foreground">Anos de Mercado</p>
               </div>
               <div className="text-center lg:text-left">
-                <p className="text-3xl font-bold text-gold"></p>
+                <p className="text-3xl font-bold text-gold">500+</p>
                 <p className="text-sm text-muted-foreground">Clientes Atendidos</p>
               </div>
               <div className="text-center lg:text-left">

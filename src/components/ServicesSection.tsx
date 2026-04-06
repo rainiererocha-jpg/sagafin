@@ -22,18 +22,18 @@ const services = [
   },
   {
     icon: LineChart,
-    title: "Derivativos",
+    title: "Derivativos & Opções",
     description: "Operações estruturadas, opções e proteção de carteira para investidores experientes."
   },
   {
     icon: Building2,
-    title: "Planejamento Sucessório",
-    description: "Holdings familiares e estruturação patrimonial para transmissão eficiente de bens."
+    title: "Consórcios & Crédito",
+    description: "Consórcios imobiliários, automotivos e produtos de crédito com as melhores condições do mercado."
   },
   {
     icon: Users,
-    title: "Assessoria Empresarial",
-    description: "Gestão de caixa, aplicações de curto prazo e estratégias para pessoa jurídica."
+    title: "Planejamento Financeiro",
+    description: "Planejamento sucessório, gestão patrimonial e estratégias personalizadas para pessoa física e jurídica."
   }
 ];
 
@@ -125,10 +125,12 @@ export function ServicesSection() {
                     </p>
                   </div>
                 </div>
+                <a href="https://wa.me/5562994160930?text=Ol%C3%A1%20Rainiere%2C%20gostaria%20de%20agendar%20uma%20assessoria." target="_blank" rel="noopener noreferrer">
                 <Button variant="gold" size="lg">
-                  Agendar Consultoria Gratuita
+                  Agendar Assessoria Gratuita
                   <ArrowRight className="w-4 h-4 ml-2" />
                 </Button>
+                </a>
               </SlideInLeft>
               <SlideInRight className="hidden md:flex justify-center">
                 <div className="relative w-64 h-64">

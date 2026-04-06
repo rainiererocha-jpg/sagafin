@@ -23,7 +23,7 @@ const testimonials = [
     name: "Roberto Almeida",
     role: "Engenheiro",
     content:
-      "A consultoria de planejamento sucessório foi fundamental para minha família. Profissionalismo e conhecimento técnico impecáveis.",
+      "A assessoria de planejamento sucessório foi fundamental para minha família. Profissionalismo e conhecimento técnico impecáveis.",
     rating: 5,
     initials: "RA",
   },

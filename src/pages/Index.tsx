@@ -10,6 +10,8 @@ import { ServicesSection } from "@/components/ServicesSection";
 import { TestimonialsSection } from "@/components/TestimonialsSection";
 import { ContactForm } from "@/components/ContactForm";
 import { Footer } from "@/components/Footer";
+import { WhatsAppButton } from "@/components/WhatsAppButton";
+import { BackToTop } from "@/components/BackToTop";
 
 const Index = () => {
   return (
@@ -110,6 +112,10 @@ const Index = () => {
 
       {/* Footer */}
       <Footer />
+
+      {/* Floating Elements */}
+      <WhatsAppButton />
+      <BackToTop />
     </div>
   );
 };
