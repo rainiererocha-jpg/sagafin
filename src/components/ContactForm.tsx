@@ -65,7 +65,7 @@ Será o primeiro capítulo da sua nova história de sucesso financeiro. Bons fut
                 </div>
                 <div>
                   <p className="text-sm text-muted-foreground">E-mail</p>
-                  <p className="font-semibold text-foreground">rainiere@sagafinanceira.com.br</p>
+                  <p className="font-semibold text-foreground">rainiererocha@sagafinanceira.com.br</p>
                 </div>
               </div>
               <div className="flex items-center gap-4">

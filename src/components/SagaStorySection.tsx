@@ -50,8 +50,7 @@ export function SagaStorySection() {
             <span className="text-gradient-gold">Patrimônio</span>
           </h2>
           <p className="text-lg text-muted-foreground">
-            Uma metodologia comprovada que transforma sonhos financeiros em 
-            conquistas reais, passo a passo.
+            Transforma sonhos financeiros em conquistas reais, passo a passo.
           </p>
         </FadeInUp>
 

@@ -60,15 +60,15 @@ export function HeroSection() {
             {/* Trust Badges */}
             <div className="flex flex-wrap justify-center lg:justify-start gap-8 mt-12">
               <div className="text-center lg:text-left">
-                <p className="text-3xl font-bold text-gold">10+</p>
+                <p className="text-3xl font-bold text-gold">6+</p>
                 <p className="text-sm text-muted-foreground">Anos de Mercado</p>
               </div>
               <div className="text-center lg:text-left">
-                <p className="text-3xl font-bold text-gold">500+</p>
+                <p className="text-3xl font-bold text-gold">100+</p>
                 <p className="text-sm text-muted-foreground">Clientes Atendidos</p>
               </div>
               <div className="text-center lg:text-left">
-                <p className="text-3xl font-bold text-gold">R$ 200M+</p>
+                <p className="text-3xl font-bold text-gold">R$ 1M+</p>
                 <p className="text-sm text-muted-foreground">Sob Assessoria</p>
               </div>
             </div>
@@ -91,7 +91,7 @@ export function HeroSection() {
                 <div className="absolute bottom-6 left-6 right-6">
                   <div className="bg-background/80 backdrop-blur-md rounded-xl px-4 py-3 border border-gold/20">
                     <p className="text-gold font-semibold text-sm">Credenciado XP Investimentos</p>
-                    <p className="text-foreground/70 text-xs">Assessoria Personalizada Premium</p>
+                    <p className="text-foreground/70 text-xs">Assessoria Personalizada </p>
                   </div>
                 </div>
               </div>
