@@ -105,21 +105,21 @@ export function ServicesSection() {
                   Rainiere Rocha
                 </h3>
                 <p className="text-muted-foreground mb-6 leading-relaxed">
-                  A verdadeira assessoria de investimentos vai além da escolha de ativos; trata-se de arquitetar um plano de vida resiliente. Um bom especialista, atua na intersecção entre o gerenciamento de risco rigoroso e a busca por oportunidades em derivativos e produtos de crédito. Através da XP Investimentos, ofereço aos meus clientes um ac, sempre com o suporte de uma análise de viabilidade honesta. Seja no planejamento financeiro pessoal ou na estruturação de garantias para o futuro, meu objetivo é transformar complexidade técnica em segurança e crescimento patrimonial sustentável.
+                  A verdadeira assessoria de investimentos vai além da escolha de ativos; trata-se de arquitetar um plano de vida resiliente. Um bom especialista, atua na intersecção entre o gerenciamento de risco rigoroso e a busca por oportunidades em derivativos e produtos de crédito. Através da XP Investimentos, ofereço aos meus clientes uma análise de viabilidade honesta. Seja no planejamento financeiro pessoal ou na estruturação de garantias para o futuro, meu objetivo é transformar complexidade técnica em segurança e crescimento patrimonial sustentável.
                 </p>
                 <div className="grid grid-cols-3 gap-4 mb-8">
                   <div className="text-center p-4 bg-background/50 rounded-xl">
-                    <p className="text-2xl font-bold text-gold">500+</p>
+                    <p className="text-2xl font-bold text-gold">100+</p>
                     <p className="text-xs text-muted-foreground">Clientes</p>
                   </div>
                   <div className="text-center p-4 bg-background/50 rounded-xl">
-                    <p className="text-2xl font-bold text-gold">R$ 200M+</p>
+                    <p className="text-2xl font-bold text-gold">R$ 1M+</p>
                     <p className="text-xs text-muted-foreground">
                       Sob Assessoria
                     </p>
                   </div>
                   <div className="text-center p-4 bg-background/50 rounded-xl">
-                    <p className="text-2xl font-bold text-gold">10+</p>
+                    <p className="text-2xl font-bold text-gold">6+</p>
                     <p className="text-xs text-muted-foreground">
                       Anos de Mercado
                     </p>
