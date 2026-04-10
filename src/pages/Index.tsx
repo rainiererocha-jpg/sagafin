@@ -12,22 +12,22 @@ import { ContactForm } from "@/components/ContactForm";
 import { Footer } from "@/components/Footer";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
 import { BackToTop } from "@/components/BackToTop";
+import { FadeInUp } from "@/components/ui/motion";
 
 const Index = () => {
   return (
     <div className="min-h-screen bg-background">
-      {/* Market Ticker */}
+
+      {/* Market Ticker — fixed at very top */}
       <div className="fixed top-0 left-0 right-0 z-50">
         <MarketTicker />
       </div>
 
-      {/* Header - positioned below ticker */}
-      <div className="pt-[42px]">
-        <Header />
-      </div>
+      {/* Header — fixed just below ticker */}
+      <Header />
 
-      {/* Hero with Photo */}
-      <div className="pt-[42px]">
+      {/* Hero — full viewport, accounts for ticker + header */}
+      <div className="pt-[38px]">
         <HeroSection />
       </div>
 
@@ -37,83 +37,93 @@ const Index = () => {
       {/* Armas Secretas do Assessor */}
       <SecretWeaponsSection />
 
-      {/* Compound Interest Simulator */}
-      <section id="simulador" className="py-24 bg-background">
-        <div className="container mx-auto px-4">
-          <div className="text-center max-w-3xl mx-auto mb-12">
-            <span className="inline-block text-gold font-semibold text-sm tracking-widest uppercase mb-4">
-              Simulador
-            </span>
-            <h2 className="text-4xl md:text-5xl font-serif text-foreground mb-6">
+      {/* Simulador de Juros Compostos */}
+      <section id="simulador" className="py-28 lg:py-36 bg-background relative overflow-hidden">
+        <span
+          aria-hidden
+          className="absolute -top-6 right-6 lg:right-16 font-serif font-bold text-white/[0.025] leading-none select-none pointer-events-none"
+          style={{ fontSize: "clamp(8rem, 18vw, 18rem)" }}
+        >
+          S1
+        </span>
+        <div className="container mx-auto px-6 lg:px-10 relative z-10">
+          <FadeInUp className="mb-14">
+            <div className="flex items-center gap-4 mb-6">
+              <div className="h-px w-10" style={{ background: "linear-gradient(to right, hsl(42 85% 55% / 0.6), transparent)" }} />
+              <span className="text-label">Simulador</span>
+            </div>
+            <h2 className="font-serif font-light text-foreground mb-4" style={{ fontSize: "clamp(2.4rem, 4.5vw, 4rem)" }}>
               O Poder dos{" "}
-              <span className="text-gradient-gold">Juros Compostos</span>
+              <em className="not-italic text-gradient-gold font-semibold">Juros Compostos</em>
             </h2>
-            <p className="text-lg text-muted-foreground">
+            <p className="text-muted-foreground text-sm leading-relaxed max-w-lg">
               Visualize o crescimento exponencial do seu patrimônio ao longo do tempo.
             </p>
-          </div>
+          </FadeInUp>
 
-          <div className="max-w-5xl mx-auto bg-card/50 backdrop-blur-md rounded-2xl p-6 md:p-8 border border-border/50 shadow-elevated">
+          <div className="bg-card/40 backdrop-blur-md rounded-lg p-6 md:p-8 border border-white/[0.06]">
             <CompoundInterestSimulator />
           </div>
         </div>
       </section>
 
-      {/* Investor Profile Quiz */}
-      <section id="perfil" className="py-24 bg-secondary/30">
-        <div className="container mx-auto px-4">
-          <div className="text-center max-w-3xl mx-auto mb-12">
-            <span className="inline-block text-gold font-semibold text-sm tracking-widest uppercase mb-4">
-              Análise de Perfil
-            </span>
-            <h2 className="text-4xl md:text-5xl font-serif text-foreground mb-6">
+      {/* Quiz de Perfil de Investidor */}
+      <section id="perfil" className="py-28 lg:py-36 bg-secondary/15 relative overflow-hidden">
+        <div className="container mx-auto px-6 lg:px-10 relative z-10">
+          <FadeInUp className="mb-14">
+            <div className="flex items-center gap-4 mb-6">
+              <div className="h-px w-10" style={{ background: "linear-gradient(to right, hsl(42 85% 55% / 0.6), transparent)" }} />
+              <span className="text-label">Análise de Perfil</span>
+            </div>
+            <h2 className="font-serif font-light text-foreground mb-4" style={{ fontSize: "clamp(2.4rem, 4.5vw, 4rem)" }}>
               Descubra seu{" "}
-              <span className="text-gradient-gold">Perfil de Investidor</span>
+              <em className="not-italic text-gradient-gold font-semibold">Perfil de Investidor</em>
             </h2>
-            <p className="text-lg text-muted-foreground">
+            <p className="text-muted-foreground text-sm leading-relaxed max-w-lg">
               Responda 7 perguntas rápidas e receba uma análise personalizada
-              com sugestões de alocação para seu perfil.
+              com sugestões de alocação para o seu perfil.
             </p>
-          </div>
+          </FadeInUp>
 
           <InvestorProfileQuiz />
         </div>
       </section>
 
-      {/* Fixed Income Comparator */}
-      <section id="renda-fixa" className="py-24 bg-background">
-        <div className="container mx-auto px-4">
-          <div className="text-center max-w-3xl mx-auto mb-12">
-            <span className="inline-block text-gold font-semibold text-sm tracking-widest uppercase mb-4">
-              Comparador
-            </span>
-            <h2 className="text-4xl md:text-5xl font-serif text-foreground mb-6">
+      {/* Comparador de Renda Fixa */}
+      <section id="renda-fixa" className="py-28 lg:py-36 bg-background relative overflow-hidden">
+        <div className="container mx-auto px-6 lg:px-10 relative z-10">
+          <FadeInUp className="mb-14">
+            <div className="flex items-center gap-4 mb-6">
+              <div className="h-px w-10" style={{ background: "linear-gradient(to right, hsl(42 85% 55% / 0.6), transparent)" }} />
+              <span className="text-label">Comparador</span>
+            </div>
+            <h2 className="font-serif font-light text-foreground mb-4" style={{ fontSize: "clamp(2.4rem, 4.5vw, 4rem)" }}>
               Compare produtos de{" "}
-              <span className="text-gradient-gold">Renda Fixa</span>
+              <em className="not-italic text-gradient-gold font-semibold">Renda Fixa</em>
             </h2>
-            <p className="text-lg text-muted-foreground">
+            <p className="text-muted-foreground text-sm leading-relaxed max-w-lg">
               Veja na prática quanto você está perdendo na Poupança e descubra
-              alternativas mais rentáveis com segurança.
+              alternativas muito mais rentáveis com a mesma segurança.
             </p>
-          </div>
+          </FadeInUp>
 
           <FixedIncomeComparator />
         </div>
       </section>
 
-      {/* Services */}
+      {/* Serviços + Sobre o Assessor */}
       <ServicesSection />
 
-      {/* Testimonials */}
+      {/* Depoimentos */}
       <TestimonialsSection />
 
-      {/* Contact Form */}
+      {/* Formulário de Contato */}
       <ContactForm />
 
       {/* Footer */}
       <Footer />
 
-      {/* Floating Elements */}
+      {/* Floating elements */}
       <WhatsAppButton />
       <BackToTop />
     </div>

@@ -1,111 +1,210 @@
-import { Button } from "@/components/ui/button";
-import { ArrowDown, Phone } from "lucide-react";
+import { ArrowDown, Phone, ArrowRight } from "lucide-react";
+import { motion } from "framer-motion";
 import heroImage from "@/assets/rainiere-hero.jpg";
-import { HeroSlideLeft, HeroSlideRight, HeroFadeIn } from "@/components/ui/motion";
+
+const WA_URL =
+  "https://wa.me/5562994160930?text=Ol%C3%A1%20Rainiere%2C%20gostaria%20de%20agendar%20uma%20assessoria.";
 
 export function HeroSection() {
   return (
-    <section id="hero" className="relative min-h-screen bg-background overflow-hidden pt-24 pb-16">
-      {/* Subtle Background Gradient */}
-      <div className="absolute inset-0 bg-gradient-to-b from-background via-background to-secondary/20" />
-      
-      {/* Gold Accent Glow */}
-      <div className="absolute top-1/3 right-1/4 w-[600px] h-[600px] bg-gold/5 rounded-full blur-[120px]" />
-      <div className="absolute bottom-1/4 left-1/4 w-[400px] h-[400px] bg-gold/3 rounded-full blur-[100px]" />
+    <section id="hero" className="relative min-h-screen flex overflow-hidden bg-background">
 
-      <div className="container mx-auto px-4 relative z-10">
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-8 items-center min-h-[80vh]">
-          {/* Left Content */}
-          <HeroSlideLeft delay={0.2} className="order-2 lg:order-1 text-center lg:text-left">
-            {/* Title with Serif Font */}
-            <h1 className="text-5xl md:text-6xl lg:text-7xl font-serif text-foreground mb-4 leading-[1.1]">
-              RAINIERE
-            </h1>
-            <h1 className="text-5xl md:text-6xl lg:text-7xl font-serif text-foreground mb-6 leading-[1.1]">
-              ROCHA
-            </h1>
-            
-            {/* Subtitle with Gold Italic */}
-            <p className="text-xl md:text-2xl font-serif italic text-gold mb-8">
-              Assessor de Investimentos
+      {/* Mobile: photo as full-bleed background */}
+      <div className="absolute inset-0 lg:hidden">
+        <img
+          src={heroImage}
+          alt="Rainiere Rocha"
+          className="w-full h-full object-cover object-top"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/88 to-background/50" />
+      </div>
+
+      {/* Desktop: right photo panel (58% width) */}
+      <motion.div
+        initial={{ opacity: 0, scale: 1.04 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 1.4, ease: [0.25, 0.1, 0.25, 1] }}
+        className="hidden lg:block absolute right-0 inset-y-0 w-[58%] overflow-hidden"
+      >
+        <img
+          src={heroImage}
+          alt="Rainiere Rocha — Assessor de Investimentos XP"
+          className="w-full h-full object-cover object-center"
+          loading="eager"
+        />
+        {/* Left-side gradient bleeding into content panel */}
+        <div className="absolute inset-0 bg-gradient-to-r from-background via-background/25 to-transparent" />
+        {/* Bottom gradient */}
+        <div className="absolute inset-0 bg-gradient-to-t from-background/65 via-transparent to-transparent" />
+        {/* Warm gold tint on highlights */}
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{ background: "linear-gradient(135deg, transparent 40%, hsl(42 85% 55% / 0.05) 100%)" }}
+        />
+        {/* XP credential badge */}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 1.3 }}
+          className="absolute bottom-14 right-14"
+        >
+          <div className="bg-background/72 backdrop-blur-md border border-white/10 rounded-md px-5 py-3.5 shadow-elevated">
+            <p className="text-gold text-[13px] font-semibold tracking-wide leading-tight">
+              Credenciado XP Investimentos
             </p>
-            
-            {/* Main Tagline */}
-            <h2 className="text-2xl md:text-3xl lg:text-4xl font-serif text-foreground/90 mb-6 leading-tight">
-              O arquiteto da sua{" "}
-              <span className="text-gradient-gold">prosperidade financeira</span>
-            </h2>
-            
-            {/* Description */}
-            <p className="text-muted-foreground max-w-xl mx-auto lg:mx-0 mb-10 text-base lg:text-left font-medium leading-relaxed">
-              Assessoria de investimentos personalizada com estratégia, tecnologia e visão de longo prazo. Proteja e multiplique seu patrimônio com quem entende do mercado.
+            <p className="text-white/35 text-[11px] tracking-widest uppercase mt-1">
+              Assessoria Personalizada
             </p>
+          </div>
+        </motion.div>
+      </motion.div>
 
-            {/* CTA Buttons */}
-            <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-              <a href="https://wa.me/5562994160930?text=Ol%C3%A1%20Rainiere%2C%20gostaria%20de%20agendar%20uma%20assessoria." target="_blank" rel="noopener noreferrer">
-                <Button variant="gold" size="lg" className="text-base px-8">
-                  <Phone className="w-4 h-4 mr-2" />
-                  Agende sua Assessoria
-                </Button>
-              </a>
-              <a href="https://wa.me/5562994160930" target="_blank" rel="noopener noreferrer">
-                <Button variant="outline" size="lg" className="text-base px-8 border-gold/30 text-foreground hover:bg-gold/10 hover:border-gold/50">
-                  <Phone className="w-4 h-4 mr-2" />
-                  Fale pelo WhatsApp
-                </Button>
-              </a>
-            </div>
+      {/* Content panel — left 44% on desktop, full width on mobile */}
+      <div className="relative z-10 flex flex-col justify-center w-full lg:w-[44%] px-6 sm:px-10 lg:px-14 xl:px-20 min-h-screen py-36 lg:py-0">
 
-            {/* Trust Badges */}
-            <div className="flex flex-wrap justify-center lg:justify-start gap-8 mt-12">
-              <div className="text-center lg:text-left">
-                <p className="text-3xl font-bold text-gold">6+</p>
-                <p className="text-sm text-muted-foreground">Anos de Mercado</p>
-              </div>
-              <div className="text-center lg:text-left">
-                <p className="text-3xl font-bold text-gold">100+</p>
-                <p className="text-sm text-muted-foreground">Clientes Atendidos</p>
-              </div>
-              <div className="text-center lg:text-left">
-                <p className="text-3xl font-bold text-gold">R$ 1M+</p>
-                <p className="text-sm text-muted-foreground">Sob Assessoria</p>
-              </div>
-            </div>
-          </HeroSlideLeft>
+        {/* Origin label */}
+        <motion.div
+          initial={{ opacity: 0, x: -16 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.6, delay: 0.25 }}
+          className="flex items-center gap-3 mb-10"
+        >
+          <div
+            className="h-px w-8 shrink-0"
+            style={{ background: "linear-gradient(to right, hsl(42 85% 55% / 0.6), transparent)" }}
+          />
+          <span className="text-label">
+            XP Investimentos · Goiânia, Brasil
+          </span>
+        </motion.div>
 
-          {/* Right Content - Photo */}
-          <HeroSlideRight delay={0.4} className="order-1 lg:order-2 flex justify-center lg:justify-end">
-            <div className="relative">
-              {/* Background Glow Effect */}
-              <div className="absolute inset-0 bg-gradient-to-t from-gold/20 via-gold/5 to-transparent rounded-3xl blur-2xl scale-110" />
-              
-              {/* Photo Container */}
-              <div className="relative w-[300px] md:w-[400px] lg:w-[500px] aspect-[4/3] rounded-3xl overflow-hidden border-glow glow-gold">
-                <img src={heroImage} alt="Rainiere Rocha - Assessor de Investimentos XP" className="w-full h-full object-cover object-center" loading="eager" />
-                
-                {/* Overlay Gradient */}
-                <div className="absolute inset-0 bg-gradient-to-t from-background/60 via-transparent to-transparent" />
-                
-                {/* XP Badge */}
-                <div className="absolute bottom-6 left-6 right-6">
-                  <div className="bg-background/80 backdrop-blur-md rounded-xl px-4 py-3 border border-gold/20">
-                    <p className="text-gold font-semibold text-sm">Credenciado XP Investimentos</p>
-                    <p className="text-foreground/70 text-xs">Assessoria Personalizada </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </HeroSlideRight>
+        {/* Name — typographic centrepiece */}
+        <div className="relative mb-8">
+          {/* Ghost monogram behind */}
+          <span
+            aria-hidden
+            className="absolute -top-10 -left-5 font-serif font-bold leading-none select-none pointer-events-none text-white/[0.022]"
+            style={{ fontSize: "clamp(8rem, 16vw, 14rem)" }}
+          >
+            RR
+          </span>
+
+          <motion.h1
+            initial={{ opacity: 0, y: 48 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.95, delay: 0.32, ease: [0.22, 1, 0.36, 1] }}
+            className="font-serif font-light text-foreground leading-[0.86] uppercase tracking-[0.05em]"
+            style={{ fontSize: "clamp(3.6rem, 7.2vw, 7.8rem)" }}
+          >
+            Rainiere
+          </motion.h1>
+
+          <motion.h1
+            initial={{ opacity: 0, y: 48 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.95, delay: 0.48, ease: [0.22, 1, 0.36, 1] }}
+            className="font-serif font-bold text-foreground leading-[0.86] uppercase tracking-[0.02em]"
+            style={{ fontSize: "clamp(3.6rem, 7.2vw, 7.8rem)" }}
+          >
+            Rocha
+          </motion.h1>
         </div>
 
-        {/* Scroll Indicator */}
-        <HeroFadeIn delay={1} className="flex justify-center mt-8">
-          <a href="#saga" className="flex flex-col items-center gap-2 text-muted-foreground hover:text-gold transition-colors">
-            <span className="text-sm">Conheça a Saga</span>
-            <ArrowDown className="w-5 h-5 animate-bounce" />
+        {/* Gold rule */}
+        <motion.div
+          initial={{ scaleX: 0, opacity: 0 }}
+          animate={{ scaleX: 1, opacity: 1 }}
+          transition={{ duration: 1.1, delay: 0.66, ease: [0.22, 1, 0.36, 1] }}
+          className="origin-left mb-6"
+          style={{
+            height: "1px",
+            width: "68%",
+            background: "linear-gradient(to right, hsl(42 85% 55%), hsl(42 85% 55% / 0.25), transparent)",
+          }}
+        />
+
+        {/* Tagline */}
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.8, delay: 0.78 }}
+          className="font-serif italic text-gold mb-5"
+          style={{ fontSize: "clamp(1.1rem, 2.2vw, 1.35rem)" }}
+        >
+          Assessor de Investimentos
+        </motion.p>
+
+        {/* Description */}
+        <motion.p
+          initial={{ opacity: 0, y: 18 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.88 }}
+          className="text-muted-foreground leading-relaxed max-w-[360px] mb-11"
+          style={{ fontSize: "clamp(0.82rem, 1.1vw, 0.9rem)" }}
+        >
+          Assessoria personalizada com estratégia, tecnologia e visão de longo
+          prazo. Proteja e multiplique seu patrimônio com quem entende do mercado.
+        </motion.p>
+
+        {/* CTAs */}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 1.02 }}
+          className="flex flex-col sm:flex-row gap-3 mb-14"
+        >
+          <a href={WA_URL} target="_blank" rel="noopener noreferrer">
+            <button className="flex items-center justify-center gap-2 px-7 py-3.5 bg-gold text-background text-[11.5px] tracking-[0.16em] uppercase font-semibold hover:bg-gold/90 transition-colors duration-200 w-full sm:w-auto">
+              <Phone className="w-3.5 h-3.5" />
+              Agendar Assessoria
+            </button>
           </a>
-        </HeroFadeIn>
+          <a href="#saga">
+            <button className="flex items-center justify-center gap-2 px-7 py-3.5 border border-white/12 text-foreground/55 text-[11.5px] tracking-[0.16em] uppercase font-medium hover:text-foreground/85 hover:border-white/22 transition-all duration-200 w-full sm:w-auto">
+              Conhecer a Metodologia
+              <ArrowRight className="w-3.5 h-3.5" />
+            </button>
+          </a>
+        </motion.div>
+
+        {/* Stats row */}
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 1.18 }}
+          className="flex items-start gap-8 pt-8 border-t border-white/[0.07]"
+        >
+          {[
+            { value: "100+", label: "Clientes Ativos" },
+            { value: "R$ 1M+", label: "Sob Assessoria" },
+            { value: "6+", label: "Anos de Mercado" },
+          ].map((stat, i) => (
+            <div key={i} className={i > 0 ? "border-l border-white/10 pl-8" : ""}>
+              <p className="font-serif font-bold text-foreground" style={{ fontSize: "clamp(1.4rem, 2.5vw, 2rem)" }}>
+                {stat.value}
+              </p>
+              <p className="text-[10.5px] text-muted-foreground/60 tracking-[0.18em] uppercase mt-1 font-medium">
+                {stat.label}
+              </p>
+            </div>
+          ))}
+        </motion.div>
+
+        {/* Scroll hint */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.6, delay: 1.5 }}
+          className="absolute bottom-8 left-6 sm:left-10 lg:left-14 xl:left-20"
+        >
+          <a
+            href="#saga"
+            className="flex items-center gap-2 text-[10px] tracking-[0.25em] uppercase text-muted-foreground/30 hover:text-gold transition-colors duration-200"
+          >
+            <ArrowDown className="w-3 h-3 animate-bounce" />
+            Descobrir
+          </a>
+        </motion.div>
       </div>
     </section>
   );
