@@ -110,7 +110,7 @@ export function ContactForm() {
             <div className="space-y-5 mb-10">
               {[
                 { icon: Phone, label: "WhatsApp", value: "(62) 99416-0930", href: WA_URL },
-                { icon: Mail, label: "E-mail", value: "rainiererocha@sagafinanceira.com.br", href: `mailto:rainiererocha@sagafinanceira.com.br` },
+                { icon: Mail, label: "E-mail", value: "rainiere.assessoria@sagafin.com.br", href: `mailto:rainiere.assessoria@sagafin.com.br` },
                 { icon: MapPin, label: "Atendimento", value: "Online para todo o Brasil", href: null },
               ].map(({ icon: Icon, label, value, href }) => (
                 <div key={label} className="flex items-center gap-4 group">
