@@ -11,6 +11,7 @@ const navLinks = [
   { label: "Simulador", href: "#simulador", isRoute: false },
   { label: "Serviços", href: "/servicos", isRoute: true },
   { label: "Blog", href: "/blog", isRoute: true },
+  { label: "Biblioteca", href: "/biblioteca", isRoute: true },
   { label: "Contato", href: "#contato", isRoute: false },
 ];
 
