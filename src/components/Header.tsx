@@ -2,9 +2,6 @@ import { useState, useEffect } from "react";
 import { Menu, X } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 
-const WA_URL =
-  "https://wa.me/5562994160930?text=Ol%C3%A1%20Rainiere%2C%20gostaria%20de%20agendar%20uma%20consultoria%20gratuita.";
-
 const navLinks = [
   { label: "Início", href: "/", isRoute: true },
   { label: "A Saga", href: "#saga", isRoute: false },
@@ -97,14 +94,8 @@ export function Header() {
             })}
           </nav>
 
-          {/* CTA */}
-          <div className="hidden md:block">
-            <a href={WA_URL} target="_blank" rel="noopener noreferrer">
-              <button className="px-5 py-2 text-[10.5px] tracking-[0.2em] uppercase font-medium text-gold border border-gold/32 hover:border-gold/60 hover:bg-gold/5 rounded-sm transition-all duration-200">
-                Agendar Consultoria
-              </button>
-            </a>
-          </div>
+          {/* CTA — hidden; entry points are in-page */}
+          <div className="hidden md:block" />
 
           {/* Mobile toggle */}
           <button
@@ -140,13 +131,6 @@ export function Header() {
                 </a>
               )
             )}
-            <div className="pt-4">
-              <a href={WA_URL} target="_blank" rel="noopener noreferrer">
-                <button className="w-full py-3 text-[10.5px] tracking-[0.2em] uppercase font-medium text-gold border border-gold/32 hover:bg-gold/5 transition-all duration-200">
-                  Agendar Consultoria
-                </button>
-              </a>
-            </div>
           </div>
         )}
       </div>

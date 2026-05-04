@@ -57,22 +57,19 @@ export function TestimonialsSection() {
         {/* Featured testimonial — pull-quote style */}
         <FadeInUp className="mb-16 lg:mb-20">
           <div className="relative border-t border-white/[0.06] pt-10 lg:pt-14">
-            {/* Giant open-quote character */}
-            <span
-              aria-hidden
-              className="absolute top-4 left-0 font-serif text-gold/12 leading-none select-none pointer-events-none"
-              style={{ fontSize: "clamp(6rem, 14vw, 13rem)", lineHeight: 0.8 }}
-            >
-              "
-            </span>
+            {/* Gold vertical accent bar */}
+            <div
+              className="absolute top-10 left-0 w-[3px] h-full max-h-32 rounded-full opacity-40"
+              style={{ background: "linear-gradient(to bottom, hsl(42 85% 55%), transparent)" }}
+            />
 
-            <div className="grid lg:grid-cols-[1fr_auto] gap-10 items-end pl-6 lg:pl-0">
+            <div className="grid lg:grid-cols-[1fr_auto] gap-10 items-end pl-7 lg:pl-8">
               <blockquote>
                 <p
                   className="font-serif italic text-foreground/85 leading-snug mb-8"
                   style={{ fontSize: "clamp(1.35rem, 2.8vw, 2.2rem)" }}
                 >
-                  "{featured.content}"
+                  {featured.content}
                 </p>
                 <div className="flex items-center gap-4">
                   <div
@@ -125,7 +122,7 @@ export function TestimonialsSection() {
                 ))}
               </div>
               <p className="text-foreground/70 text-sm leading-relaxed mb-6 italic font-serif">
-                "{t.content}"
+                {t.content}
               </p>
               <div className="flex items-center gap-3">
                 <div

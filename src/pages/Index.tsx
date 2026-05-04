@@ -3,6 +3,7 @@ import { Header } from "@/components/Header";
 import { HeroSection } from "@/components/HeroSection";
 import { SagaStorySection } from "@/components/SagaStorySection";
 import { SecretWeaponsSection } from "@/components/SecretWeaponsSection";
+import { MarketDigestBanner } from "@/components/MarketDigestBanner";
 import { CompoundInterestSimulator } from "@/components/CompoundInterestSimulator";
 import { InvestorProfileQuiz } from "@/components/InvestorProfileQuiz";
 import { FixedIncomeComparator } from "@/components/FixedIncomeComparator";
@@ -36,6 +37,9 @@ const Index = () => {
 
       {/* Armas Secretas do Assessor */}
       <SecretWeaponsSection />
+
+      {/* Diário Saga — Market Digest CTA */}
+      <MarketDigestBanner />
 
       {/* Simulador de Juros Compostos */}
       <section id="simulador" className="py-28 lg:py-36 bg-background relative overflow-hidden">
@@ -116,6 +120,9 @@ const Index = () => {
 
       {/* Depoimentos */}
       <TestimonialsSection />
+
+      {/* Diário Saga — 2ª entrada (após depoimentos, antes do form) */}
+      <MarketDigestBanner />
 
       {/* Formulário de Contato */}
       <ContactForm />

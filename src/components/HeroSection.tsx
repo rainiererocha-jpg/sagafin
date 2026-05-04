@@ -1,6 +1,7 @@
 import { ArrowDown, Phone, ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
 import heroImage from "@/assets/rainiere-hero.jpg";
+import { MarketDigestModal } from "@/components/MarketDigestModal";
 
 const WA_URL =
   "https://wa.me/5562994160930?text=Ol%C3%A1%20Rainiere%2C%20gostaria%20de%20agendar%20uma%20assessoria.";
@@ -159,12 +160,12 @@ export function HeroSection() {
               Agendar Assessoria
             </button>
           </a>
-          <a href="#saga">
-            <button className="flex items-center justify-center gap-2 px-7 py-3.5 border border-white/12 text-foreground/55 text-[11.5px] tracking-[0.16em] uppercase font-medium hover:text-foreground/85 hover:border-white/22 transition-all duration-200 w-full sm:w-auto">
-              Conhecer a Metodologia
+          <MarketDigestModal>
+            <button className="flex items-center justify-center gap-2 px-7 py-3.5 border border-gold/30 text-gold text-[11.5px] tracking-[0.16em] uppercase font-medium hover:bg-gold/8 hover:border-gold/55 transition-all duration-200 w-full sm:w-auto">
+              Receber Diário Saga
               <ArrowRight className="w-3.5 h-3.5" />
             </button>
-          </a>
+          </MarketDigestModal>
         </motion.div>
 
         {/* Stats row */}

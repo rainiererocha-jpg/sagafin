@@ -8,7 +8,7 @@ import { supabase } from "@/lib/supabase";
 import { FadeInUp, SlideInLeft, SlideInRight } from "@/components/ui/motion";
 
 const WA_URL =
-  "https://wa.me/5562994160930?text=Ol%C3%A1%20Rainiere%2C%20gostaria%20de%20agendar%20uma%20consultoria.";
+  "https://wa.me/5562994160930?text=Ol%C3%A1%20Rainiere%2C%20gostaria%20de%20agendar%20uma%20assessoria.";
 
 const benefits = [
   "Análise completa do seu perfil de investidor",

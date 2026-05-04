@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ScaleIn } from "@/components/ui/motion";
+import { MarketDigestModal } from "@/components/MarketDigestModal";
 
 interface Question {
   id: number;
@@ -234,19 +235,34 @@ export function InvestorProfileQuiz() {
             <p className="text-sm text-muted-foreground">
               Esta é uma sugestão genérica baseada nas suas respostas. Para uma
               estratégia personalizada considerando sua situação completa,
-              agende uma consultoria com nosso assessor.
+              agende uma assessoria gratuita com Rainiere Rocha.
             </p>
           </div>
         </div>
 
-        <div className="flex flex-col sm:flex-row gap-4">
-          <Button variant="gold" className="flex-1">
-            Agendar Consultoria Personalizada
-          </Button>
-          <Button variant="outline" onClick={resetQuiz} className="flex-1 border-border hover:bg-secondary">
-            <RotateCcw className="w-4 h-4 mr-2" />
-            Refazer Quiz
-          </Button>
+        <div className="flex flex-col gap-3">
+          <div className="flex flex-col sm:flex-row gap-3">
+            <a
+              href="https://wa.me/5562994160930?text=Ol%C3%A1%20Rainiere%2C%20fiz%20o%20quiz%20de%20perfil%20e%20gostaria%20de%20uma%20assessoria%20personalizada."
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex-1"
+            >
+              <Button variant="gold" className="w-full">
+                Agendar Assessoria Personalizada
+              </Button>
+            </a>
+            <Button variant="outline" onClick={resetQuiz} className="flex-1 border-border hover:bg-secondary">
+              <RotateCcw className="w-4 h-4 mr-2" />
+              Refazer Quiz
+            </Button>
+          </div>
+          <MarketDigestModal>
+            <button className="w-full py-2.5 text-[11px] tracking-[0.18em] uppercase font-medium text-muted-foreground hover:text-gold border border-border hover:border-gold/30 rounded-lg transition-all duration-200 flex items-center justify-center gap-2">
+              <TrendingUp className="w-3.5 h-3.5" />
+              Receber análises como essa todos os dias — grátis
+            </button>
+          </MarketDigestModal>
         </div>
       </ScaleIn>
     );
