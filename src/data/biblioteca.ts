@@ -21,6 +21,18 @@ export interface BibliotecaItem {
 }
 
 export const bibliotecaItems: BibliotecaItem[] = [
+  // ─── DESTAQUE — LANÇAMENTO ────────────────────────────────────────────────
+  {
+    id: "eb-family-holding",
+    titulo: "Family Holding — Guia Completo",
+    descricao: "Como estruturar seu patrimônio para reduzir imposto de herança em até 80%, eliminar inventário e proteger sua família. 12 capítulos com exemplos práticos para R$1mi, R$5mi e R$10mi de patrimônio — incluindo checklist de implementação e quando NÃO fazer.",
+    categoria: "Ebooks",
+    tipo: "ebook",
+    arquivo: "https://sagafin.com.br/ebooks/family-holding.pdf",
+    tags: ["holding", "ITCMD", "sucessão", "patrimônio", "tributação"],
+    destaque: true,
+  },
+
   // ─── EBOOKS FINANCEIROS ────────────────────────────────────────────────────
   {
     id: "eb-primeiros-passos",
