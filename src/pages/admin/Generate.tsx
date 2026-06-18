@@ -6,23 +6,23 @@ type Req = {
   id: string;
   created_at: string;
   type: string;
-  status: "queued" | "running" | "done" | "failed";
+  status: "queued" | "running" | "done" | "failed" | "manual";
   result_summary: string | null;
   error: string | null;
   finished_at: string | null;
 };
 
 const TYPES = [
-  { type: "daily_post", title: "Gerar 1 post agora", desc: "Reel ou carrossel do dia (alterna automático). Cai em Aprovações.", emoji: "📷" },
-  { type: "weekly_video", title: "Gerar vídeo da semana", desc: "Vídeo 60s com clone IA (próximo tema do WEEKLY_PLAN).", emoji: "🎬" },
-  { type: "batch_posts", title: "Gerar lote (10 posts)", desc: "10 posts estáticos IG+LinkedIn agendados — reabastece a fila.", emoji: "📦" },
+  { type: "daily_post", title: "Gerar 1 post agora", desc: "Reel ou carrossel do dia (alterna automático). Automático: cai em Aprovações.", emoji: "📷" },
+  { type: "weekly_video", title: "Gerar vídeo da semana", desc: "Vídeo 60s com clone IA (próximo tema do WEEKLY_PLAN). Roda no chat (geração criativa).", emoji: "🎬" },
+  { type: "batch_posts", title: "Gerar lote (10 posts)", desc: "10 posts estáticos IG+LinkedIn — reabastece a fila. Roda no chat (geração criativa).", emoji: "📦" },
 ];
 
 const STATUS_LABELS: Record<Req["status"], string> = {
-  queued: "Na fila", running: "Rodando", done: "Concluído", failed: "Falhou",
+  queued: "Na fila", running: "Rodando", done: "Concluído", failed: "Falhou", manual: "Rodar no chat",
 };
 const STATUS_COLORS: Record<Req["status"], string> = {
-  queued: "text-yellow-400", running: "text-blue-400", done: "text-teal-400", failed: "text-red-400",
+  queued: "text-yellow-400", running: "text-blue-400", done: "text-teal-400", failed: "text-red-400", manual: "text-purple-400",
 };
 
 export default function Generate() {
