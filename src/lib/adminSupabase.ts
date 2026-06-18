@@ -2,18 +2,23 @@ import { createClient } from "@supabase/supabase-js";
 
 // Projeto Supabase da automação/aprovações (separado do projeto do blog).
 // A anon/publishable key é segura no cliente — quem protege os dados é o RLS + Auth.
+// Projeto Sagafin (mesmo do site/blog). A central convive com posts/leads.
 const ADMIN_URL =
   (import.meta.env.VITE_ADMIN_SUPABASE_URL as string) ??
-  "https://ojesmvryqehcmaolkbsd.supabase.co";
+  (import.meta.env.VITE_SUPABASE_URL as string) ??
+  "https://vcmnfnsjgfbudypewvjx.supabase.co";
 const ADMIN_KEY =
   (import.meta.env.VITE_ADMIN_SUPABASE_ANON_KEY as string) ??
-  "sb_publishable_QSRU-LZga7oHclWgMM7OBQ_5wUfvZM2";
+  (import.meta.env.VITE_SUPABASE_ANON_KEY as string) ??
+  "sb_publishable_ls394GmNW335PK6ttwzWvQ_OV1Wd0xq";
 
 export const adminSupabase = createClient(ADMIN_URL, ADMIN_KEY, {
   auth: {
     persistSession: true,
     autoRefreshToken: true,
     detectSessionInUrl: true,
+    // storageKey distinto p/ não colidir com o client do site (mesmo projeto)
+    storageKey: "saga-studio-admin",
   },
 });
 
