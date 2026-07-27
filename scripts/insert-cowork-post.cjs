@@ -1,8 +1,9 @@
 'use strict';
 const https = require('https');
+const { require_env } = require('./env.cjs');
 
-const PROJECT = 'vcmnfnsjgfbudypewvjx';
-const SERVICE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZjbW5mbnNqZ2ZidWR5cGV3dmp4Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3NTg0ODU0MywiZXhwIjoyMDkxNDI0NTQzfQ.HKgW7-d_1zQ2lPM4jNviHqEwSPyW2wpNXyA89g_C3Ko';
+const PROJECT = require_env('SUPABASE_PROJECT_REF');
+const SERVICE_KEY = require_env('SUPABASE_SERVICE_ROLE_KEY');
 
 function insert(row) {
   return new Promise((resolve, reject) => {

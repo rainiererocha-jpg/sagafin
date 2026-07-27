@@ -2,9 +2,10 @@
 const puppeteer = require('puppeteer-core');
 const fs = require('fs');
 const https = require('https');
+const { require_env } = require('./env.cjs');
 
 const CHROME_PATH = 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe';
-const SERVICE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZjbW5mbnNqZ2ZidWR5cGV3dmp4Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3NTg0ODU0MywiZXhwIjoyMDkxNDI0NTQzfQ.HKgW7-d_1zQ2lPM4jNviHqEwSPyW2wpNXyA89g_C3Ko';
+const SERVICE_KEY = require_env('SUPABASE_SERVICE_ROLE_KEY');
 const FOOTER = '<div style="width:100%;font-family:Arial,sans-serif;font-size:8px;padding:4px 36px;display:flex;justify-content:space-between;align-items:center;border-top:0.5px solid #ccc;box-sizing:border-box;color:#aaa;"><span style="color:#B8962A;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;font-size:7.5px;">Rainiere Rocha &nbsp;·&nbsp; Assessor de Investimentos &nbsp;·&nbsp; XP Investimentos</span><span><span class="pageNumber"></span> / <span class="totalPages"></span></span></div>';
 
 const OUT = 'tmp-ebooks/primeiros-passos-do-investidor.pdf';
@@ -98,7 +99,7 @@ const CONTENT = `<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><
   const fileData = fs.readFileSync(OUT);
   await new Promise((resolve, reject) => {
     const req = https.request({
-      hostname: 'vcmnfnsjgfbudypewvjx.supabase.co',
+      hostname: `${require_env('SUPABASE_PROJECT_REF')}.supabase.co`,
       port: 443,
       path: '/storage/v1/object/biblioteca/ebooks/primeiros-passos-do-investidor.pdf',
       method: 'POST',

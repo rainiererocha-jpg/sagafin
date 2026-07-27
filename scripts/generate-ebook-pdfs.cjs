@@ -5,14 +5,14 @@ const puppeteer = require('puppeteer-core');
 const { createClient } = require('@supabase/supabase-js');
 const fs = require('fs');
 const path = require('path');
+const { require_env } = require('./env.cjs');
 
 // ─── Config ───────────────────────────────────────────────────────────────────
 
 const CHROME_PATH = 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe';
 
-const SUPABASE_URL = 'https://vcmnfnsjgfbudypewvjx.supabase.co';
-const SERVICE_ROLE_KEY =
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZjbW5mbnNqZ2ZidWR5cGV3dmp4Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3NTg0ODU0MywiZXhwIjoyMDkxNDI0NTQzfQ.HKgW7-d_1zQ2lPM4jNviHqEwSPyW2wpNXyA89g_C3Ko';
+const SUPABASE_URL = `https://${require_env('SUPABASE_PROJECT_REF')}.supabase.co`;
+const SERVICE_ROLE_KEY = require_env('SUPABASE_SERVICE_ROLE_KEY');
 
 const EBOOKS = [
   { id: 'eb-primeiros-passos',   file: 'primeiros-passos-do-investidor.pdf',  url: 'https://gamma.app/docs/rxxzyuwmvygd2ja' },
