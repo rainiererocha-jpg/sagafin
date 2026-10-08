@@ -29,27 +29,42 @@ async function yahoo(symbol) {
   const d = await getJson(
     `https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(symbol)}?interval=1d&range=5d`
   );
-  const m = d.chart.result[0].meta;
+  const r0 = d.chart.result[0];
+  const m = r0.meta;
   const price = m.regularMarketPrice;
-  const prev = m.chartPreviousClose ?? m.previousClose;
+  // `chartPreviousClose` é o fechamento ANTES da janela (5 pregões atrás).
+  // A variação do dia precisa ser contra o fechamento do pregão anterior:
+  // penúltimo valor válido da série de fechamentos.
+  const closes = (r0.indicators?.quote?.[0]?.close ?? []).filter((c) => Number.isFinite(c));
+  const prev =
+    m.regularMarketPreviousClose ??
+    m.previousClose ??
+    (closes.length >= 2 ? closes[closes.length - 2] : null);
   return { price, change: prev ? ((price - prev) / prev) * 100 : 0 };
 }
 
-const settled = (p) => p.then((v) => v, () => null);
+const settled = (name, p) =>
+  p.then(
+    (v) => v,
+    (e) => {
+      console.error(`quotes: fonte ${name} falhou: ${e?.message ?? e}`);
+      return null;
+    }
+  );
 
 export default async function handler(req, res) {
   res.setHeader("Cache-Control", "public, s-maxage=300, stale-while-revalidate=600");
 
   const [selic, cdi, ipca, fx, ibov, petr, vale, itub, bbdc] = await Promise.all([
-    settled(sgs(432)),
-    settled(sgs(4389)),
-    settled(sgs(433)),
-    settled(getJson("https://economia.awesomeapi.com.br/json/last/USD-BRL,EUR-BRL,XAU-USD")),
-    settled(yahoo("^BVSP")),
-    settled(yahoo("PETR4.SA")),
-    settled(yahoo("VALE3.SA")),
-    settled(yahoo("ITUB4.SA")),
-    settled(yahoo("BBDC4.SA")),
+    settled("selic", sgs(432)),
+    settled("cdi", sgs(4389)),
+    settled("ipca", sgs(433)),
+    settled("awesomeapi", getJson("https://economia.awesomeapi.com.br/json/last/USD-BRL,EUR-BRL,XAU-USD")),
+    settled("ibov", yahoo("^BVSP")),
+    settled("petr4", yahoo("PETR4.SA")),
+    settled("vale3", yahoo("VALE3.SA")),
+    settled("itub4", yahoo("ITUB4.SA")),
+    settled("bbdc4", yahoo("BBDC4.SA")),
   ]);
 
   const q = {};
