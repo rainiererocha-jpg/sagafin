@@ -283,7 +283,6 @@ async function gerarTexto(prompt) {
       body: JSON.stringify({
         model: MODEL,
         max_tokens: 2000,
-        temperature: 0.5,
         messages: [{ role: "user", content: prompt }],
       }),
     },
