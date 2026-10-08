@@ -34,11 +34,13 @@ export function MarketDigestModal({ children }: Props) {
     objetivo: "",
   });
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const reset = () => {
     setOpen(false);
     setTimeout(() => {
       setStep(1);
+      setError(null);
       setFormData({ name: "", email: "", patrimonio: "", objetivo: "" });
     }, 350);
   };
@@ -50,21 +52,35 @@ export function MarketDigestModal({ children }: Props) {
 
   const handleStep2 = async () => {
     setLoading(true);
+    setError(null);
     try {
-      if (supabase) {
-        await supabase.from("leads").insert({
-          name: formData.name,
-          email: formData.email,
-          investment_range: formData.patrimonio,
-          message: `Objetivo: ${formData.objetivo} | Canal: Diário Saga`,
-          source: "newsletter",
-        });
+      if (!supabase) {
+        throw new Error("Cadastro indisponível no momento. Tente novamente mais tarde.");
       }
-    } catch {
-      // silent fail — still show success
+
+      // 1) Assinante do Diário (reativa quem já se descadastrou).
+      const { error: subError } = await supabase.rpc("subscribe_daily", {
+        p_email: formData.email,
+        p_name: formData.name,
+      });
+      if (subError) throw subError;
+
+      // 2) Lead comercial com perfil (patrimônio/objetivo).
+      const { error: leadError } = await supabase.from("leads").insert({
+        name: formData.name,
+        email: formData.email,
+        investment_range: formData.patrimonio,
+        message: `Objetivo: ${formData.objetivo} | Canal: Diário Saga`,
+        source: "newsletter",
+      });
+      if (leadError) console.error("[Diário Saga] lead não salvo:", leadError.message);
+
+      setStep(3);
+    } catch (err) {
+      console.error("[Diário Saga] inscrição falhou:", err);
+      setError("Não foi possível concluir o cadastro. Tente novamente em instantes.");
     } finally {
       setLoading(false);
-      setStep(3);
     }
   };
 
@@ -177,8 +193,9 @@ export function MarketDigestModal({ children }: Props) {
                           </button>
                         </form>
 
-                        <p className="text-[11px] text-center text-white/18 mt-4 tracking-wide">
-                          Cancele quando quiser · Sem spam
+                        <p className="text-[11px] text-center text-white/18 mt-4 tracking-wide leading-relaxed">
+                          Ao continuar, você autoriza o uso do seu e-mail apenas para o envio do Diário Saga (LGPD).
+                          <br />Cancele quando quiser · Sem spam
                         </p>
                       </motion.div>
                     )}
@@ -252,6 +269,12 @@ export function MarketDigestModal({ children }: Props) {
                           </div>
                         </div>
 
+                        {error && (
+                          <p role="alert" className="mt-5 text-[12px] text-red-400/85 leading-relaxed">
+                            {error}
+                          </p>
+                        )}
+
                         <button
                           type="button"
                           onClick={handleStep2}
@@ -259,7 +282,7 @@ export function MarketDigestModal({ children }: Props) {
                           className="mt-6 w-full py-3.5 rounded-lg text-background text-[11px] tracking-[0.2em] uppercase font-semibold flex items-center justify-center gap-2 transition-opacity disabled:opacity-38 disabled:cursor-not-allowed"
                           style={{ background: "linear-gradient(135deg, hsl(42 85% 55%), hsl(38 78% 42%))" }}
                         >
-                          {loading ? "Salvando..." : (
+                          {loading ? "Salvando..." : error ? "Tentar novamente" : (
                             <>Personalizar Meu Diário <ArrowRight className="w-3.5 h-3.5" /></>
                           )}
                         </button>

@@ -34,13 +34,13 @@ export function Footer() {
                   Saga Financeira
                 </p>
                 <p className="text-[9.5px] tracking-[0.22em] uppercase text-gold/45 font-medium mt-0.5">
-                  Rainiere Rocha · XP Investimentos
+                  Rainiere Rocha · InvestSmart | XP
                 </p>
               </div>
             </div>
             <p className="text-muted-foreground/55 text-[12.5px] leading-relaxed max-w-xs">
-              Assessoria de investimentos credenciada à XP Investimentos, oferecendo soluções
-              personalizadas para construção e proteção do seu patrimônio em todo o Brasil.
+              Assessoria de investimentos pela InvestSmart, escritório credenciado à XP Investimentos,
+              oferecendo soluções personalizadas para construção e proteção do seu patrimônio em todo o Brasil.
             </p>
           </div>
 
@@ -96,11 +96,21 @@ export function Footer() {
 
         {/* Disclaimer */}
         <div className="border-t border-white/[0.05] pt-8 mb-8">
-          <p className="text-[11px] text-muted-foreground/28 leading-relaxed max-w-3xl">
-            A XP Investimentos CCTVM S/A, inscrita sob o CNPJ: 02.332.886/0001-04, é uma instituição
-            financeira autorizada a funcionar pelo Banco Central do Brasil. Este site não constitui
-            oferta de produto ou serviço financeiro. Rentabilidade passada não garante rentabilidade
-            futura. Investimentos envolvem riscos e podem resultar em perdas.
+          <p className="text-[11px] text-muted-foreground/28 leading-relaxed max-w-4xl">
+            Rainiere Rocha é assessor de investimentos vinculado à Invest Smart Assessor de Investimento Ltda.,
+            inscrita sob o CNPJ nº 19.438.577/0001-08, empresa de Assessoria de Investimento devidamente
+            registrada na Comissão de Valores Mobiliários na forma da Resolução CVM 178/23, que mantém contrato
+            de distribuição de produtos financeiros com a XP Investimentos Corretora de Câmbio, Títulos e Valores
+            Mobiliários S.A. (&quot;XP&quot;) e pode, por conta e ordem dos seus clientes, operar no mercado de capitais
+            segundo a legislação vigente. Na forma da legislação da CVM, o Assessor de Investimento não pode
+            administrar ou gerir o patrimônio de investidores. O conteúdo deste site tem caráter meramente
+            educacional e informativo e não constitui oferta, solicitação de compra ou venda ou recomendação de
+            qualquer ativo financeiro, nem relatório de análise (Resolução CVM 20). O investimento em ações é um
+            investimento de risco e rentabilidade passada não é garantia de rentabilidade futura. Na realização de
+            operações com derivativos existe a possibilidade de perdas superiores aos valores investidos, podendo
+            resultar em significativas perdas patrimoniais. Antes de investir, verifique a adequação dos produtos
+            ao seu perfil de investidor. Para informações e dúvidas sobre produtos, contate seu assessor de
+            investimentos. Para reclamações, contate a Ouvidoria da XP pelo telefone 0800 722 3730.
           </p>
         </div>
 
