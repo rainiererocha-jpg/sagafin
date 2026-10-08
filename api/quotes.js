@@ -72,10 +72,23 @@ export default async function handler(req, res) {
     if (value != null && Number.isFinite(value)) q[key] = { value, change };
   };
 
+  // AwesomeAPI devolve 429 com frequência para os IPs compartilhados da Vercel;
+  // quando isso acontece, busca os mesmos pares no Yahoo.
+  const [usdY, eurY, xauY] = fx
+    ? [null, null, null]
+    : await Promise.all([
+        settled("usdbrl-yahoo", yahoo("BRL=X")),
+        settled("eurbrl-yahoo", yahoo("EURBRL=X")),
+        settled("xau-yahoo", yahoo("GC=F")),
+      ]);
+
   if (ibov) put("IBOV", ibov.price, ibov.change);
   if (fx?.USDBRL) put("USD/BRL", parseFloat(fx.USDBRL.bid), parseFloat(fx.USDBRL.pctChange));
+  else if (usdY) put("USD/BRL", usdY.price, usdY.change);
   if (fx?.EURBRL) put("EUR/BRL", parseFloat(fx.EURBRL.bid), parseFloat(fx.EURBRL.pctChange));
+  else if (eurY) put("EUR/BRL", eurY.price, eurY.change);
   if (fx?.XAUUSD) put("XAU", parseFloat(fx.XAUUSD.bid), parseFloat(fx.XAUUSD.pctChange));
+  else if (xauY) put("XAU", xauY.price, xauY.change);
   if (petr) put("PETR4", petr.price, petr.change);
   if (vale) put("VALE3", vale.price, vale.change);
   if (itub) put("ITUB4", itub.price, itub.change);
