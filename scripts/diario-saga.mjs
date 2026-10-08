@@ -17,8 +17,9 @@ const FORCE_RUN = process.env.FORCE_RUN === "true";
 const DRY_RUN = process.env.DRY_RUN === "true";
 const MODEL = "claude-sonnet-5-5";
 const MIN_WORDS = 200;
-const FROM = "Rainiere Rocha · Saga Financeira <diario@sagafin.com.br>";
-const REPLY_TO = "contato@sagafin.com.br";
+// Remetente no domínio mesalva.app (verificado no Resend); sobrescrevível por env.
+const FROM = process.env.MAIL_FROM || "Rainiere Rocha · Saga Financeira <diario@mesalva.app>";
+const REPLY_TO = process.env.MAIL_REPLY_TO || "contato@sagafin.com.br";
 
 const RSS_FEEDS = [
   { nome: "InfoMoney", url: "https://www.infomoney.com.br/feed/" },
