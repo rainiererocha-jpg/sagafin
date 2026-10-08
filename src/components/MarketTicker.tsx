@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { TrendingUp, TrendingDown } from "lucide-react";
 
 interface TickerItem {
@@ -7,21 +8,81 @@ interface TickerItem {
   change: number;
 }
 
-const marketData: TickerItem[] = [
-  { symbol: "IBOV", name: "Ibovespa", value: "127.450", change: 0.85 },
-  { symbol: "USD/BRL", name: "Dólar", value: "5,08", change: -0.32 },
-  { symbol: "EUR/BRL", name: "Euro", value: "5,52", change: -0.18 },
-  { symbol: "XAU", name: "Ouro", value: "2.635,40", change: 1.24 },
-  { symbol: "PETR4", name: "Petrobras", value: "38,45", change: 2.15 },
-  { symbol: "VALE3", name: "Vale", value: "62,80", change: -0.95 },
-  { symbol: "ITUB4", name: "Itaú", value: "34,22", change: 0.45 },
-  { symbol: "BBDC4", name: "Bradesco", value: "14,85", change: -0.28 },
-  { symbol: "SELIC", name: "Taxa Selic", value: "10,50%", change: 0 },
-  { symbol: "CDI", name: "CDI Anual", value: "10,40%", change: 0 },
+const META: { symbol: string; name: string }[] = [
+  { symbol: "IBOV", name: "Ibovespa" },
+  { symbol: "USD/BRL", name: "Dólar" },
+  { symbol: "EUR/BRL", name: "Euro" },
+  { symbol: "XAU", name: "Ouro (US$/oz)" },
+  { symbol: "PETR4", name: "Petrobras" },
+  { symbol: "VALE3", name: "Vale" },
+  { symbol: "ITUB4", name: "Itaú" },
+  { symbol: "BBDC4", name: "Bradesco" },
+  { symbol: "SELIC", name: "Meta Selic" },
+  { symbol: "CDI", name: "CDI Anual" },
 ];
 
+const PERCENT = new Set(["SELIC", "CDI"]);
+const REFRESH_MS = 5 * 60 * 1000;
+
+interface Quote {
+  value: number;
+  change: number;
+}
+
+function format(symbol: string, value: number) {
+  if (PERCENT.has(symbol)) return `${value.toFixed(2).replace(".", ",")}%`;
+  const digits = symbol === "IBOV" ? 0 : 2;
+  return value.toLocaleString("pt-BR", {
+    minimumFractionDigits: digits,
+    maximumFractionDigits: digits,
+  });
+}
+
+// Usado apenas se /api/quotes estiver indisponível.
+const FALLBACK: Record<string, Quote> = {
+  SELIC: { value: 13.75, change: 0 },
+  CDI: { value: 13.65, change: 0 },
+};
+
+function useQuotes() {
+  const [quotes, setQuotes] = useState<Record<string, Quote>>(FALLBACK);
+  const [updatedAt, setUpdatedAt] = useState<Date | null>(null);
+
+  useEffect(() => {
+    let alive = true;
+    const load = async () => {
+      try {
+        const r = await fetch("/api/quotes");
+        if (!r.ok) throw new Error(String(r.status));
+        const d = await r.json();
+        if (alive && d?.quotes && Object.keys(d.quotes).length) {
+          setQuotes(d.quotes);
+          setUpdatedAt(new Date(d.updatedAt));
+        }
+      } catch {
+        /* mantém o último valor conhecido */
+      }
+    };
+    load();
+    const id = setInterval(load, REFRESH_MS);
+    return () => {
+      alive = false;
+      clearInterval(id);
+    };
+  }, []);
+
+  return { quotes, updatedAt };
+}
+
 export function MarketTicker() {
-  const doubled = [...marketData, ...marketData];
+  const { quotes, updatedAt } = useQuotes();
+  const items: TickerItem[] = META.filter((m) => quotes[m.symbol]).map((m) => ({
+    ...m,
+    value: format(m.symbol, quotes[m.symbol].value),
+    change: quotes[m.symbol].change,
+  }));
+  const doubled = [...items, ...items];
+  const hora = updatedAt?.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
 
   return (
     <div className="w-full overflow-hidden bg-black/60 backdrop-blur-sm border-b border-white/[0.06] py-[9px]">
@@ -58,6 +119,11 @@ export function MarketTicker() {
           </div>
         ))}
       </div>
+      {hora && (
+        <span className="sr-only" aria-live="off">
+          Cotações atualizadas às {hora}
+        </span>
+      )}
     </div>
   );
 }

@@ -1,3 +1,24 @@
+async function marketContext(req) {
+  const data = new Date().toLocaleDateString("pt-BR", { timeZone: "America/Sao_Paulo" });
+  try {
+    const host = req.headers["x-forwarded-host"] || req.headers.host;
+    const r = await fetch(`https://${host}/api/quotes`);
+    const { quotes } = await r.json();
+    const f = (k, d = 2) =>
+      quotes[k] ? quotes[k].value.toLocaleString("pt-BR", { minimumFractionDigits: d, maximumFractionDigits: d }) : "n/d";
+    const linhas = [
+      `- Meta Selic: ${f("SELIC")}% ao ano`,
+      `- CDI: ${f("CDI")}% ao ano`,
+      `- IPCA último mês: ${f("IPCA")}%`,
+      `- Ibovespa: ${f("IBOV", 0)} pontos`,
+      `- Dólar: R$ ${f("USD/BRL")}`,
+    ].join("\n");
+    return { data, linhas };
+  } catch {
+    return { data, linhas: "- Dados de mercado em tempo real indisponíveis; não cite números de mercado específicos." };
+  }
+}
+
 export default async function handler(req, res) {
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method not allowed" });
@@ -28,6 +49,8 @@ export default async function handler(req, res) {
     "protecao": "proteção do patrimônio",
   }[objetivo] || objetivo;
 
+  const contexto = await marketContext(req);
+
   const prompt = `Você é o sistema de análise de carteira do assessor Rainiere Rocha, credenciado XP Investimentos.
 
 Analise a carteira abaixo e gere um diagnóstico profissional, personalizado e acionável.
@@ -41,12 +64,8 @@ PERFIL DO INVESTIDOR:
 CARTEIRA ATUAL INFORMADA PELO INVESTIDOR:
 ${carteira}
 
-CONTEXTO DE MERCADO ATUAL (Abril 2026):
-- Selic: 13,75% ao ano
-- IPCA acumulado 12 meses: ~5,5%
-- CDI: ~13,65% ao ano
-- Ibovespa: próximo de 130.000 pontos
-- Dólar: ~R$ 5,08
+CONTEXTO DE MERCADO ATUAL (${contexto.data}):
+${contexto.linhas}
 
 Gere um diagnóstico estruturado com os seguintes títulos exatos em HTML:
 
