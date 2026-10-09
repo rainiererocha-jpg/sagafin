@@ -9,12 +9,15 @@
 import { readFile } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
+import { escolherFeature, blocoEmail, blocoPost, EMAIL_HEAD_EXTRAS } from "./mesalva-ad.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const SITE_URL = (process.env.SITE_URL || "https://sagafin.com.br").replace(/\/$/, "");
 const FORCE_RUN = process.env.FORCE_RUN === "true";
 const DRY_RUN = process.env.DRY_RUN === "true";
+// Bloco publicitário do MeSalva (uma funcionalidade por dia); MESALVA_AD=off desliga.
+const MESALVA_AD = process.env.MESALVA_AD !== "off";
 const MODEL = "claude-sonnet-5-5";
 const MIN_WORDS = 200;
 // Remetente no domínio mesalva.app (verificado no Resend); sobrescrevível por env.
@@ -331,13 +334,13 @@ function rodapePost() {
   return `<hr /><p><em>O Diário Saga é produzido todos os dias úteis com apoio de inteligência artificial a partir de dados públicos e revisado sob responsabilidade de Rainiere Rocha · InvestSmart | XP. Conteúdo educacional; não é recomendação de investimento.</em></p><p style="font-size:12px;opacity:.7">${escapeHtml(AVISO_LEGAL)}</p>`;
 }
 
-async function publicarPost({ hoje, slug, texto }) {
+async function publicarPost({ hoje, slug, texto, feature }) {
   const minutos = Math.max(2, Math.round(texto.palavras / 180));
   const body = {
     slug,
     titulo: texto.titulo,
     resumo: texto.resumo,
-    conteudo_html: `${texto.html}\n${rodapePost()}`,
+    conteudo_html: `${texto.html}\n${feature ? blocoPost(feature) + "\n" : ""}${rodapePost()}`,
     data_publicacao: hoje,
     tempo_leitura: `${minutos} min`,
     tags: ["diario-saga"],
@@ -373,11 +376,11 @@ async function listarAssinantes() {
 
 // ---------------------------------------------------------------- 5. Resend
 
-function htmlEmail({ hoje, slug, texto, unsubscribeUrl, nome }) {
+function htmlEmail({ hoje, slug, texto, unsubscribeUrl, nome, feature }) {
   const saudacao = nome ? `Bom dia, ${escapeHtml(nome.split(" ")[0])}.` : "Bom dia.";
   const postUrl = `${SITE_URL}/blog/${slug}`;
   return `<!doctype html>
-<html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${escapeHtml(texto.titulo)}</title></head>
+<html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${escapeHtml(texto.titulo)}</title>${EMAIL_HEAD_EXTRAS}</head>
 <body style="margin:0;padding:0;background:#f4f2ee;">
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f4f2ee;padding:24px 12px;">
 <tr><td align="center">
@@ -396,6 +399,7 @@ function htmlEmail({ hoje, slug, texto, unsubscribeUrl, nome }) {
     <p style="margin:22px 0 10px;font-family:Arial,Helvetica,sans-serif;font-size:13px;"><a href="${postUrl}" style="color:#9a7a2e;">Ler no site →</a></p>
     <p style="margin:0 0 18px;font-size:15px;">Bom dia e bons investimentos,<br><strong>Rainiere Rocha</strong><br><span style="font-family:Arial,Helvetica,sans-serif;font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:#9a7a2e;">Assessor de investimentos · InvestSmart | XP</span></p>
   </td></tr>
+  ${feature ? blocoEmail(feature) : ""}
   <tr><td style="padding:16px 28px 24px;border-top:1px solid #e8e4dc;font-family:Arial,Helvetica,sans-serif;font-size:11px;line-height:1.55;color:#6f6a62;">
     <p style="margin:0 0 10px;"><strong>Aviso legal.</strong> ${escapeHtml(AVISO_LEGAL)}</p>
     <p style="margin:0;">Você recebe este e-mail porque se cadastrou em sagafin.com.br; seus dados são usados apenas para este envio (LGPD). Para cancelar, <a href="${unsubscribeUrl}" style="color:#9a7a2e;">clique aqui</a>.</p>
@@ -405,7 +409,7 @@ function htmlEmail({ hoje, slug, texto, unsubscribeUrl, nome }) {
 </body></html>`;
 }
 
-async function enviarEmails({ hoje, slug, texto, assinantes }) {
+async function enviarEmails({ hoje, slug, texto, assinantes, feature }) {
   if (!assinantes.length) {
     console.log("ℹ Nenhum assinante ativo; e-mail não enviado.");
     return { enviados: 0, lotesComErro: 0 };
@@ -422,7 +426,7 @@ async function enviarEmails({ hoje, slug, texto, assinantes }) {
         to: [s.email],
         reply_to: REPLY_TO,
         subject: assunto,
-        html: htmlEmail({ hoje, slug, texto, unsubscribeUrl, nome: s.name }),
+        html: htmlEmail({ hoje, slug, texto, unsubscribeUrl, nome: s.name, feature }),
         headers: {
           "List-Unsubscribe": `<${unsubscribeUrl}>`,
           "List-Unsubscribe-Post": "List-Unsubscribe=One-Click",
@@ -470,17 +474,20 @@ async function main() {
   const [noticias, agenda] = await Promise.all([coletarNoticias(), proximosEventos(hoje)]);
 
   const texto = await gerarTexto(montarPrompt({ hoje, cotacoes, noticias, agenda }));
+  const feature = MESALVA_AD ? escolherFeature(hoje) : null;
+  console.log(feature ? `✓ Peça MeSalva do dia: ${feature.id} — ${feature.titulo}` : "ℹ Peça MeSalva desligada (MESALVA_AD=off).");
 
   if (DRY_RUN) {
     console.log("\n--- TÍTULO ---\n" + texto.titulo + "\n--- RESUMO ---\n" + texto.resumo + "\n--- HTML ---\n" + texto.html);
+    if (feature) console.log("\n--- BLOCO MESALVA (e-mail) ---\n" + blocoEmail(feature));
     console.log("\nℹ DRY RUN: nada publicado nem enviado.");
     return;
   }
 
-  await publicarPost({ hoje, slug, texto });
+  await publicarPost({ hoje, slug, texto, feature });
   const assinantes = await listarAssinantes();
   console.log(`✓ Assinantes ativos: ${assinantes.length}`);
-  const { enviados, lotesComErro } = await enviarEmails({ hoje, slug, texto, assinantes });
+  const { enviados, lotesComErro } = await enviarEmails({ hoje, slug, texto, assinantes, feature });
   console.log(`\nConcluído: post publicado, ${enviados} e-mails aceitos pelo Resend.`);
   if (lotesComErro) fail(`${lotesComErro} lote(s) de e-mail falharam (post já está publicado).`);
 }

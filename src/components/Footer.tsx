@@ -90,6 +90,18 @@ export function Footer() {
                   <ExternalLink className="w-2.5 h-2.5" />
                 </a>
               </li>
+              <li>
+                <a
+                  href="https://mesalva.app/?utm_source=sagafin&utm_medium=site&utm_campaign=footer&utm_content=link"
+                  target="_blank"
+                  rel="noopener"
+                  aria-label="MeSalva — app de finanças pessoais (abre em nova aba)"
+                  className="text-[12.5px] text-muted-foreground/50 hover:text-gold transition-colors duration-200 inline-flex items-center gap-1.5"
+                >
+                  MeSalva — app de finanças pessoais
+                  <ExternalLink className="w-2.5 h-2.5" />
+                </a>
+              </li>
             </ul>
           </div>
         </div>

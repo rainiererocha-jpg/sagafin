@@ -3,6 +3,7 @@ import { Download, Search, BookOpen, Zap, Star, X, ArrowRight, Lock, CheckCircle
 import { useForm } from "react-hook-form";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
+import { MesalvaBanner } from "@/components/MesalvaBanner";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
 import { BackToTop } from "@/components/BackToTop";
 import { FadeInUp } from "@/components/ui/motion";
@@ -964,6 +965,10 @@ export default function Biblioteca() {
             )}
           </div>
         </section>
+
+        <div className="container mx-auto px-6 lg:px-10 pb-12">
+          <MesalvaBanner variant="strip" campaign="biblioteca" />
+        </div>
 
         {/* ─── CTA Final ────────────────────────────────────────────────── */}
         <section className="py-24 border-t border-white/[0.05]">

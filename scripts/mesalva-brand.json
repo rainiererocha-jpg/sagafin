@@ -1,0 +1,29 @@
+{
+  "nome": "MeSalva",
+  "url": "https://mesalva.app/",
+  "signupUrl": "https://mesalva.app/auth?mode=signup",
+  "font": {
+    "family": "Plus Jakarta Sans",
+    "stack": "'Plus Jakarta Sans', system-ui, -apple-system, 'Segoe UI', Arial, sans-serif",
+    "emailStack": "'Plus Jakarta Sans', Arial, Helvetica, sans-serif",
+    "googleFontsParam": "Plus+Jakarta+Sans:wght@500;700;800"
+  },
+  "light": { "bg": "#F7F4FB", "card": "#FFFFFF", "ink": "#0E1436", "ink2": "#1E2450", "muted": "#6A6E8E", "border": "#DDDEE7" },
+  "dark": { "bg": "#0C0E1C", "card": "#12162B", "panel": "#20243C", "border": "#292B3D", "ink": "#F0F2F5", "muted": "#8B8EA7", "primary": "#8770DB", "secondary": "#3DB8AB" },
+  "cham": ["#2FB3A6", "#3FA2E0", "#6B4BD1", "#C23C88", "#E86B3A", "#F2A93A"],
+  "color": { "teal": "#2FB3A6", "blue": "#3FA2E0", "violet": "#6B4BD1", "magenta": "#C23C88", "copper": "#E86B3A", "amber": "#F2A93A" },
+  "gradient": {
+    "cham": "linear-gradient(95deg,#2FB3A6 0%,#3FA2E0 20%,#6B4BD1 45%,#C23C88 70%,#E86B3A 88%,#F2A93A 100%)",
+    "mint": "linear-gradient(135deg,#2FB3A6,#3FA2E0)",
+    "purple": "linear-gradient(135deg,#6B4BD1,#C23C88)"
+  },
+  "shadowCta": "0 14px 32px -12px rgba(194,60,136,.55), 0 6px 18px -8px rgba(47,179,166,.45)",
+  "radius": 14,
+  "promessa": "Grátis para começar · Sem cartão · 14 dias de teste · Dados criptografados",
+  "assinatura": "Saúde financeira para brasileiros. Feito no Brasil, para brasileiros.",
+  "compliance": "Publicidade · MeSalva é um produto independente de Rainiere Rocha e não é serviço da InvestSmart/XP.",
+  "planos": {
+    "individual": { "mensal": "R$ 19,90", "anual": "R$ 14,90", "economia": "R$ 60/ano", "pessoas": "1 pessoa" },
+    "familia": { "mensal": "R$ 29,90", "anual": "R$ 19,90", "economia": "R$ 120/ano", "pessoas": "2 pessoas" }
+  }
+}
