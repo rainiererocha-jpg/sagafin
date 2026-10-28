@@ -12,7 +12,7 @@ export function EwzComposition({ data }: { data: LiveQuotes | undefined }) {
 
   const { altas, setores, top10 } = useMemo(() => {
     const altas = holdings
-      .filter((h) => h.changePct != null)
+      .filter((h) => h.changePct != null && h.changePct > 0)
       .sort((a, b) => (b.changePct as number) - (a.changePct as number))
       .slice(0, 5);
     const map = new Map<string, number>();
@@ -69,7 +69,9 @@ export function EwzComposition({ data }: { data: LiveQuotes | undefined }) {
               ))}
             </ul>
           ) : (
-            <p className="mt-3 text-sm text-muted-foreground">Sem cotações dos papéis agora.</p>
+            <p className="mt-3 text-sm text-muted-foreground">
+              {holdings.some((h) => h.changePct != null) ? "Nenhum papel em alta agora." : "Sem cotações dos papéis agora."}
+            </p>
           )}
         </div>
 
