@@ -9,6 +9,11 @@ import { TradeStudyCard } from "@/components/trading/TradeStudyCard";
 import { TrackRecordTable } from "@/components/trading/TrackRecordTable";
 import { MethodologySection } from "@/components/trading/MethodologySection";
 import { BrasilNaTastySection } from "@/components/trading/BrasilNaTastySection";
+import { LivePanel } from "@/components/trading/LivePanel";
+import { LiveChart } from "@/components/trading/LiveChart";
+import { EwzComposition } from "@/components/trading/EwzComposition";
+import { EwzInvestorGuide } from "@/components/trading/EwzInvestorGuide";
+import { useLiveQuotes } from "@/hooks/useLiveQuotes";
 import {
   listStudies, getTrackRecord, getContexto, type StudyPublic, type TrackRecord, type Contexto, type Horizon,
   HORIZON_LABEL, HORIZON_ORDER, fmtNum, fmtPct,
@@ -48,6 +53,7 @@ export default function Trading() {
   const [ctx, setCtx] = useState<Contexto | null>(null);
   const [loading, setLoading] = useState(true);
   const [tab, setTab] = useState<Horizon>("monthly");
+  const live = useLiveQuotes();
 
   useEffect(() => {
     Promise.allSettled([listStudies(), getTrackRecord(), getContexto()]).then(([s, t, c]) => {
@@ -93,6 +99,15 @@ export default function Trading() {
       <section className="pb-10">
         <div className="container mx-auto px-4 max-w-6xl">
           <ContextBar ctx={ctx} />
+        </div>
+      </section>
+
+      <section id="ao-vivo" className="pb-12">
+        <div className="container mx-auto px-4 max-w-6xl space-y-8">
+          <LivePanel data={live.data} loading={live.isLoading} error={live.isError} />
+          <LiveChart data={live.data} />
+          <EwzComposition data={live.data} />
+          <EwzInvestorGuide />
         </div>
       </section>
 
