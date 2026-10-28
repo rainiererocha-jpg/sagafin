@@ -12,7 +12,7 @@ export function env(name, fallback) {
     if (fallback !== undefined) return fallback;
     fail(`Variável ${name} não configurada.`);
   }
-  return v;
+  return v.trim();
 }
 
 /** Data de hoje (YYYY-MM-DD) num fuso IANA. Default: America/Sao_Paulo. */
