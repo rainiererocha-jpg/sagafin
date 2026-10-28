@@ -10,6 +10,13 @@ import { readFile } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
 import { escolherFeature, blocoEmail, blocoPost, EMAIL_HEAD_EXTRAS } from "./mesalva-ad.mjs";
+import {
+  fail, env, hojeISO, dataExtenso, ddmm, fetchJson, stripHtml, contarPalavras,
+  escapeHtml, fmt, fmtVar, extrairJson,
+} from "./lib/util.mjs";
+import { sbHeaders } from "./lib/supabase.mjs";
+import { AVISO_LEGAL, PROIBIDAS } from "./lib/compliance.mjs";
+import { carregarFeriados, diaDePregao } from "./lib/calendario.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -30,112 +37,13 @@ const RSS_FEEDS = [
   { nome: "Valor Econômico", url: "https://valor.globo.com/rss/" },
 ];
 
-const AVISO_LEGAL =
-  "Rainiere Rocha é assessor de investimentos vinculado à Invest Smart Assessor de Investimento Ltda., inscrita sob o CNPJ nº 19.438.577/0001-08, empresa de Assessoria de Investimento devidamente registrada na Comissão de Valores Mobiliários na forma da Resolução CVM 178/23, que mantém contrato de distribuição de produtos financeiros com a XP Investimentos Corretora de Câmbio, Títulos e Valores Mobiliários S.A. (\"XP\") e pode, por conta e ordem dos seus clientes, operar no mercado de capitais segundo a legislação vigente. Na forma da legislação da CVM, o Assessor de Investimento não pode administrar ou gerir o patrimônio de investidores. O Diário Saga é um informativo de caráter meramente educacional e informativo, elaborado com apoio de inteligência artificial a partir de dados públicos (Banco Central do Brasil, B3 e agências de notícias); não constitui e não deve ser interpretado como oferta, solicitação de compra ou venda ou recomendação de qualquer ativo financeiro, nem como relatório de análise (Resolução CVM 20) ou consultoria de valores mobiliários. O investimento em ações é um investimento de risco e rentabilidade passada não é garantia de rentabilidade futura. Na realização de operações com derivativos existe a possibilidade de perdas superiores aos valores investidos, podendo resultar em significativas perdas patrimoniais. Antes de investir, verifique a adequação dos produtos ao seu perfil de investidor. Para informações e dúvidas sobre produtos, contate seu assessor de investimentos. Para reclamações, contate a Ouvidoria da XP pelo telefone 0800 722 3730.";
-
-// ---------------------------------------------------------------- utilitários
-
-function fail(msg) {
-  console.error(`✖ ${msg}`);
-  process.exit(1);
-}
-
-function env(name) {
-  const v = process.env[name];
-  if (!v) fail(`Variável ${name} não configurada.`);
-  return v;
-}
-
-function hojeISO() {
-  // TZ=America/Sao_Paulo está definido no workflow; mesmo assim formata explicitamente.
-  const p = new Intl.DateTimeFormat("en-CA", {
-    timeZone: "America/Sao_Paulo",
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-  }).formatToParts(new Date());
-  const g = (t) => p.find((x) => x.type === t).value;
-  return `${g("year")}-${g("month")}-${g("day")}`;
-}
-
-function dataExtenso(iso) {
-  const d = new Date(`${iso}T12:00:00-03:00`);
-  return d.toLocaleDateString("pt-BR", {
-    weekday: "long",
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-    timeZone: "America/Sao_Paulo",
-  });
-}
-
-function ddmm(iso) {
-  const [, m, d] = iso.split("-");
-  return `${d}/${m}`;
-}
-
-async function fetchJson(url, opts = {}, timeoutMs = 20000) {
-  const ctrl = new AbortController();
-  const t = setTimeout(() => ctrl.abort(), timeoutMs);
-  try {
-    const r = await fetch(url, { ...opts, signal: ctrl.signal });
-    const text = await r.text();
-    let json = null;
-    try { json = JSON.parse(text); } catch { /* não é JSON */ }
-    return { ok: r.ok, status: r.status, json, text };
-  } finally {
-    clearTimeout(t);
-  }
-}
-
-function stripHtml(html) {
-  return html
-    .replace(/<style[\s\S]*?<\/style>/gi, "")
-    .replace(/<script[\s\S]*?<\/script>/gi, "")
-    .replace(/<[^>]+>/g, " ")
-    .replace(/&nbsp;/g, " ")
-    .replace(/&amp;/g, "&")
-    .replace(/&quot;/g, '"')
-    .replace(/&#39;|&apos;/g, "'")
-    .replace(/&lt;/g, "<")
-    .replace(/&gt;/g, ">")
-    .replace(/\s+/g, " ")
-    .trim();
-}
-
-function contarPalavras(texto) {
-  return texto.split(/\s+/).filter(Boolean).length;
-}
-
-function escapeHtml(s) {
-  return String(s)
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;");
-}
-
-function fmt(n, dec = 2) {
-  if (typeof n !== "number" || !Number.isFinite(n)) return "n/d";
-  return n.toLocaleString("pt-BR", { minimumFractionDigits: dec, maximumFractionDigits: dec });
-}
-
-function fmtVar(ch) {
-  if (typeof ch !== "number" || !Number.isFinite(ch)) return "";
-  const sinal = ch > 0 ? "+" : "";
-  return ` (${sinal}${fmt(ch)}%)`;
-}
 
 // ---------------------------------------------------------------- 1. calendário
 
 async function deveRodar(hoje) {
-  const dow = new Date(`${hoje}T12:00:00-03:00`).getUTCDay();
-  if (dow === 0 || dow === 6) return { rodar: false, motivo: "fim de semana" };
-  const feriados = JSON.parse(await readFile(path.join(__dirname, "feriados-b3.json"), "utf8"));
-  const ano = hoje.slice(0, 4);
-  if (!feriados[ano]) console.warn(`⚠ scripts/feriados-b3.json não tem o ano ${ano}; atualize a lista.`);
-  if ((feriados[ano] || []).includes(hoje)) return { rodar: false, motivo: "feriado B3" };
-  return { rodar: true };
+  const feriados = await carregarFeriados(path.join(__dirname, "feriados-b3.json"));
+  const r = diaDePregao(hoje, feriados);
+  return r.rodar ? r : { rodar: false, motivo: r.motivo === "feriado" ? "feriado B3" : r.motivo };
 }
 
 // ---------------------------------------------------------------- 2. coleta
@@ -262,17 +170,6 @@ FORMATO DE SAÍDA: responda SOMENTE com um JSON válido (sem crases, sem texto a
 No campo "html" use apenas as tags <h2>, <p>, <ul>, <li>, <strong>. Os cinco títulos <h2> devem ser exatamente: "Resumo do dia", "Brasil", "Exterior", "Agenda", "O que isso muda para você". A última seção deve trazer reflexões gerais de educação financeira (diversificação, horizonte, perfil de risco), nunca instruções sobre ativos específicos.`;
 }
 
-function extrairJson(texto) {
-  const limpo = texto.trim().replace(/^```(?:json)?\s*/i, "").replace(/```$/i, "").trim();
-  try { return JSON.parse(limpo); } catch { /* tenta recortar */ }
-  const ini = limpo.indexOf("{");
-  const fim = limpo.lastIndexOf("}");
-  if (ini >= 0 && fim > ini) {
-    try { return JSON.parse(limpo.slice(ini, fim + 1)); } catch { /* cai no erro abaixo */ }
-  }
-  return null;
-}
-
 async function gerarTexto(prompt) {
   const r = await fetchJson(
     "https://api.anthropic.com/v1/messages",
@@ -300,7 +197,6 @@ async function gerarTexto(prompt) {
   const tagsEstranhas = (out.html.match(/<[^>]+>/g) || []).filter((t) => !TAGS_OK.test(t));
   if (tagsEstranhas.length) fail(`HTML contém tags não permitidas: ${[...new Set(tagsEstranhas)].slice(0, 5).join(" ")}`);
 
-  const PROIBIDAS = /\b(compre|venda agora|recomendo comprar|recomendamos comprar|recomendo vender|preço-alvo|preço alvo|garantido|rentabilidade garantida)\b/i;
   const m = stripHtml(out.html).match(PROIBIDAS);
   if (m) fail(`Texto contém expressão vedada pelo compliance: "${m[0]}". Abortando sem publicar.`);
 
@@ -316,11 +212,6 @@ async function gerarTexto(prompt) {
 }
 
 // ---------------------------------------------------------------- 4. Supabase
-
-function sbHeaders(extra = {}) {
-  const key = env("SUPABASE_SERVICE_ROLE_KEY");
-  return { apikey: key, Authorization: `Bearer ${key}`, "Content-Type": "application/json", ...extra };
-}
 
 async function postJaExiste(slug) {
   const r = await fetchJson(`${env("SUPABASE_URL")}/rest/v1/posts?slug=eq.${encodeURIComponent(slug)}&select=id`, {

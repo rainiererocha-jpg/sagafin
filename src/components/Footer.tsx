@@ -7,6 +7,7 @@ const navLinks = [
   { label: "Perfil de Investidor", href: "#perfil" },
   { label: "Serviços", href: "/servicos" },
   { label: "Blog", href: "/blog" },
+  { label: "Trading", href: "/trading" },
   { label: "Contato", href: "#contato" },
 ];
 
