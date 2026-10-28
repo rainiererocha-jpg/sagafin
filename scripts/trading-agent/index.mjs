@@ -26,6 +26,8 @@ const DRY_RUN = process.env.DRY_RUN === "true";
 const FORCE_RUN = process.env.FORCE_RUN === "true";
 const SITE_URL = (process.env.SITE_URL || "https://sagafin.com.br").replace(/\/$/, "");
 const MAX_CHAINS = Number(process.env.MAX_CHAINS || 14);
+const MAX_EXP_POR_CADEIA = 5;
+const JANELA_STRIKES = 6;
 
 // Janelas em horário de Nova York (ET). Os dois crons UTC do workflow caem em uma única janela cada.
 const JANELAS = {
@@ -112,16 +114,25 @@ async function main() {
     const optStreamers = new Set(streamersDosAbertos(abertos));
     for (const [s, ch] of Object.entries(chains)) {
       if (!ch || !spot[s]) continue;
+      let nExp = 0;
       for (const exp of ch.expirations) {
-        if (exp.dte == null || exp.dte > 230) continue;
+        if (exp.dte == null || exp.dte > 230 || nExp >= MAX_EXP_POR_CADEIA) continue;
+        nExp++;
         const idx = exp.strikes.reduce((b, st, i) => (Math.abs(st.strike - spot[s]) < Math.abs(exp.strikes[b].strike - spot[s]) ? i : b), 0);
-        for (let i = Math.max(0, idx - 14); i <= Math.min(exp.strikes.length - 1, idx + 14); i++) {
+        for (let i = Math.max(0, idx - JANELA_STRIKES); i <= Math.min(exp.strikes.length - 1, idx + JANELA_STRIKES); i++) {
           if (exp.strikes[i].call_streamer) optStreamers.add(exp.strikes[i].call_streamer);
           if (exp.strikes[i].put_streamer) optStreamers.add(exp.strikes[i].put_streamer);
         }
       }
     }
-    const cotOpcoes = optStreamers.size ? await snapshotCotacoes(qt, [...optStreamers], { timeoutMs: 60000, quietMs: 4000 }) : {};
+    log(`… DXLink opções: ${optStreamers.size} símbolos`);
+    // A tastytrade derruba a sessão com muitas assinaturas de uma vez: uma sessão por grupo de símbolos.
+    const cotOpcoes = {};
+    const listaOpc = [...optStreamers];
+    for (let i = 0; i < listaOpc.length; i += 250) {
+      Object.assign(cotOpcoes, await snapshotCotacoes(qt, listaOpc.slice(i, i + 250), { timeoutMs: 45000, quietMs: 4000, lote: 100, espacoMs: 500 }));
+      await dormir(500);
+    }
     const cot = { ...cotAVista, ...cotOpcoes };
     log(`✓ DXLink opções: ${Object.keys(cotOpcoes).length}/${optStreamers.size} símbolos com dados`);
 
