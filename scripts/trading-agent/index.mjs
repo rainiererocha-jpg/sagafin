@@ -126,7 +126,13 @@ async function main() {
       }
     }
     log(`… DXLink opções: ${optStreamers.size} símbolos`);
-    const cotOpcoes = optStreamers.size ? await snapshotCotacoes(qt, [...optStreamers], { timeoutMs: 150000, quietMs: 5000, lote: 100, espacoMs: 500 }) : {};
+    // A tastytrade derruba a sessão com muitas assinaturas de uma vez: uma sessão por grupo de símbolos.
+    const cotOpcoes = {};
+    const listaOpc = [...optStreamers];
+    for (let i = 0; i < listaOpc.length; i += 250) {
+      Object.assign(cotOpcoes, await snapshotCotacoes(qt, listaOpc.slice(i, i + 250), { timeoutMs: 45000, quietMs: 4000, lote: 100, espacoMs: 500 }));
+      await dormir(500);
+    }
     const cot = { ...cotAVista, ...cotOpcoes };
     log(`✓ DXLink opções: ${Object.keys(cotOpcoes).length}/${optStreamers.size} símbolos com dados`);
 
