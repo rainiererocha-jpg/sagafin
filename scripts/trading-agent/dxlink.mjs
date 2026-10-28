@@ -28,7 +28,7 @@ const numOuNull = (v) => (typeof v === "number" && Number.isFinite(v) ? v : null
  * Busca Quote/Trade/Summary para `symbols` e Greeks para os que forem opções (começam com ".").
  * Devolve { [symbol]: { bid, ask, mid, last, volume, prev_close, oi, delta, gamma, theta, vega, iv } }.
  */
-export async function snapshotCotacoes({ token, url }, symbols, { timeoutMs = 25000, quietMs = 2500 } = {}) {
+export async function snapshotCotacoes({ token, url }, symbols, { timeoutMs = 60000, quietMs = 6000 } = {}) {
   if (typeof globalThis.WebSocket !== "function") {
     throw new Error("WebSocket nativo indisponível: use Node 22+ para o agente.");
   }
@@ -88,8 +88,11 @@ export async function snapshotCotacoes({ token, url }, symbols, { timeoutMs = 25
             add.push({ type: "Quote", symbol: s }, { type: "Trade", symbol: s }, { type: "Summary", symbol: s });
             if (s.startsWith(".")) add.push({ type: "Greeks", symbol: s });
           }
-          for (let i = 0; i < add.length; i += 400) {
-            send({ type: "FEED_SUBSCRIPTION", channel: 1, reset: i === 0, add: add.slice(i, i + 400) });
+          // A tastytrade limita a taxa de assinatura (BAD_ACTION "subscription rate is too high"): lotes pequenos e espaçados.
+          for (let i = 0, n = 0; i < add.length; i += 100, n++) {
+            setTimeout(() => {
+              try { send({ type: "FEED_SUBSCRIPTION", channel: 1, reset: i === 0, add: add.slice(i, i + 100) }); } catch { /* ignore */ }
+            }, n * 300);
           }
           break;
         }
