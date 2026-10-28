@@ -28,7 +28,7 @@ const numOuNull = (v) => (typeof v === "number" && Number.isFinite(v) ? v : null
  * Busca Quote/Trade/Summary para `symbols` e Greeks para os que forem opções (começam com ".").
  * Devolve { [symbol]: { bid, ask, mid, last, volume, prev_close, oi, delta, gamma, theta, vega, iv } }.
  */
-export async function snapshotCotacoes({ token, url }, symbols, { timeoutMs = 60000, quietMs = 6000 } = {}) {
+export async function snapshotCotacoes({ token, url }, symbols, { timeoutMs = 60000, quietMs = 6000, lote = 100, espacoMs = 300 } = {}) {
   if (typeof globalThis.WebSocket !== "function") {
     throw new Error("WebSocket nativo indisponível: use Node 22+ para o agente.");
   }
@@ -85,14 +85,15 @@ export async function snapshotCotacoes({ token, url }, symbols, { timeoutMs = 60
         case "FEED_CONFIG": {
           const add = [];
           for (const s of alvo) {
-            add.push({ type: "Quote", symbol: s }, { type: "Trade", symbol: s }, { type: "Summary", symbol: s });
+            add.push({ type: "Quote", symbol: s }, { type: "Summary", symbol: s });
             if (s.startsWith(".")) add.push({ type: "Greeks", symbol: s });
+            else add.push({ type: "Trade", symbol: s });
           }
           // A tastytrade limita a taxa de assinatura (BAD_ACTION "subscription rate is too high"): lotes pequenos e espaçados.
-          for (let i = 0, n = 0; i < add.length; i += 100, n++) {
+          for (let i = 0, n = 0; i < add.length; i += lote, n++) {
             setTimeout(() => {
-              try { send({ type: "FEED_SUBSCRIPTION", channel: 1, reset: i === 0, add: add.slice(i, i + 100) }); } catch { /* ignore */ }
-            }, n * 300);
+              try { send({ type: "FEED_SUBSCRIPTION", channel: 1, reset: i === 0, add: add.slice(i, i + lote) }); } catch { /* ignore */ }
+            }, n * espacoMs);
           }
           break;
         }
