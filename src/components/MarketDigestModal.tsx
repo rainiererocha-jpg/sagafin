@@ -2,6 +2,7 @@ import { useState } from "react";
 import { X, ArrowRight, TrendingUp, CheckCircle2, BarChart3 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { supabase } from "@/lib/supabase";
+import { setSubscriberEmail } from "@/lib/tradingClient";
 
 const WA_URL =
   "https://wa.me/5562994160930?text=Ol%C3%A1%20Rainiere%2C%20me%20cadastrei%20no%20Di%C3%A1rio%20Saga%20e%20gostaria%20de%20uma%20assessoria%20personalizada.";
@@ -64,6 +65,7 @@ export function MarketDigestModal({ children }: Props) {
         p_name: formData.name,
       });
       if (subError) throw subError;
+      setSubscriberEmail(formData.email); // libera o detalhe dos Destaques de Trading
 
       // 2) Lead comercial com perfil (patrimônio/objetivo).
       const { error: leadError } = await supabase.from("leads").insert({

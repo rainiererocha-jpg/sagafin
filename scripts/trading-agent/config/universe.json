@@ -1,0 +1,33 @@
+{
+  "_comentario": "Universo de estudo do agente. As watchlists privadas da conta tastytrade são somadas a esta lista em tempo de execução. Tudo passa pelo filtro liquidity_rating >= 3 da própria tastytrade antes de virar candidato.",
+  "etfs_core": ["SPY", "QQQ", "IWM", "DIA", "TLT", "GLD", "SLV", "USO", "XLE", "XLU", "XLF", "XLK", "XLV", "EEM", "FXI", "EWZ", "HYG"],
+  "alavancados_somente_estudo_de_risco": ["TQQQ", "SQQQ", "UVXY"],
+  "acoes_us": ["AAPL", "MSFT", "NVDA", "AMZN", "GOOGL", "META", "TSLA", "AMD", "AVGO", "JPM", "XOM", "KO", "PFE", "BAC", "INTC"],
+  "adr_br": [
+    { "symbol": "PBR",  "nome": "Petrobras (ON)",      "b3": "PETR3.SA", "ratio": 1 },
+    { "symbol": "PBR.A","nome": "Petrobras (PN)",      "b3": "PETR4.SA", "ratio": 1 },
+    { "symbol": "VALE", "nome": "Vale",                "b3": "VALE3.SA", "ratio": 1 },
+    { "symbol": "ITUB", "nome": "Itaú Unibanco",       "b3": "ITUB4.SA", "ratio": 1 },
+    { "symbol": "BBD",  "nome": "Bradesco",            "b3": "BBDC4.SA", "ratio": 1 },
+    { "symbol": "ABEV", "nome": "Ambev",               "b3": "ABEV3.SA", "ratio": 1 },
+    { "symbol": "ERJ",  "nome": "Embraer",             "b3": "EMBR3.SA", "ratio": 4 },
+    { "symbol": "GGB",  "nome": "Gerdau",              "b3": "GGBR4.SA", "ratio": 1 },
+    { "symbol": "SBS",  "nome": "Sabesp",              "b3": "SBSP3.SA", "ratio": 1 },
+    { "symbol": "CIG",  "nome": "Cemig",               "b3": "CMIG4.SA", "ratio": 1 },
+    { "symbol": "BSBR", "nome": "Santander Brasil",    "b3": "SANB11.SA", "ratio": 1 },
+    { "symbol": "NU",   "nome": "Nubank",              "b3": null, "ratio": null },
+    { "symbol": "MELI", "nome": "Mercado Livre",       "b3": null, "ratio": null },
+    { "symbol": "XP",   "nome": "XP Inc.",             "b3": null, "ratio": null },
+    { "symbol": "STNE", "nome": "Stone",               "b3": null, "ratio": null },
+    { "symbol": "PAGS", "nome": "PagSeguro",           "b3": null, "ratio": null }
+  ],
+  "macro_referencia": {
+    "spx": "SPY", "vix_proxy": "VIX", "brasil_etf": "EWZ", "dolar": "USD/BRL", "ibov": "IBOV"
+  },
+  "limites": {
+    "liquidity_min": 3,
+    "max_candidatos_por_horizonte": 8,
+    "max_estudos_publicados_por_slot": 5,
+    "max_estudos_novos_por_horizonte_por_dia": 1
+  }
+}

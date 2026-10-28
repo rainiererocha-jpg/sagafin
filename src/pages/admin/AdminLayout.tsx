@@ -6,6 +6,7 @@ const TABS = [
   { to: "/admin/calendar", label: "Calendário", end: false },
   { to: "/admin/metrics", label: "Métricas", end: false },
   { to: "/admin/generate", label: "Gerar", end: false },
+  { to: "/admin/trading", label: "Trading", end: false },
 ];
 
 function Shell() {
