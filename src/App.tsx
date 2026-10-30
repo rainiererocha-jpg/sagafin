@@ -17,6 +17,7 @@ import AdminCalendar from "./pages/admin/Calendar";
 import Metrics from "./pages/admin/Metrics";
 import Generate from "./pages/admin/Generate";
 import AdminTrading from "./pages/admin/Trading";
+import Clientes from "./pages/admin/Clientes";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -42,6 +43,7 @@ const App = () => (
             <Route path="metrics" element={<Metrics />} />
             <Route path="generate" element={<Generate />} />
             <Route path="trading" element={<AdminTrading />} />
+            <Route path="clientes" element={<Clientes />} />
           </Route>
           {/* back-compat: rota antiga protegida por token redireciona pro novo /admin */}
           <Route path="/admin/approvals" element={<Navigate to="/admin" replace />} />

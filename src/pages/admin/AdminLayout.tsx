@@ -7,6 +7,7 @@ const TABS = [
   { to: "/admin/metrics", label: "Métricas", end: false },
   { to: "/admin/generate", label: "Gerar", end: false },
   { to: "/admin/trading", label: "Trading", end: false },
+  { to: "/admin/clientes", label: "Clientes", end: false },
 ];
 
 function Shell() {
