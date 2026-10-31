@@ -77,3 +77,30 @@ No GitHub: *Actions → Agente de Trading → Run workflow* com `dry_run` marcad
 ## Custos estimados
 
 Por execução: ~1 chamada Sonnet 5.5 (≈10–20k tokens de entrada) + 1 chamada Opus 5.5 (≈6–10k entrada, 3–5k saída) ≈ US$ 0,15–0,35. Quatro execuções por dia ≈ US$ 0,6–1,4/dia. O valor fica em `trading_runs.cost_usd_estimate`.
+
+## Lições do primeiro run real (28/10/2026)
+
+O primeiro `post_close` real rodou com sucesso, mas publicou só um estudo (JKS, longo prazo, confiança baixa). A leitura do snapshot mostrou cinco defeitos, corrigidos em seguida:
+
+| Defeito | Efeito | Correção |
+|---|---|---|
+| `historical-volatility-30-day` vem em **percentual** (84,5) e `implied-volatility-index` em **decimal** (0,43) | `ivx > hv30` nunca era verdadeiro: zero estudos de venda de prêmio | `tasty.mjs` normaliza HV e `iv-hv-30-day-difference` para decimal |
+| PBR = **2** ações PETR3 por ADR | prêmio do ADR calculado em +100% | `universe.json`: `ratio: 2` em PBR e PBR.A |
+| Watchlists da conta somavam ~300 símbolos | universo de 348 nomes, candidatos exóticos | só entram até `max_watchlist` (40) com liquidez ≥ 3 |
+| Longo prazo ignorava balanço iminente | estudo publicado dois dias antes do resultado | exclui símbolos com balanço em até `earnings_dias_longo_prazo` (7) dias; reversão à média só em nome do núcleo/ADR com liquidez 4 |
+| `price-earnings-ratio = -99999.99` | sentinela aparecia como P/E | vira `null` |
+
+A triagem também passou a priorizar EWZ/ADR com POP teórica ≥ 65% e liquidez 4, e o prompt prefere venda de prêmio com risco definido a estudos de ações de baixa confiança.
+
+## Painel "Exterior em foco" (EWZ e dólar)
+
+Primeira dobra de `/trading`. Dados em `api/trading-panel.js` (função Vercel, cache de borda de 15 minutos; cada fonte falha isolada):
+
+- **Yahoo Finance**: séries diárias de 1 ano de `EWZ`, `BRL=X`, `^BVSP`, `^GSPC` → preço, variações, MM200, 52 semanas, vol. realizada 30 d, base 100 (S&P 500 convertido em reais × Ibovespa × EWZ × dólar), correlações de retornos diários e quantos meses de queda do Ibovespa tiveram alta do dólar.
+- **BCB – Expectativas de Mercado (Focus)** via Olinda (`ExpectativasMercadoAnuais`, `baseCalculo eq 0`): mediana de Câmbio, Selic e IPCA para fim de 2026 e 2027, sempre exibida com a data da pesquisa e o número de instituições. Licença ODbL: citar "Fonte: BCB – Expectativas de Mercado (Focus)". É a única "projeção" do painel; o site não faz projeção própria.
+- **BCB SGS**: Selic (432) e CDI (4389).
+- **Snapshot do agente** (`trading_contexto()`): IV rank e IVx de EWZ → cone teórico de 30 dias, `preço × IV × √(dias/365)`, 1σ e 2σ, rotulado como faixa implícita nas opções e não projeção de preço.
+
+Números estáticos do bloco "Por que olhar para fora" e suas fontes: Brasil = 0,25% do MSCI ACWI IMI (jun/2026); piso de 16% no exterior (FGVcef, set/2026); fundos locais com exposição externa ≈ 15% do patrimônio (jul/2026). Revisar a cada semestre.
+
+CTA principal: WhatsApp do assessor com mensagem pré-preenchida sobre investir no exterior pela XP. CTA secundário: cadastro no Diário Saga (libera os estudos). Rodapé com aviso de remuneração por distribuição (Res. CVM 179/23).
