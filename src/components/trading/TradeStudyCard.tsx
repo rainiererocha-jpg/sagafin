@@ -7,6 +7,12 @@ import {
 
 const DirIcon = { bullish: TrendingUp, bearish: TrendingDown, neutral: Minus } as const;
 
+function diasAte(iso: string | null | undefined): number | null {
+  if (!iso) return null;
+  const d = Math.round((Date.parse(`${iso}T12:00:00Z`) - Date.now()) / 86400000);
+  return Number.isFinite(d) ? d : null;
+}
+
 function Stat({ label, value }: { label: string; value: string }) {
   return (
     <div className="min-w-0">
@@ -63,6 +69,20 @@ export function TradeStudyCard({ study, index = 0 }: { study: StudyPublic; index
           <Stat label="POP teórica" value={r.pop_estimate != null ? `${fmtNum(r.pop_estimate, 0)}%` : "—"} />
         </div>
 
+        {(study.confidence || r.earnings_date) && (
+          <div className="flex flex-wrap gap-2">
+            {study.confidence && (
+              <span className={`text-[10px] tracking-[0.15em] uppercase px-2 py-0.5 rounded-full ${study.confidence === "alta" ? "text-emerald-300 bg-emerald-400/10" : study.confidence === "media" ? "text-gold bg-gold/10" : "text-muted-foreground bg-white/5"}`}>
+                confiança {study.confidence === "media" ? "média" : study.confidence}
+              </span>
+            )}
+            {r.earnings_date && diasAte(r.earnings_date) != null && diasAte(r.earnings_date)! >= 0 && diasAte(r.earnings_date)! <= 45 && (
+              <span className="text-[10px] tracking-[0.15em] uppercase px-2 py-0.5 rounded-full text-amber-300 bg-amber-400/10">
+                balanço em {diasAte(r.earnings_date)} dia{diasAte(r.earnings_date) === 1 ? "" : "s"}
+              </span>
+            )}
+          </div>
+        )}
         <h3 className="text-base font-serif font-semibold text-foreground leading-snug group-hover:text-gold transition-colors">{study.title}</h3>
         <p className="text-sm text-muted-foreground leading-relaxed line-clamp-3">{study.thesis_public}</p>
 

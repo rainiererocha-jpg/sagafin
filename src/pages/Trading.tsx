@@ -9,51 +9,29 @@ import { TradeStudyCard } from "@/components/trading/TradeStudyCard";
 import { TrackRecordTable } from "@/components/trading/TrackRecordTable";
 import { MethodologySection } from "@/components/trading/MethodologySection";
 import { BrasilNaTastySection } from "@/components/trading/BrasilNaTastySection";
+import { PanelExterior } from "@/components/trading/PanelExterior";
 import {
-  listStudies, getTrackRecord, getContexto, type StudyPublic, type TrackRecord, type Contexto, type Horizon,
+  listStudies, getTrackRecord, getContexto, getPanel, type StudyPublic, type TrackRecord, type Contexto, type Panel, type Horizon,
   HORIZON_LABEL, HORIZON_ORDER, fmtNum, fmtPct,
 } from "@/lib/tradingClient";
 
 const AVISO_CURTO =
   "Os Destaques de Trading Sagafin são estudos de caráter exclusivamente educacional, elaborados com apoio de inteligência artificial a partir de dados da tastytrade e fontes públicas. Não constituem recomendação de investimento, relatório de análise (Resolução CVM 20) nem consultoria de valores mobiliários. Resultados exibidos são hipotéticos, sem custos, e não representam operações reais. Operações com opções podem gerar perdas superiores ao capital investido. Rainiere Rocha é assessor de investimentos vinculado à InvestSmart (XP), registrado na CVM conforme a Resolução CVM 178/23, e não pode recomendar, administrar ou gerir investimentos.";
 
-function ContextBar({ ctx }: { ctx: Contexto | null }) {
-  const m = (ctx?.macro ?? {}) as Record<string, { value?: number; change?: number; iv_rank?: number | null } | null>;
-  const items: [string, string][] = [
-    ["S&P 500", m.spx?.value != null ? fmtNum(m.spx.value, 0) : "—"],
-    ["VIX", m.vix?.value != null ? fmtNum(m.vix.value, 1) : "—"],
-    ["EWZ IV rank", m.ewz?.iv_rank != null ? fmtNum(m.ewz.iv_rank, 0) : "—"],
-    ["USD/BRL", m.usdbrl?.value != null ? fmtNum(m.usdbrl.value, 2) : "—"],
-    ["Ibovespa", m.ibov?.value != null ? fmtNum(m.ibov.value, 0) : "—"],
-    ["Selic", m.selic != null ? `${fmtNum(m.selic as unknown as number, 2)}%` : "—"],
-  ];
-  return (
-    <div className="rounded-2xl border border-border bg-card/40 backdrop-blur-sm px-4 py-3 flex flex-wrap items-center gap-x-8 gap-y-2">
-      {items.map(([l, v]) => (
-        <div key={l} className="flex items-baseline gap-2">
-          <span className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground/70">{l}</span>
-          <span className="text-sm font-semibold tabular-nums text-foreground">{v}</span>
-        </div>
-      ))}
-      <span className="ml-auto text-[11px] text-muted-foreground/60">
-        {ctx?.captured_at ? `Snapshot ${new Date(ctx.captured_at).toLocaleString("pt-BR", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" })}` : "Aguardando o primeiro snapshot do agente"}
-      </span>
-    </div>
-  );
-}
-
 export default function Trading() {
   const [studies, setStudies] = useState<StudyPublic[]>([]);
   const [tr, setTr] = useState<TrackRecord | null>(null);
   const [ctx, setCtx] = useState<Contexto | null>(null);
+  const [panel, setPanel] = useState<Panel | null>(null);
   const [loading, setLoading] = useState(true);
   const [tab, setTab] = useState<Horizon>("monthly");
 
   useEffect(() => {
-    Promise.allSettled([listStudies(), getTrackRecord(), getContexto()]).then(([s, t, c]) => {
+    Promise.allSettled([listStudies(), getTrackRecord(), getContexto(), getPanel()]).then(([s, t, c, p]) => {
       if (s.status === "fulfilled") setStudies(s.value);
       if (t.status === "fulfilled") setTr(t.value);
       if (c.status === "fulfilled") setCtx(c.value);
+      if (p.status === "fulfilled") setPanel(p.value);
       setLoading(false);
     });
   }, []);
@@ -78,26 +56,33 @@ export default function Trading() {
       <div className="fixed top-0 left-0 right-0 z-50"><div className="h-[42px]" /></div>
       <div className="pt-[42px]"><Header /></div>
 
-      <section className="pt-32 pb-12 bg-background">
+      <section className="pt-32 pb-10 bg-background">
         <div className="container mx-auto px-4 max-w-5xl text-center">
           <span className="inline-block text-gold font-semibold text-sm tracking-widest uppercase mb-4">Estudo educacional · não é recomendação</span>
-          <h1 className="text-5xl md:text-6xl font-serif text-foreground mb-6">
+          <h1 className="text-5xl md:text-6xl font-serif text-foreground mb-5">
             Destaques de Trading <span className="text-gradient-gold">Sagafin</span>
           </h1>
-          <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
-            Quatro vezes por dia de pregão, um agente lê a tastytrade, aplica as regras das melhores referências de mercado e transforma o que encontra em estudos de opções e ações no exterior, por horizonte: diário, semanal, mensal, semestral e longo prazo. Com Brasil incluído, via ADRs e EWZ.
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+            O Brasil é 0,25% do mercado global de ações. Sua carteira sabe disso? Painel de EWZ e dólar, e estudos de opções e ações no exterior lidos na tastytrade quatro vezes por dia.
           </p>
+          {abertos.length > 0 && (
+            <p className="text-xs text-muted-foreground/70 mt-3 tabular-nums">{abertos.length} estudo{abertos.length > 1 ? "s" : ""} em acompanhamento agora</p>
+          )}
         </div>
       </section>
 
-      <section className="pb-10">
+      <section id="exterior" className="pb-16">
         <div className="container mx-auto px-4 max-w-6xl">
-          <ContextBar ctx={ctx} />
+          <span className="text-label">Exterior em foco</span>
+          <h2 className="text-3xl md:text-4xl font-serif text-foreground mt-3 mb-8">EWZ e dólar: <em className="not-italic text-gradient-gold font-semibold">o Brasil visto de fora</em></h2>
+          <PanelExterior panel={panel} ctx={ctx} studies={studies} />
         </div>
       </section>
 
-      <section className="pb-20">
+      <section id="estudos" className="py-16 border-t border-white/[0.06]">
         <div className="container mx-auto px-4 max-w-6xl">
+          <span className="text-label">Estudos do agente</span>
+          <h2 className="text-3xl md:text-4xl font-serif text-foreground mt-3 mb-8">Por horizonte: <em className="not-italic text-gradient-gold font-semibold">do dia ao longo prazo</em></h2>
           {loading ? (
             <div className="flex justify-center items-center py-24"><Loader2 className="w-8 h-8 text-gold animate-spin" /></div>
           ) : (

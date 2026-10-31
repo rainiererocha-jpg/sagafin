@@ -160,6 +160,12 @@ export function candidatosOpcoes(ctx) {
 /** Candidatos de longo prazo (ações/ETFs sem opções): tendência e valor relativo de ADR. */
 export function candidatosLongoPrazo({ symbol, assetClass, metrics: m, spot, trend, adrPremio, refTime, universe }) {
   if (!spot || !trend || universe.alavancados_somente_estudo_de_risco.includes(symbol)) return [];
+  // Balanço iminente distorce qualquer estudo de longo prazo (gap de resultado): pula.
+  if (m?.earnings_date) {
+    const dias = Math.round((Date.parse(m.earnings_date) - Date.now()) / 86400000);
+    if (dias >= 0 && dias <= (universe.limites?.earnings_dias_longo_prazo ?? 7)) return [];
+  }
+  const nucleo = universe.etfs_core.includes(symbol) || universe.acoes_us.includes(symbol) || assetClass === "adr_br" || assetClass === "etf_br";
   const out = [];
   const base = {
     symbol, asset_class: assetClass, horizon: "long_term",
@@ -186,17 +192,19 @@ export function candidatosLongoPrazo({ symbol, assetClass, metrics: m, spot, tre
     out.push({ ...base, id: `${symbol}-long_term-adr_discount`.toLowerCase(), strategy_type: "shares_relative_value", direction: "bullish",
       risk: risco(trend.min_52w), score: r2(1 + Math.abs(adrPremio) / 3) });
   }
-  if (trend.acima_mm200 === false && (trend.ret_6m_pct ?? 0) <= -15 && (m?.iv_rank ?? 0) >= 50 && (trend.pos_52w_pct ?? 100) <= 20) {
+  // Reversão à média só em nome conhecido (núcleo ou ADR BR) e com liquidez máxima: é o estudo mais arriscado.
+  if (nucleo && m?.liquidity === 4 && trend.acima_mm200 === false && (trend.ret_6m_pct ?? 0) <= -15 && (m?.iv_rank ?? 0) >= 50 && (trend.pos_52w_pct ?? 100) <= 20) {
     out.push({ ...base, id: `${symbol}-long_term-shares_mean_reversion`.toLowerCase(), strategy_type: "shares_mean_reversion", direction: "bullish",
       risk: risco(trend.min_52w * 0.9), score: r2(0.8 + (m?.iv_rank ?? 0) / 100) });
   }
   return out;
 }
 
-/** Mantém no máximo N candidatos por horizonte, com no máximo 2 por símbolo. */
+/** Mantém no máximo N candidatos por horizonte, com no máximo 2 por símbolo. Brasil (EWZ/ADR) com POP ≥ 65 e liquidez 4 tem prioridade. */
 export function selecionarCandidatos(cands, maxPorHorizonte = 8) {
   const porH = {};
-  for (const c of [...cands].sort((a, b) => b.score - a.score)) {
+  const prioridade = (c) => ((c.asset_class === "adr_br" || c.asset_class === "etf_br") && (c.risk?.pop_estimate ?? 0) >= 65 && c.metrics?.liquidity === 4 ? 1 : 0);
+  for (const c of [...cands].sort((a, b) => prioridade(b) - prioridade(a) || b.score - a.score)) {
     const lista = (porH[c.horizon] ||= []);
     if (lista.length >= maxPorHorizonte) continue;
     if (lista.filter((x) => x.symbol === c.symbol).length >= 2) continue;

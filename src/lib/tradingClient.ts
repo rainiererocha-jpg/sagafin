@@ -17,6 +17,7 @@ export interface StudyResumo {
   max_loss: number | null;
   max_profit: number | null;
   credit_or_debit: string | null;
+  earnings_date?: string | null;
 }
 
 export interface StudyPublic {
@@ -84,6 +85,43 @@ export interface Contexto {
   slot: string | null;
   macro: Record<string, unknown> | null;
   brasil: Record<string, { iv_rank: number | null; ivx: number | null; liquidity: number | null; ref_price: number | null; premio_pct: number | null }>;
+}
+
+export interface SeriePonto { d: string; v: number }
+export interface SerieStats {
+  last: number | null;
+  change_1d_pct: number | null;
+  change_1m_pct: number | null;
+  change_3m_pct: number | null;
+  change_12m_pct: number | null;
+  mm200: number | null;
+  dist_mm200_pct: number | null;
+  high_52w: number | null;
+  low_52w: number | null;
+  vol30_pct: number | null;
+  series: SeriePonto[];
+  ewz_brl?: number | null;
+}
+export interface FocusItem { mediana: number | null; media: number | null; data: string | null; n: number | null }
+export interface Panel {
+  updatedAt: string;
+  ewz: SerieStats | null;
+  usdbrl: SerieStats | null;
+  ibov: SerieStats | null;
+  spx: SerieStats | null;
+  base100: { d: string; ewz: number; ibov: number; spx_brl: number; usdbrl: number }[];
+  focus: { cambio: Record<string, FocusItem>; selic: Record<string, FocusItem>; ipca: Record<string, FocusItem> };
+  juros: { selic: number | null; cdi: number | null };
+  correl: { ewz_spx: number | null; usdbrl_ibov: number | null };
+  hedge: { meses_ibov_queda: number | null; meses_dolar_subiu: number | null };
+  decomp12m: { ibov_brl_pct: number | null; usdbrl_pct: number | null; ewz_pct: number | null; periodo?: string };
+  fontes: string;
+}
+
+export async function getPanel(): Promise<Panel | null> {
+  const r = await fetch("/api/trading-panel");
+  if (!r.ok) throw new Error(`HTTP ${r.status}`);
+  return (await r.json()) as Panel;
 }
 
 const EMAIL_KEY = "saga_subscriber_email";

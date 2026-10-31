@@ -65,12 +65,21 @@ async function main() {
   try {
     // 1. universo
     const universe = JSON.parse(await readFile(path.join(__dirname, "config", "universe.json"), "utf8"));
-    universe.watchlist = await watchlistSymbols();
-    const simbolos = [...new Set([...universe.etfs_core, ...universe.alavancados_somente_estudo_de_risco, ...universe.acoes_us, ...universe.adr_br.map((a) => a.symbol), ...universe.watchlist])];
-    log(`✓ Universo: ${simbolos.length} símbolos (${universe.watchlist.length} da watchlist)`);
+    const nucleo = [...new Set([...universe.etfs_core, ...universe.alavancados_somente_estudo_de_risco, ...universe.acoes_us, ...universe.adr_br.map((a) => a.symbol)])];
+    // Watchlists da conta entram só até o limite e só com liquidez de opções ≥ 3 (evita inundar
+    // o universo com centenas de símbolos ilíquidos, como no primeiro run real).
+    const watchlistBruta = (await watchlistSymbols()).filter((s) => !nucleo.includes(s) && /^[A-Z.]{1,6}$/.test(s));
+    const metricsWatch = watchlistBruta.length ? await marketMetrics(watchlistBruta) : {};
+    universe.watchlist = watchlistBruta
+      .filter((s) => (metricsWatch[s]?.liquidity ?? 0) >= (universe.limites.liquidity_min ?? 3))
+      .sort((a, b) => (metricsWatch[b].liquidity_value ?? 0) - (metricsWatch[a].liquidity_value ?? 0))
+      .slice(0, universe.limites.max_watchlist ?? 40);
+    const simbolos = [...new Set([...nucleo, ...universe.watchlist])];
+    log(`✓ Universo: ${simbolos.length} símbolos (${universe.watchlist.length} da watchlist, de ${watchlistBruta.length} na conta)`);
 
-    // 2. métricas tastytrade
-    const metrics = await marketMetrics(simbolos);
+    // 2. métricas tastytrade (reaproveita as da watchlist)
+    const metrics = { ...(await marketMetrics(nucleo)) };
+    for (const s of universe.watchlist) if (metricsWatch[s]) metrics[s] = metricsWatch[s];
     resumo.n_symbols = Object.keys(metrics).length;
     log(`✓ market-metrics: ${resumo.n_symbols} símbolos`);
 
