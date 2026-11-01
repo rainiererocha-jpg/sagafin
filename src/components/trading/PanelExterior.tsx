@@ -46,6 +46,17 @@ function fmtData(iso: string | null | undefined) {
 
 interface Hoje { price: number | null; changePct: number | null; ts: number | null; series: Candle[]; var5m?: number | null; var1h?: number | null }
 
+/** "14:35" se o dado é de hoje; "sex 30/10 17:00" se é de outro dia (fim de semana, feriado). */
+function quando(ts: number): string {
+  const tz = { timeZone: "America/Sao_Paulo" } as const;
+  const d = new Date(ts * 1000);
+  const hora = d.toLocaleTimeString("pt-BR", { ...tz, hour: "2-digit", minute: "2-digit" });
+  const dia = (x: Date) => x.toLocaleDateString("pt-BR", tz);
+  if (dia(d) === dia(new Date())) return hora;
+  const sem = d.toLocaleDateString("pt-BR", { ...tz, weekday: "short" }).replace(".", "");
+  return `${sem} ${d.toLocaleDateString("pt-BR", { ...tz, day: "2-digit", month: "2-digit" })} ${hora}`;
+}
+
 function varJanela(series: Candle[], minutos: number): number | null {
   if (!series?.length) return null;
   const last = series[series.length - 1];
@@ -93,7 +104,7 @@ function CardAtivo({ titulo, subtitulo, stats, hoje, decimals, children, grid, r
               )}
             </div>
             {naHoje && hoje?.ts && (
-              <div className="text-[10px] text-muted-foreground/60 mt-1">dado de {new Date(hoje.ts * 1000).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit", timeZone: "America/Sao_Paulo" })} · atraso de até 15 min</div>
+              <div className="text-[10px] text-muted-foreground/60 mt-1">dado de {quando(hoje.ts)} · atraso de até 15 min</div>
             )}
           </div>
         )}
