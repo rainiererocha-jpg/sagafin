@@ -6,11 +6,17 @@ import { PriceCone } from "@/components/trading/charts/PriceCone";
 import { FxFocus } from "@/components/trading/charts/FxFocus";
 import { Base100 } from "@/components/trading/charts/Base100";
 import { CalculadoraDolar } from "@/components/trading/CalculadoraDolar";
+import { Intraday } from "@/components/trading/charts/Intraday";
+import { EwzComposition } from "@/components/trading/EwzComposition";
+import { EwzInvestorGuide } from "@/components/trading/EwzInvestorGuide";
+import { useLiveQuotes, type Candle } from "@/hooks/useLiveQuotes";
+import { buildWhatsAppUrl } from "@/lib/whatsapp";
+import { useState } from "react";
+import { DollarSign } from "lucide-react";
 import { type Panel, type Contexto, type StudyPublic, type SerieStats, fmtNum, fmtPct, STRATEGY_LABEL, HORIZON_LABEL } from "@/lib/tradingClient";
 
-const WA_EXTERIOR =
-  "https://wa.me/5562994160930?text=" +
-  encodeURIComponent("Olá Rainiere, vi o painel de EWZ e dólar no sagafin.com.br/trading e quero entender como investir no exterior pela XP.");
+const WA_EXTERIOR = buildWhatsAppUrl("Olá Rainiere, vi o painel de EWZ e dólar no sagafin.com.br/trading e quero entender como investir no exterior pela XP.");
+const WA_DOLAR = buildWhatsAppUrl("Olá Rainiere, vi o painel do dólar no sagafin.com.br/trading e quero cotar a compra de dólar. [Origem: site /trading]");
 
 function Chip({ label, v }: { label: string; v: number | null | undefined }) {
   const cls = v == null ? "text-muted-foreground" : v >= 0 ? "text-emerald-400" : "text-red-400";
@@ -38,26 +44,63 @@ function fmtData(iso: string | null | undefined) {
   return d.toLocaleDateString("pt-BR", { day: "2-digit", month: "2-digit" });
 }
 
-function CardAtivo({ titulo, subtitulo, stats, children, grid, rodape }: { titulo: string; subtitulo: string; stats: SerieStats | null; children: React.ReactNode; grid: React.ReactNode; rodape?: React.ReactNode }) {
+interface Hoje { price: number | null; changePct: number | null; ts: number | null; series: Candle[]; var5m?: number | null; var1h?: number | null }
+
+function varJanela(series: Candle[], minutos: number): number | null {
+  if (!series?.length) return null;
+  const last = series[series.length - 1];
+  const alvo = last.time - minutos * 60;
+  let ref: Candle | null = null;
+  for (const p of series) { if (p.time <= alvo) ref = p; else break; }
+  return ref?.close ? ((last.close - ref.close) / ref.close) * 100 : null;
+}
+
+function CardAtivo({ titulo, subtitulo, stats, hoje, decimals, children, grid, rodape }: { titulo: string; subtitulo: string; stats: SerieStats | null; hoje: Hoje | null; decimals: number; children: React.ReactNode; grid: React.ReactNode; rodape?: React.ReactNode }) {
+  const [aba, setAba] = useState<"12m" | "hoje">("12m");
+  const naHoje = aba === "hoje";
+  const preco = naHoje ? hoje?.price ?? null : stats?.last ?? null;
+  const prevClose = hoje?.price != null && hoje.changePct != null ? hoje.price / (1 + hoje.changePct / 100) : null;
   return (
     <div className="rounded-2xl border border-border bg-card/50 backdrop-blur-sm p-5 md:p-6 flex flex-col gap-4">
       <div className="flex items-start justify-between gap-3">
         <div>
           <div className="text-[10px] uppercase tracking-[0.2em] text-gold font-semibold">{titulo}</div>
           <div className="text-xs text-muted-foreground mt-0.5">{subtitulo}</div>
+          <div className="inline-flex mt-3 rounded-lg border border-white/10 p-0.5 text-xs">
+            {(["12m", "hoje"] as const).map((a) => (
+              <button key={a} onClick={() => setAba(a)} className={`px-3 py-1 rounded-md transition ${aba === a ? "bg-gold text-accent-foreground font-semibold" : "text-muted-foreground hover:text-foreground"}`}>
+                {a === "12m" ? "12 meses" : "Hoje"}
+              </button>
+            ))}
+          </div>
         </div>
-        {stats?.last != null && (
+        {preco != null && (
           <div className="text-right">
-            <div className="text-3xl font-serif text-foreground tabular-nums leading-none">{fmtNum(stats.last, titulo.startsWith("EWZ") ? 2 : 3)}</div>
+            <div className="text-3xl font-serif text-foreground tabular-nums leading-none">{fmtNum(preco, decimals)}</div>
             <div className="flex flex-wrap justify-end gap-x-3 gap-y-1 mt-2">
-              <Chip label="dia" v={stats.change_1d_pct} />
-              <Chip label="1 m" v={stats.change_1m_pct} />
-              <Chip label="12 m" v={stats.change_12m_pct} />
+              {naHoje ? (
+                <>
+                  <Chip label="5 min" v={hoje?.var5m ?? null} />
+                  <Chip label="1 h" v={hoje?.var1h ?? null} />
+                  <Chip label="dia" v={hoje?.changePct ?? null} />
+                </>
+              ) : (
+                <>
+                  <Chip label="dia" v={stats?.change_1d_pct} />
+                  <Chip label="1 m" v={stats?.change_1m_pct} />
+                  <Chip label="12 m" v={stats?.change_12m_pct} />
+                </>
+              )}
             </div>
+            {naHoje && hoje?.ts && (
+              <div className="text-[10px] text-muted-foreground/60 mt-1">dado de {new Date(hoje.ts * 1000).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit", timeZone: "America/Sao_Paulo" })} · atraso de até 15 min</div>
+            )}
           </div>
         )}
       </div>
-      {stats ? children : <div className="h-52 flex items-center justify-center text-sm text-muted-foreground">Série indisponível no momento.</div>}
+      {naHoje
+        ? <Intraday series={hoje?.series ?? []} prevClose={prevClose} decimals={decimals} />
+        : stats ? children : <div className="h-52 flex items-center justify-center text-sm text-muted-foreground">Série indisponível no momento.</div>}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">{grid}</div>
       {rodape}
     </div>
@@ -77,6 +120,14 @@ export function PanelExterior({ panel, ctx, studies }: { panel: Panel | null; ct
   const c = panel?.correl;
   const h = panel?.hedge;
   const d12 = panel?.decomp12m;
+  const live = useLiveQuotes();
+  const ld = live.data;
+  const hojeEwz: Hoje | null = ld?.ewz
+    ? { price: ld.ewz.price, changePct: ld.ewz.changePct, ts: ld.ewz.ts, series: ld.series.ewz, var5m: varJanela(ld.series.ewz, 5), var1h: varJanela(ld.series.ewz, 60) }
+    : null;
+  const hojeUsd: Hoje | null = ld?.usdbrl
+    ? { price: ld.usdbrl.price, changePct: ld.usdbrl.varDia, ts: ld.usdbrl.ts, series: ld.series.usdbrl, var5m: ld.usdbrl.var5m, var1h: ld.usdbrl.var1h }
+    : null;
 
   return (
     <div className="grid gap-8">
@@ -84,8 +135,10 @@ export function PanelExterior({ panel, ctx, studies }: { panel: Panel | null; ct
       <div className="grid lg:grid-cols-2 gap-5">
         <CardAtivo
           titulo="EWZ · Brasil em dólar"
-          subtitulo="iShares MSCI Brazil ETF (NYSE). Preço em US$, fechamento de referência."
+          subtitulo="iShares MSCI Brazil ETF (NYSE). Preço em US$."
           stats={ewz}
+          hoje={hojeEwz}
+          decimals={2}
           grid={
             <>
               <Mini label="52 semanas" value={ewz ? `${fmtNum(ewz.low_52w)} – ${fmtNum(ewz.high_52w)}` : "—"} />
@@ -105,8 +158,10 @@ export function PanelExterior({ panel, ctx, studies }: { panel: Panel | null; ct
 
         <CardAtivo
           titulo="Dólar · USD/BRL"
-          subtitulo="Câmbio de referência (fechamento). Linhas tracejadas: mediana do Boletim Focus."
+          subtitulo="Câmbio de referência. Em 12 meses, linhas tracejadas: mediana do Boletim Focus."
           stats={usd}
+          hoje={hojeUsd}
+          decimals={3}
           grid={
             <>
               <Mini label="52 semanas" value={usd ? `${fmtNum(usd.low_52w, 2)} – ${fmtNum(usd.high_52w, 2)}` : "—"} />
@@ -158,6 +213,18 @@ export function PanelExterior({ panel, ctx, studies }: { panel: Panel | null; ct
           <p className="text-[11px] text-muted-foreground/70 mt-2">Leitura: EWZ em dólar ≈ Ibovespa em reais descontada a variação do câmbio (o índice do EWZ é o MSCI Brazil 25/50, parecido mas não igual ao Ibovespa).</p>
         </div>
       ) : null}
+
+      {/* 2b. O que tem dentro do EWZ */}
+      <div>
+        <div className="flex items-center gap-2 mb-4">
+          <TrendingUp className="w-4 h-4 text-gold" />
+          <h3 className="text-xl font-serif text-foreground">O que tem dentro do EWZ</h3>
+        </div>
+        <EwzComposition data={ld} />
+        <div className="mt-8">
+          <EwzInvestorGuide />
+        </div>
+      </div>
 
       {/* 3. Por que olhar para fora */}
       <div>
@@ -228,11 +295,14 @@ export function PanelExterior({ panel, ctx, studies }: { panel: Panel | null; ct
         <div>
           <div className="flex items-center gap-2 text-gold text-xs tracking-[0.2em] uppercase font-semibold mb-2"><Shield className="w-3.5 h-3.5" /> Investir no exterior pela XP</div>
           <h3 className="text-2xl font-serif text-foreground">Quer entender como colocar parte do patrimônio em dólar?</h3>
-          <p className="text-sm text-muted-foreground mt-2 leading-relaxed">Conta internacional, ETFs, BDRs e fundos globais têm custos, impostos e riscos diferentes. Uma conversa de 20 minutos esclarece qual caminho combina com o seu perfil e objetivos.</p>
+          <p className="text-sm text-muted-foreground mt-2 leading-relaxed">Conta internacional, ETFs, BDRs e fundos globais têm custos, impostos e riscos diferentes. Uma conversa de 20 minutos esclarece qual caminho combina com o seu perfil e objetivos. Na compra de dólar, a cotação de referência do painel muda: o preço final é definido na execução.</p>
         </div>
         <div className="flex flex-col gap-3 min-w-[240px]">
           <a href={WA_EXTERIOR} target="_blank" rel="noopener noreferrer">
             <Button variant="gold" size="lg" className="w-full"><MessageCircle className="w-4 h-4 mr-2" /> Falar com o assessor</Button>
+          </a>
+          <a href={WA_DOLAR} target="_blank" rel="noopener noreferrer">
+            <Button variant="goldOutline" size="lg" className="w-full"><DollarSign className="w-4 h-4 mr-2" /> Comprar dólar pelo WhatsApp</Button>
           </a>
           <MarketDigestModal>
             <Button variant="goldOutline" size="lg" className="w-full">Receber os estudos por e-mail</Button>
