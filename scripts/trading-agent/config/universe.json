@@ -4,8 +4,8 @@
   "alavancados_somente_estudo_de_risco": ["TQQQ", "SQQQ", "UVXY"],
   "acoes_us": ["AAPL", "MSFT", "NVDA", "AMZN", "GOOGL", "META", "TSLA", "AMD", "AVGO", "JPM", "XOM", "KO", "PFE", "BAC", "INTC"],
   "adr_br": [
-    { "symbol": "PBR",  "nome": "Petrobras (ON)",      "b3": "PETR3.SA", "ratio": 1 },
-    { "symbol": "PBR.A","nome": "Petrobras (PN)",      "b3": "PETR4.SA", "ratio": 1 },
+    { "symbol": "PBR",  "nome": "Petrobras (ON)",      "b3": "PETR3.SA", "ratio": 2 },
+    { "symbol": "PBR.A","nome": "Petrobras (PN)",      "b3": "PETR4.SA", "ratio": 2 },
     { "symbol": "VALE", "nome": "Vale",                "b3": "VALE3.SA", "ratio": 1 },
     { "symbol": "ITUB", "nome": "Itaú Unibanco",       "b3": "ITUB4.SA", "ratio": 1 },
     { "symbol": "BBD",  "nome": "Bradesco",            "b3": "BBDC4.SA", "ratio": 1 },
@@ -26,6 +26,8 @@
   },
   "limites": {
     "liquidity_min": 3,
+    "max_watchlist": 40,
+    "earnings_dias_longo_prazo": 7,
     "max_candidatos_por_horizonte": 8,
     "max_estudos_publicados_por_slot": 5,
     "max_estudos_novos_por_horizonte_por_dia": 1

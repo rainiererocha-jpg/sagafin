@@ -59,6 +59,18 @@ const num = (v) => {
   const n = typeof v === "string" ? parseFloat(v) : v;
   return Number.isFinite(n) ? n : null;
 };
+// A tastytrade devolve volatilidade implícita em decimal (0.43 = 43%) e a histórica em
+// percentual (84.5). Normaliza tudo para decimal para as regras ivx > hv30 funcionarem.
+const vol = (v) => {
+  const n = num(v);
+  if (n == null) return null;
+  return n > 3 ? n / 100 : n;
+};
+// Sentinelas da tasty (ex.: price-earnings-ratio = -99999.99) viram null.
+const semSentinela = (v) => {
+  const n = num(v);
+  return n == null || Math.abs(n) >= 99999 ? null : n;
+};
 
 /** /market-metrics em lotes. Devolve mapa símbolo → métricas normalizadas. */
 export async function marketMetrics(symbols) {
@@ -81,16 +93,16 @@ export async function marketMetrics(symbols) {
         ivx: num(m["implied-volatility-index"]),                 // ex.: 0.632 = 63,2%
         iv_rank: ivr == null ? null : Math.round(ivr * 1000) / 10, // 0–100
         iv_pct: ivp == null ? null : Math.round(ivp * 1000) / 10,  // 0–100
-        iv30: num(m["implied-volatility-30-day"]),
-        hv30: num(m["historical-volatility-30-day"]),
-        hv90: num(m["historical-volatility-90-day"]),
-        iv_hv_diff: num(m["iv-hv-30-day-difference"]),
+        iv30: vol(m["implied-volatility-30-day"]),
+        hv30: vol(m["historical-volatility-30-day"]),
+        hv90: vol(m["historical-volatility-90-day"]),
+        iv_hv_diff: vol(m["iv-hv-30-day-difference"]),
         liquidity: num(m["liquidity-rating"]),                     // 0–4
         liquidity_value: num(m["liquidity-value"]),
         beta: num(m.beta),
         corr_spy_3m: num(m["corr-spy-3month"]),
         market_cap: num(m["market-cap"]),
-        pe: num(m["price-earnings-ratio"]),
+        pe: semSentinela(m["price-earnings-ratio"]),
         dividend_yield: num(m["dividend-yield"]),
         earnings_date: m.earnings?.["expected-report-date"] || null,
         earnings_time: m.earnings?.["time-of-day"] || null,
