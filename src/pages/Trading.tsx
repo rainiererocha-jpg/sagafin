@@ -65,6 +65,9 @@ export default function Trading() {
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
             O Brasil é 0,25% do mercado global de ações. Sua carteira sabe disso? Painel de EWZ e dólar, e estudos de opções e ações no exterior lidos na tastytrade quatro vezes por dia.
           </p>
+          <a href="#calculadora" className="inline-flex items-center gap-2 mt-5 text-sm text-gold border border-gold/40 rounded-full px-4 py-1.5 hover:bg-gold/10">
+            Calcule quanto do seu patrimônio está em dólar →
+          </a>
           {abertos.length > 0 && (
             <p className="text-xs text-muted-foreground/70 mt-3 tabular-nums">{abertos.length} estudo{abertos.length > 1 ? "s" : ""} em acompanhamento agora</p>
           )}
