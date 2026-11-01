@@ -112,7 +112,7 @@ const leg = (side, right, s, qty = 1) => ({ side, right, strike: s.strike, expir
 
 /**
  * Monta a estrutura e calcula risco. Devolve null se faltarem dados.
- * tipos: short_put_spread | short_call_spread | iron_condor | short_strangle | covered_call | long_call_spread | long_put_spread
+ * tipos: short_put_spread | short_call_spread | iron_condor | jade_lizard | short_strangle | covered_call | long_call_spread | long_put_spread
  */
 export function montarEstrutura(tipo, { exp, cot, spot, mult = 100 }) {
   if (!exp || !spot) return null;
@@ -155,6 +155,22 @@ export function montarEstrutura(tipo, { exp, cot, spot, mult = 100 }) {
     breakevens = [sp.strike - credit, sc.strike + credit];
     pop = 1 - sp.delta_abs - sc.delta_abs;
     legs = fix([leg("sell", "put", sp), leg("sell", "call", sc)]);
+  } else if (tipo === "jade_lizard") {
+    // put vendida + call spread vendido; se o crédito cobre a largura da call, não há risco de alta
+    const sp = strikePorDelta(exp, cot, "put", 0.20);
+    const sc = strikePorDelta(exp, cot, "call", 0.20);
+    const lc = sc && strikeDeslocado(exp, cot, "call", sc.strike, passos);
+    if (!sp || !sc || !lc || [sp, sc, lc].some((x) => x.mid == null)) return null;
+    credit = sp.mid + sc.mid - lc.mid;
+    const width = Math.abs(lc.strike - sc.strike);
+    if (credit <= 0) return null;
+    const semRiscoAlta = credit >= width;
+    max_profit = credit * mult;
+    max_loss = (sp.strike - credit) * mult; // risco de baixa: ativo a zero
+    bp = Math.round(0.2 * spot * mult); // aproximação de margem da put vendida
+    breakevens = semRiscoAlta ? [sp.strike - credit] : [sp.strike - credit, sc.strike + credit];
+    pop = semRiscoAlta ? 1 - sp.delta_abs : 1 - sp.delta_abs - sc.delta_abs;
+    legs = fix([leg("sell", "put", sp), leg("sell", "call", sc), leg("buy", "call", lc)]);
   } else if (tipo === "covered_call") {
     const sc = strikePorDelta(exp, cot, "call", 0.30);
     if (!sc || sc.mid == null) return null;
