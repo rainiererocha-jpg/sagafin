@@ -104,3 +104,11 @@ Primeira dobra de `/trading`. Dados em `api/trading-panel.js` (função Vercel, 
 Números estáticos do bloco "Por que olhar para fora" e suas fontes: Brasil = 0,25% do MSCI ACWI IMI (jun/2026); piso de 16% no exterior (FGVcef, set/2026); fundos locais com exposição externa ≈ 15% do patrimônio (jul/2026). Revisar a cada semestre.
 
 CTA principal: WhatsApp do assessor com mensagem pré-preenchida sobre investir no exterior pela XP. CTA secundário: cadastro no Diário Saga (libera os estudos). Rodapé com aviso de remuneração por distribuição (Res. CVM 179/23).
+
+## Calculadora "Quanto do seu patrimônio está em dólar?"
+
+Componente `src/components/trading/CalculadoraDolar.tsx`, dentro do painel "Exterior em foco" (âncora `#calculadora`, com atalho no hero). O leitor informa o patrimônio total e quanto já está em dólar; a conta roda só no navegador, nada é enviado ou gravado.
+
+Mostra: a porcentagem atual em dólar contra o piso de 16% do estudo FGVcef (set/2026); quanto falta para o piso em reais e em dólares ao câmbio do painel; quanto a parte em dólar oscila em reais se o câmbio variar 10%; e um "retrovisor" de 12 meses que aplica a divisão do leitor ao Ibovespa e ao S&P 500 em reais (série `base100` de `/api/trading-panel`), comparando com 16% em dólar. O resultado leva ao WhatsApp do assessor com a porcentagem pré-preenchida na mensagem, que o leitor vê antes de enviar.
+
+Compliance: o piso de 16% aparece como estimativa de estudo, não como alocação indicada; o texto diz que a proporção depende de perfil, prazo e objetivos e que a simulação não substitui suitability; o retrovisor usa a janela fixa de 12 meses do painel, sem escolher datas, e pode mostrar resultado pior com mais dólar, como nos dados de 30/10/2026.

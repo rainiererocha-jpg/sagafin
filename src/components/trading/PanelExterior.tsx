@@ -5,6 +5,7 @@ import { MarketDigestModal } from "@/components/MarketDigestModal";
 import { PriceCone } from "@/components/trading/charts/PriceCone";
 import { FxFocus } from "@/components/trading/charts/FxFocus";
 import { Base100 } from "@/components/trading/charts/Base100";
+import { CalculadoraDolar } from "@/components/trading/CalculadoraDolar";
 import { type Panel, type Contexto, type StudyPublic, type SerieStats, fmtNum, fmtPct, STRATEGY_LABEL, HORIZON_LABEL } from "@/lib/tradingClient";
 
 const WA_EXTERIOR =
@@ -189,6 +190,9 @@ export function PanelExterior({ panel, ctx, studies }: { panel: Panel | null; ct
           </div>
         </div>
       </div>
+
+      {/* 3b. Calculadora */}
+      <CalculadoraDolar panel={panel} />
 
       {/* 4. Ideias de estudo */}
       <div>
