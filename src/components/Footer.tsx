@@ -39,7 +39,7 @@ export function Footer() {
               </div>
             </div>
             <p className="text-muted-foreground/55 text-[12.5px] leading-relaxed max-w-xs">
-              Assessoria de investimentos credenciada à XP Investimentos, oferecendo soluções
+              Rainiere Rocha é Assessor de Investimentos vinculado à XP Investimentos CCTVM S.A. por meio da InvestSmart, oferecendo soluções
               personalizadas para construção e proteção do seu patrimônio em todo o Brasil.
             </p>
           </div>
@@ -100,7 +100,7 @@ export function Footer() {
             A XP Investimentos CCTVM S/A, inscrita sob o CNPJ: 02.332.886/0001-04, é uma instituição
             financeira autorizada a funcionar pelo Banco Central do Brasil. Este site não constitui
             oferta de produto ou serviço financeiro. Rentabilidade passada não garante rentabilidade
-            futura. Investimentos envolvem riscos e podem resultar em perdas.
+            futura. Investimentos envolvem riscos e podem resultar em perdas. Ouvidoria XP Investimentos: 0800 722 3730.
           </p>
         </div>
 

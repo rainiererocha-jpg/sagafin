@@ -9,6 +9,7 @@ import Blog from "./pages/Blog";
 import PostPage from "./pages/PostPage";
 import Biblioteca from "./pages/Biblioteca";
 import DiagnosticoPage from "./pages/DiagnosticoPage";
+import PosEleicoesPage from "./pages/PosEleicoesPage";
 import AdminLayout from "./pages/admin/AdminLayout";
 import Approvals from "./pages/admin/Approvals";
 import AdminCalendar from "./pages/admin/Calendar";
@@ -31,6 +32,7 @@ const App = () => (
           <Route path="/blog/:slug" element={<PostPage />} />
           <Route path="/biblioteca" element={<Biblioteca />} />
           <Route path="/diagnostico" element={<DiagnosticoPage />} />
+          <Route path="/pos-eleicoes" element={<PosEleicoesPage />} />
           <Route path="/admin" element={<AdminLayout />}>
             <Route index element={<Approvals />} />
             <Route path="calendar" element={<AdminCalendar />} />
