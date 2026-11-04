@@ -1,5 +1,5 @@
 'use strict';
-// Gera public/ebooks/manual-pos-eleicoes-v1.pdf e public/og/pos-eleicoes.jpg (campanha /pos-eleicoes, 04/11/2026).
+// Gera public/ebooks/manual-pos-eleicoes-v2.pdf e public/og/pos-eleicoes-v2.jpg (campanha /pos-eleicoes, 04/11/2026).
 // Uso: node scripts/generate-manual-pos-eleicoes.cjs   (precisa do Chrome instalado e de puppeteer-core)
 // Conteúdo AUTORAL: só dados públicos (Tesouro Direto, Banco Central, imprensa). Nada do material interno da XP.
 const puppeteer = require('puppeteer-core');
@@ -8,8 +8,8 @@ const path = require('path');
 
 const CHROME_PATH = 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe';
 const ROOT = path.join(__dirname, '..');
-const PDF_OUT = path.join(ROOT, 'public', 'ebooks', 'manual-pos-eleicoes-v1.pdf');
-const OG_OUT = path.join(ROOT, 'public', 'og', 'pos-eleicoes.jpg');
+const PDF_OUT = path.join(ROOT, 'public', 'ebooks', 'manual-pos-eleicoes-v2.pdf');
+const OG_OUT = path.join(ROOT, 'public', 'og', 'pos-eleicoes-v2.jpg');
 
 const FOOTER = `<div style="width:100%;font-family:Arial,sans-serif;font-size:8px;padding:4px 36px;display:flex;justify-content:space-between;border-top:0.5px solid #ccc;box-sizing:border-box;color:#999;"><span>Saga Financeira · Manual Pós-Eleições 2026 · conteúdo educacional</span><span><span class="pageNumber"></span>/<span class="totalPages"></span></span></div>`;
 
@@ -20,7 +20,7 @@ body{font-family:Georgia,'Times New Roman',serif;font-size:11.5pt;color:#1a1a2e;
 .badge{font-size:8pt;letter-spacing:3px;text-transform:uppercase;color:#B8962A;margin-bottom:34px;font-family:Arial,sans-serif;font-weight:600;}
 .cover h1{font-size:31pt;color:#D4AF37;line-height:1.22;margin-bottom:20px;}
 .cover-sub{font-size:13pt;color:#cbd5e1;font-style:italic;max-width:470px;margin:0 auto 30px;}
-.big{font-size:58pt;color:#fff;font-weight:bold;line-height:1;margin:6px 0;}
+.big{font-size:40pt;color:#fff;font-weight:bold;line-height:1;margin:6px 0;}
 .big-cap{font-size:10pt;color:#94a3b8;font-family:Arial,sans-serif;max-width:420px;margin:0 auto 26px;}
 .divider{width:60px;height:2px;background:#D4AF37;margin:22px auto;}
 .author{font-size:10pt;color:#D4AF37;letter-spacing:2px;text-transform:uppercase;font-family:Arial,sans-serif;}
@@ -138,8 +138,8 @@ const manualHtml = `<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8
   <div class="badge">Saga Financeira · Manual gratuito</div>
   <h1>Manual Pós-Eleições 2026</h1>
   <div class="cover-sub">Por que os seus investimentos caíram, o que é marcação a mercado e como pensar a carteira agora</div>
-  <div class="big">15,78%</div>
-  <div class="big-cap">foi a taxa do Tesouro Prefixado 2032 na abertura do dia 26/10, contra 12,89% na sexta anterior: a maior alta em um dia na história do programa</div>
+  <div class="big">12,89% → 15,78%</div>
+  <div class="big-cap">a taxa anual do Tesouro Prefixado 2032, da sexta (23/10) para a segunda (26/10) depois do segundo turno: a maior alta em um só dia na história do Tesouro Direto. É o juro que o governo paga para pegar dinheiro emprestado, não uma promessa de rentabilidade</div>
   <div class="divider"></div>
   <div class="author">Rainiere Rocha</div>
   <div class="role">Assessor de Investimentos · XP Investimentos via InvestSmart · Goiânia</div>
@@ -150,10 +150,10 @@ ${chapters.map((c, i) => `<div class="chapter"><div class="ch-num">Parte ${i + 1
 const ogHtml = `<!DOCTYPE html><html><head><meta charset="UTF-8"><style>
 *{margin:0;box-sizing:border-box}body{width:1200px;height:630px;background:linear-gradient(150deg,#0f172a,#1e3a5f 55%,#0f172a);color:#fff;font-family:Georgia,serif;display:flex;flex-direction:column;justify-content:center;padding:0 80px}
 .k{font:600 20px Arial;letter-spacing:5px;text-transform:uppercase;color:#D4AF37;margin-bottom:26px}
-.n{font-size:190px;font-weight:bold;color:#D4AF37;line-height:1}
+.cap{font:600 24px Arial;color:#cbd5e1;margin-top:18px}.n{font-size:150px;font-weight:bold;color:#D4AF37;line-height:1}
 .t{font-size:44px;line-height:1.2;margin-top:18px;max-width:1000px}
 .s{font:22px Arial;color:#94a3b8;margin-top:26px}
-</style></head><body><div class="k">Manual gratuito · Saga Financeira</div><div class="n">15,78%</div><div class="t">Seus investimentos caíram com a eleição? Não foi o seu lado. Foi a curva de juros.</div><div class="s">Rainiere Rocha · Assessor de Investimentos · XP via InvestSmart</div></body></html>`;
+</style></head><body><div class="k">Manual gratuito · Saga Financeira</div><div class="n">12,89% → 15,78%</div><div class="t">Em um dia, a taxa do Tesouro saltou. Veja o que isso fez com a sua carteira.</div><div class="cap">taxa anual do Tesouro Prefixado 2032, de 23/10 para 26/10</div><div class="s">Rainiere Rocha · Assessor de Investimentos · XP via InvestSmart</div></body></html>`;
 
 (async () => {
   fs.mkdirSync(path.dirname(PDF_OUT), { recursive: true });
