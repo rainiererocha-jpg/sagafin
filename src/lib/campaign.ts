@@ -21,7 +21,7 @@ export type Faixa = (typeof FAIXAS)[number]["value"];
 export const isQualified = (faixa: string) => faixa !== "ate-100k" && faixa !== "";
 export const faixaLabel = (faixa: string) => FAIXAS.find((f) => f.value === faixa)?.label ?? faixa;
 
-export const MANUAL_PDF = "/ebooks/manual-pos-eleicoes-v1.pdf";
+export const MANUAL_PDF = "/ebooks/manual-pos-eleicoes-v2.pdf";
 export const WHATSAPP = "5562994160930";
 export const XP_CODE: string = (import.meta as any).env?.VITE_XP_ASSESSOR_CODE ?? "";
 export const XP_OUVIDORIA = "0800 722 3730";

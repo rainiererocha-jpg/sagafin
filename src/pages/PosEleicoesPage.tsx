@@ -9,7 +9,7 @@ import { PosEleicoesResult } from "@/components/campaign/PosEleicoesResult";
 
 const TITULO = "Manual Pós-Eleições 2026 | Saga Financeira";
 const DESCRICAO =
-  "Por que os seus investimentos caíram com a eleição: curva de juros e marcação a mercado explicadas, e o que fazer agora. Manual gratuito da Saga Financeira.";
+  "Em um dia, a taxa do Tesouro saltou de 12,89% para 15,78%. Veja o que isso fez com a sua carteira e baixe o Manual Pós-Eleições 2026, gratuito.";
 
 const CONTEUDO = [
   "O que aconteceu com a curva de juros e por que o mercado antecipa",
@@ -50,11 +50,20 @@ export default function PosEleicoesPage() {
               Manual gratuito · Pós-eleições 2026
             </p>
             <h1 className="font-serif text-4xl sm:text-5xl leading-[1.08] text-foreground mb-6" style={{ textWrap: "balance" }}>
-              Seus investimentos caíram com a eleição? Não foi o seu lado. Foi a curva de juros.
+              Em um dia, a taxa do Tesouro saltou de 12,89% para 15,78%. Veja o que isso fez com a sua carteira.
             </h1>
+            <div className="rounded-xl border border-[hsl(42_85%_55%/0.22)] bg-[hsl(42_85%_55%/0.05)] p-5 mb-6 max-w-xl">
+              <p className="text-[10.5px] tracking-[0.2em] uppercase text-[hsl(42_85%_62%)] font-medium mb-2">O que é esse número</p>
+              <p className="text-[14.5px] leading-relaxed text-white/70">
+                É a taxa de juros anual que o Tesouro Prefixado 2032 passou a pagar na segunda-feira depois do segundo turno
+                (26/10), contra 12,89% na sexta anterior. O mercado passou a exigir mais juros para emprestar ao governo. E quando
+                essa taxa sobe, o preço dos títulos que você já tinha cai: é isso que aparece vermelho no extrato. Não é
+                promessa de rentabilidade.
+              </p>
+            </div>
             <p className="text-[16px] leading-relaxed text-white/60 mb-8 max-w-xl">
-              Baixe o Manual Pós-Eleições 2026 e entenda, sem jargão, por que o título que você já tinha ficou vermelho. Se você
-              tem a partir de R$ 100 mil investidos, receba também um diagnóstico da sua carteira em até 48 horas.
+              Baixe o Manual Pós-Eleições 2026 e entenda, em linguagem simples, o que fazer agora. Se você tem a partir de R$ 100
+              mil investidos, receba também um diagnóstico da sua carteira em até 48 horas.
             </p>
             <a
               href="#formulario"
