@@ -1,5 +1,6 @@
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
+import { MesalvaBanner } from "@/components/MesalvaBanner";
 import { Button } from "@/components/ui/button";
 import { Shield, TrendingUp, PiggyBank, LineChart, Building2, Users, ArrowRight, CheckCircle2 } from "lucide-react";
 import { motion } from "framer-motion";
@@ -109,6 +110,10 @@ export default function Servicos() {
           </div>
         </div>
       </section>
+
+      <div className="container mx-auto px-4 pb-4">
+        <MesalvaBanner variant="strip" campaign="servicos" />
+      </div>
 
       <section className="py-16 bg-background">
         <div className="container mx-auto px-4 text-center max-w-2xl">

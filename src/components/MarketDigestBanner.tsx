@@ -3,7 +3,7 @@ import { Mail, Clock, Users, ArrowRight } from "lucide-react";
 import { MarketDigestModal } from "@/components/MarketDigestModal";
 
 const stats = [
-  { icon: Users, label: "2.000+ leitores" },
+  { icon: Users, label: "Leitores em todo o Brasil" },
   { icon: Clock, label: "Todos os dias úteis" },
   { icon: Mail, label: "Totalmente gratuito" },
 ];

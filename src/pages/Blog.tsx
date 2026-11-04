@@ -1,5 +1,6 @@
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
+import { MesalvaBanner } from "@/components/MesalvaBanner";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Clock, Tag, Loader2 } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -119,6 +120,8 @@ export default function Blog() {
               ))}
             </div>
           )}
+
+          <MesalvaBanner variant="strip" className="mt-12" />
 
           <div className="text-center mt-16 p-12 bg-card/50 rounded-2xl border border-border">
             <h3 className="text-2xl font-serif text-foreground mb-4">

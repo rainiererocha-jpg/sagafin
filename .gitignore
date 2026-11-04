@@ -36,3 +36,18 @@ tmp-*
 !.env.example
 .claude/settings.local.json
 **/settings.local.json
+
+# Chaves, tokens e credenciais (nunca versionar)
+meta.env
+*.env
+access-token*
+service-role-key*
+*-key-sagafin
+*.pem
+*.pfx
+*.p12
+*.key
+credentials*.json
+client_secret*.json
+supabase/.temp/
+supabase/.branches/

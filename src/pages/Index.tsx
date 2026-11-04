@@ -4,6 +4,7 @@ import { HeroSection } from "@/components/HeroSection";
 import { SagaStorySection } from "@/components/SagaStorySection";
 import { SecretWeaponsSection } from "@/components/SecretWeaponsSection";
 import { MarketDigestBanner } from "@/components/MarketDigestBanner";
+import { MesalvaBanner } from "@/components/MesalvaBanner";
 import { CompoundInterestSimulator } from "@/components/CompoundInterestSimulator";
 import { InvestorProfileQuiz } from "@/components/InvestorProfileQuiz";
 import { FixedIncomeComparator } from "@/components/FixedIncomeComparator";
@@ -121,8 +122,8 @@ const Index = () => {
       {/* Depoimentos */}
       <TestimonialsSection />
 
-      {/* Diário Saga — 2ª entrada (após depoimentos, antes do form) */}
-      <MarketDigestBanner />
+      {/* MeSalva — app de finanças pessoais (após depoimentos, antes do form) */}
+      <MesalvaBanner variant="section" />
 
       {/* Formulário de Contato */}
       <ContactForm />

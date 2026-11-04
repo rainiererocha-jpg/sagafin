@@ -95,6 +95,14 @@
 }
 
 @layer utilities {
+  /* MeSalva: texto em gradiente camaleão */
+  .cham-text {
+    background-image: linear-gradient(95deg,#2FB3A6 0%,#3FA2E0 20%,#6B4BD1 45%,#C23C88 70%,#E86B3A 88%,#F2A93A 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
   /* Font families */
   .font-serif {
     font-family: 'Cormorant Garamond', serif;

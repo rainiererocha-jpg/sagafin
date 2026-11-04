@@ -10,11 +10,15 @@ import PostPage from "./pages/PostPage";
 import Biblioteca from "./pages/Biblioteca";
 import DiagnosticoPage from "./pages/DiagnosticoPage";
 import PosEleicoesPage from "./pages/PosEleicoesPage";
+import Trading from "./pages/Trading";
+import TradingStudy from "./pages/TradingStudy";
 import AdminLayout from "./pages/admin/AdminLayout";
 import Approvals from "./pages/admin/Approvals";
 import AdminCalendar from "./pages/admin/Calendar";
 import Metrics from "./pages/admin/Metrics";
 import Generate from "./pages/admin/Generate";
+import AdminTrading from "./pages/admin/Trading";
+import Clientes from "./pages/admin/Clientes";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -33,11 +37,15 @@ const App = () => (
           <Route path="/biblioteca" element={<Biblioteca />} />
           <Route path="/diagnostico" element={<DiagnosticoPage />} />
           <Route path="/pos-eleicoes" element={<PosEleicoesPage />} />
+          <Route path="/trading" element={<Trading />} />
+          <Route path="/trading/:slug" element={<TradingStudy />} />
           <Route path="/admin" element={<AdminLayout />}>
             <Route index element={<Approvals />} />
             <Route path="calendar" element={<AdminCalendar />} />
             <Route path="metrics" element={<Metrics />} />
             <Route path="generate" element={<Generate />} />
+            <Route path="trading" element={<AdminTrading />} />
+            <Route path="clientes" element={<Clientes />} />
           </Route>
           {/* back-compat: rota antiga protegida por token redireciona pro novo /admin */}
           <Route path="/admin/approvals" element={<Navigate to="/admin" replace />} />

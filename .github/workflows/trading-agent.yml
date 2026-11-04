@@ -1,0 +1,69 @@
+name: Agente de Trading (Destaques Sagafin)
+
+on:
+  schedule:
+    # Dois crons em UTC cobrem o horário de verão americano (EDT, UTC-4) e o padrão (EST, UTC-5).
+    # O script só executa se o horário de Nova York cair numa das janelas: 09:20 (pré-abertura),
+    # 11:20 (meio da manhã), 14:20 (meio da tarde) e 16:20 (pós-fechamento). O cron "errado" sai sem fazer nada.
+    - cron: "20 13,15,18,20 * * 1-5"
+    - cron: "20 14,16,19,21 * * 1-5"
+  workflow_dispatch:
+    inputs:
+      slot:
+        description: "Slot (vazio = inferir pelo horário de NY)"
+        type: choice
+        default: ""
+        options: ["", "pre_open", "mid_morning", "mid_afternoon", "post_close"]
+      dry_run:
+        description: "Gerar sem publicar nada"
+        type: boolean
+        default: false
+      force:
+        description: "Rodar mesmo fora de janela/feriado (teste)"
+        type: boolean
+        default: false
+      playwright:
+        description: "Capturar gráficos com Playwright (experimental)"
+        type: boolean
+        default: false
+
+concurrency:
+  group: trading-agent
+  cancel-in-progress: false
+
+jobs:
+  rodar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Instalar Playwright (opcional)
+        if: ${{ inputs.playwright }}
+        run: |
+          npm i --no-save playwright otplib
+          npx playwright install --with-deps chromium
+
+      - name: Ler a tastytrade e publicar os estudos
+        run: node scripts/trading-agent/index.mjs
+        env:
+          TZ: America/New_York
+          SLOT: ${{ inputs.slot }}
+          DRY_RUN: ${{ inputs.dry_run && 'true' || 'false' }}
+          FORCE_RUN: ${{ inputs.force && 'true' || 'false' }}
+          PLAYWRIGHT: ${{ inputs.playwright && 'on' || 'off' }}
+          SITE_URL: https://sagafin.com.br
+          TASTY_CLIENT_ID: ${{ secrets.TASTY_CLIENT_ID }}
+          TASTY_CLIENT_SECRET: ${{ secrets.TASTY_CLIENT_SECRET }}
+          TASTY_REFRESH_TOKEN: ${{ secrets.TASTY_REFRESH_TOKEN }}
+          TASTY_USERNAME: ${{ secrets.TASTY_USERNAME }}
+          TASTY_PASSWORD: ${{ secrets.TASTY_PASSWORD }}
+          TASTY_TOTP_SECRET: ${{ secrets.TASTY_TOTP_SECRET }}
+          TASTY_STORAGE_STATE: ${{ secrets.TASTY_STORAGE_STATE }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}

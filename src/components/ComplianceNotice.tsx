@@ -9,9 +9,7 @@ export function ComplianceNotice() {
           XP Investimentos CCTVM S.A. · CNPJ 02.332.886/0001-04
         </p>
         <p>
-          Rainiere Rocha é <strong>Assessor de Investimentos</strong> vinculado à XP Investimentos CCTVM S.A.
-          por meio da InvestSmart, contratado pela intermediária para atuar em seu nome. A XP Investimentos é a
-          instituição responsável pela intermediação e custódia dos seus investimentos.
+          Rainiere Rocha é <strong>Assessor de Investimentos</strong> vinculado à Invest Smart Assessor de Investimento Ltda. (CNPJ 19.438.577/0001-08), registrada na CVM na forma da Resolução CVM 178/23, que mantém contrato de distribuição com a XP Investimentos CCTVM S.A. Na forma da legislação da CVM, o assessor de investimento não pode administrar ou gerir o patrimônio de investidores. A XP Investimentos é a instituição responsável pela intermediação e pela custódia dos seus investimentos.
         </p>
         <p>
           Ouvidoria XP Investimentos: {XP_OUVIDORIA} (dias úteis, das 9h às 18h).

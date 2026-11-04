@@ -1,0 +1,98 @@
+[
+  {
+    "id": "sobra-real",
+    "kicker": "Controle",
+    "titulo": "Saiba para onde vai cada real",
+    "texto": "Você trabalha o mês inteiro e o dinheiro some. Importe o extrato de qualquer banco, a foto da fatura ou um OFX: em segundos o MeSalva categoriza tudo e mostra a sobra real do mês. Sem planilha.",
+    "cta": "Ver quanto sobra de verdade",
+    "anchor": "#funcionalidades"
+  },
+  {
+    "id": "categorizacao",
+    "kicker": "Automação",
+    "titulo": "Categorizar gasto por gasto? Nunca mais.",
+    "texto": "O MeSalva lê suas transações e separa sozinho: mercado, delivery, transporte, assinaturas. Você só confere e segue a vida. Clareza financeira em menos de 60 segundos.",
+    "cta": "Organizar meus gastos",
+    "anchor": "#funcionalidades"
+  },
+  {
+    "id": "mesalva-ia",
+    "kicker": "MeSalva IA",
+    "titulo": "Consultora que trabalha por você, não pelo banco",
+    "texto": "O gerente do banco trabalha para o banco. A MeSalva IA trabalha exclusivamente para você: responde sobre CDB, Tesouro, reserva e dívida 24h, sem jargão, sem comissão, sem produto empurrado.",
+    "cta": "Conversar com a MeSalva IA",
+    "anchor": "#mesalva-ia"
+  },
+  {
+    "id": "calculadora-fire",
+    "kicker": "Independência financeira",
+    "titulo": "Descubra sua data de liberdade financeira",
+    "texto": "Com seus números reais, o MeSalva projeta 1, 5, 10 e 20 anos à frente e mostra o dia em que a renda dos investimentos cobre o seu custo de vida. Não é uma meta vaga: é uma data.",
+    "cta": "Calcular minha independência",
+    "anchor": "#funcionalidades"
+  },
+  {
+    "id": "jornada",
+    "kicker": "Da reserva à liberdade",
+    "titulo": "Seis marcos. Um caminho. O seu.",
+    "texto": "Começa com um respiro (a reserva), passa pelas chaves na sua mão e termina em acordar sem peso. O MeSalva mostra em que marco você está e qual é o próximo passo concreto.",
+    "cta": "Começar minha jornada grátis",
+    "anchor": "#funcionalidades"
+  },
+  {
+    "id": "alertas",
+    "kicker": "Alertas inteligentes",
+    "titulo": "Corte R$ 180 em delivery. Economize R$ 2.160 no ano.",
+    "texto": "O MeSalva acompanha o ritmo dos seus gastos e avisa quando uma categoria acelera, com o valor exato que dá para recuperar. Alerta útil, não notificação inútil.",
+    "cta": "Ativar meus alertas",
+    "anchor": "#funcionalidades"
+  },
+  {
+    "id": "metas-ilimitadas",
+    "kicker": "Metas",
+    "titulo": "Viagem, carro, entrada do apê: quantas metas você quiser",
+    "texto": "Crie metas e conecte contas sem limite. Cada uma com progresso, prazo e quanto falta, em um painel só. Simples. Honesto. Sem surpresa.",
+    "cta": "Criar minha primeira meta",
+    "anchor": "#funcionalidades"
+  },
+  {
+    "id": "plano-familia",
+    "kicker": "Plano Família",
+    "titulo": "Dinheiro a dois, sem briga no fim do mês",
+    "texto": "Dois perfis na mesma conta, metas em conjunto e alertas para os dois. Plano Família por R$ 29,90/mês, ou R$ 19,90/mês no anual (você economiza R$ 120 por ano).",
+    "cta": "Conhecer o Plano Família",
+    "anchor": "#planos"
+  },
+  {
+    "id": "seguranca",
+    "kicker": "Segurança",
+    "titulo": "Seus dados, criptografados. Seu banco, fora disso.",
+    "texto": "O MeSalva não se conecta à sua conta bancária. Você importa o que quiser, quando quiser, com criptografia de 256 bits. Sem acesso bancário automático. Cancele quando quiser.",
+    "cta": "Ver como protegemos seus dados",
+    "anchor": "#funcionalidades"
+  },
+  {
+    "id": "teste-gratis",
+    "kicker": "Teste grátis",
+    "titulo": "14 dias grátis. Sem cartão. Sem pegadinha.",
+    "texto": "Teste tudo por 14 dias sem informar cartão. Depois, Individual por R$ 19,90/mês (ou R$ 14,90/mês no anual) e Família por R$ 29,90/mês (ou R$ 19,90 no anual). Cancele quando quiser.",
+    "cta": "Testar 14 dias grátis",
+    "anchor": "#planos"
+  },
+  {
+    "id": "score-copiloto",
+    "kicker": "Copiloto",
+    "titulo": "Quanto você pode gastar hoje sem furar o mês?",
+    "texto": "O Copiloto prevê como o mês termina e devolve um número simples: quanto dá para gastar hoje e quanto pode investir. Substitui a ansiedade do \"será que vai dar?\".",
+    "cta": "Ver meu score",
+    "anchor": "#funcionalidades"
+  },
+  {
+    "id": "comece-1-minuto",
+    "kicker": "Comece agora",
+    "titulo": "Clareza financeira em menos de 60 segundos",
+    "texto": "E-mail, extrato, pronto: seu painel aparece. Sem configuração, sem planilha, sem tutorial de 40 minutos. Feito no Brasil, para brasileiros.",
+    "cta": "Começar grátis",
+    "anchor": "#funcionalidades"
+  }
+]

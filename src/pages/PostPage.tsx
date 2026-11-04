@@ -1,5 +1,6 @@
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
+import { MesalvaBanner } from "@/components/MesalvaBanner";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, ArrowRight, Clock, Tag, Calendar, Loader2 } from "lucide-react";
 import { Link, useParams, useNavigate } from "react-router-dom";
@@ -21,6 +22,25 @@ interface Post {
 function formatDate(iso: string) {
   const d = new Date(iso + "T12:00:00");
   return d.toLocaleDateString("pt-BR", { day: "2-digit", month: "long", year: "numeric" });
+}
+
+// Posts do Diário já trazem o anúncio embutido no HTML: nunca duplicar.
+function temAnuncioEmbutido(html: string) {
+  return html.includes("data-mesalva-ad=") || html.includes("utm_source=sagafin&utm_medium=post");
+}
+
+function contarParagrafos(html: string) {
+  return html.split("</p>").length - 1;
+}
+
+function splitAfterParagraph(html: string, n: number): [string, string] {
+  let pos = -1;
+  for (let i = 0; i < n; i++) {
+    pos = html.indexOf("</p>", pos + 1);
+    if (pos === -1) return [html, ""];
+  }
+  const cut = pos + "</p>".length;
+  return [html.slice(0, cut), html.slice(cut)];
 }
 
 const WA_URL =
@@ -79,6 +99,10 @@ export default function PostPage() {
     );
   }
 
+  const embutido = temAnuncioEmbutido(post.conteudo_html);
+  const inline = !embutido && contarParagrafos(post.conteudo_html) >= 10;
+  const [antes, depois] = inline ? splitAfterParagraph(post.conteudo_html, 4) : [post.conteudo_html, ""];
+
   return (
     <div className="min-h-screen bg-background">
       <div className="fixed top-0 left-0 right-0 z-50">
@@ -133,7 +157,15 @@ export default function PostPage() {
       {/* Content */}
       <section className="pb-24 bg-background">
         <div className="container mx-auto px-4 max-w-3xl">
-          <div className="post-content" dangerouslySetInnerHTML={{ __html: post.conteudo_html }} />
+          {inline ? (
+            <>
+              <div className="post-content" dangerouslySetInnerHTML={{ __html: antes }} />
+              <MesalvaBanner variant="inline" />
+              <div className="post-content" dangerouslySetInnerHTML={{ __html: depois }} />
+            </>
+          ) : (
+            <div className="post-content" dangerouslySetInnerHTML={{ __html: post.conteudo_html }} />
+          )}
 
           {/* CTA */}
           <div className="mt-16 p-10 bg-card/50 rounded-2xl border border-gold/20 text-center">
@@ -153,6 +185,9 @@ export default function PostPage() {
               </Button>
             </a>
           </div>
+
+          {/* MeSalva — peça rotativa do dia */}
+          {!embutido && !inline && <MesalvaBanner variant="card" />}
 
           <div className="mt-8 text-center">
             <Link to="/blog" className="text-muted-foreground hover:text-gold transition-colors text-sm">
