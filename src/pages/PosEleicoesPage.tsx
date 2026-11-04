@@ -102,7 +102,7 @@ export default function PosEleicoesPage() {
           </div>
           <p className="text-[14px] leading-relaxed text-white/60 max-w-xl">
             Mais de 6 anos ajudando famílias e empresários a organizar o patrimônio. Meu lema: o melhor operador de mercado é o
-            tempo. Por isso este manual não vende produto: explica o que aconteceu e como pensar a sua carteira.
+            tempo. Por isso este manual explica o que aconteceu e como pensar a sua carteira, com calma.
           </p>
         </section>
 

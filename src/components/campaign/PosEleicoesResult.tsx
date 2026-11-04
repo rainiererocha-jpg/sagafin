@@ -30,7 +30,7 @@ export function PosEleicoesResult({ faixa, nome }: { faixa: string; nome: string
         <CheckCircle2 className="h-7 w-7 shrink-0 text-[hsl(42_85%_55%)]" aria-hidden />
         <div>
           <h2 className="font-serif text-2xl text-foreground leading-tight">Pronto, {primeiro}. O manual é seu.</h2>
-          <p className="text-[13.5px] text-white/55 mt-1">Leitura de 12 minutos, sem jargão e sem produto empurrado.</p>
+          <p className="text-[13.5px] text-white/55 mt-1">Leitura de 12 minutos, em linguagem simples.</p>
         </div>
       </div>
 
