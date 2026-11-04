@@ -30,7 +30,7 @@ const services = [
     icon: LineChart,
     title: "Derivativos & Opções",
     description: "Operações estruturadas, opções e proteção de carteira (hedge) para investidores experientes que buscam alavancagem ou proteção.",
-    items: ["Opções de compra e venda", "Estruturas de proteção", "Operações de hedge", "Consultoria em risco"],
+    items: ["Opções de compra e venda", "Estruturas de proteção", "Operações de hedge", "Assessoria em gestão de risco"],
   },
   {
     icon: Building2,
@@ -70,7 +70,7 @@ export default function Servicos() {
           </p>
           <a href={WA_URL} target="_blank" rel="noopener noreferrer">
             <Button variant="gold" size="lg">
-              Agendar Consultoria Gratuita
+              Agendar Conversa Gratuita
               <ArrowRight className="w-4 h-4 ml-2" />
             </Button>
           </a>
@@ -121,7 +121,7 @@ export default function Servicos() {
             Pronto para começar sua <span className="text-gradient-gold">saga financeira</span>?
           </h2>
           <p className="text-muted-foreground mb-8">
-            Agende uma consultoria gratuita e receba um diagnóstico personalizado da sua carteira.
+            Agende uma conversa gratuita e receba um diagnóstico da sua carteira.
           </p>
           <a href={WA_URL} target="_blank" rel="noopener noreferrer">
             <Button variant="gold" size="lg" className="text-base px-10">

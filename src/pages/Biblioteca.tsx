@@ -981,11 +981,11 @@ export default function Biblioteca() {
                 Quer ir além do conteúdo?
               </h2>
               <p className="text-muted-foreground text-sm leading-relaxed max-w-md mx-auto mb-8">
-                Agende uma consultoria gratuita e descubra como aplicar essas
+                Agende uma conversa gratuita e descubra como aplicar essas
                 estratégias no seu patrimônio e negócio com orientação personalizada.
               </p>
               <a
-                href="https://wa.me/5562994160930?text=Ol%C3%A1%20Rainiere%2C%20vi%20a%20biblioteca%20e%20gostaria%20de%20uma%20consultoria."
+                href="https://wa.me/5562994160930?text=Ol%C3%A1%20Rainiere%2C%20vi%20a%20biblioteca%20e%20gostaria%20de%20uma%20conversa%20sobre%20a%20minha%20carteira."
                 target="_blank"
                 rel="noopener noreferrer"
               >
@@ -993,7 +993,7 @@ export default function Biblioteca() {
                   className="px-8 py-3.5 text-[10.5px] tracking-[0.22em] uppercase font-semibold text-background rounded-sm transition-all duration-200 hover:opacity-90"
                   style={{ background: "linear-gradient(135deg, hsl(42 85% 55%), hsl(38 78% 42%))" }}
                 >
-                  Agendar Consultoria Gratuita
+                  Agendar Conversa Gratuita
                 </button>
               </a>
             </FadeInUp>

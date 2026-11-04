@@ -9,6 +9,7 @@ import Blog from "./pages/Blog";
 import PostPage from "./pages/PostPage";
 import Biblioteca from "./pages/Biblioteca";
 import DiagnosticoPage from "./pages/DiagnosticoPage";
+import PosEleicoesPage from "./pages/PosEleicoesPage";
 import Trading from "./pages/Trading";
 import TradingStudy from "./pages/TradingStudy";
 import AdminLayout from "./pages/admin/AdminLayout";
@@ -35,6 +36,7 @@ const App = () => (
           <Route path="/blog/:slug" element={<PostPage />} />
           <Route path="/biblioteca" element={<Biblioteca />} />
           <Route path="/diagnostico" element={<DiagnosticoPage />} />
+          <Route path="/pos-eleicoes" element={<PosEleicoesPage />} />
           <Route path="/trading" element={<Trading />} />
           <Route path="/trading/:slug" element={<TradingStudy />} />
           <Route path="/admin" element={<AdminLayout />}>

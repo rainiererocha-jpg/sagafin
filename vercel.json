@@ -1,5 +1,6 @@
 {
   "rewrites": [
+    { "source": "/pos-eleicoes", "destination": "/pos-eleicoes.html" },
     { "source": "/((?!api/|ebooks/|assets/).*)", "destination": "/index.html" }
   ],
   "headers": [
