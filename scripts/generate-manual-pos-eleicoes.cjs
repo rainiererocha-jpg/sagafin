@@ -1,5 +1,5 @@
 'use strict';
-// Gera public/ebooks/manual-pos-eleicoes-v2.pdf e public/og/pos-eleicoes-v2.jpg (campanha /pos-eleicoes, 04/11/2026).
+// Gera public/ebooks/manual-pos-eleicoes-v2.pdf e public/og/pos-eleicoes-v3.jpg (campanha /pos-eleicoes, 04/11/2026).
 // Uso: node scripts/generate-manual-pos-eleicoes.cjs   (precisa do Chrome instalado e de puppeteer-core)
 // Conteúdo AUTORAL: só dados públicos (Tesouro Direto, Banco Central, imprensa). Nada do material interno da XP.
 const puppeteer = require('puppeteer-core');
@@ -9,7 +9,7 @@ const path = require('path');
 const CHROME_PATH = 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe';
 const ROOT = path.join(__dirname, '..');
 const PDF_OUT = path.join(ROOT, 'public', 'ebooks', 'manual-pos-eleicoes-v2.pdf');
-const OG_OUT = path.join(ROOT, 'public', 'og', 'pos-eleicoes-v2.jpg');
+const OG_OUT = path.join(ROOT, 'public', 'og', 'pos-eleicoes-v3.jpg');
 
 const FOOTER = `<div style="width:100%;font-family:Arial,sans-serif;font-size:8px;padding:4px 36px;display:flex;justify-content:space-between;border-top:0.5px solid #ccc;box-sizing:border-box;color:#999;"><span>Saga Financeira · Manual Pós-Eleições 2026 · conteúdo educacional</span><span><span class="pageNumber"></span>/<span class="totalPages"></span></span></div>`;
 
@@ -147,13 +147,31 @@ const manualHtml = `<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8
 ${chapters.map((c, i) => `<div class="chapter"><div class="ch-num">Parte ${i + 1} de ${chapters.length}</div>${c}</div>`).join('\n')}
 </body></html>`;
 
+const FOTO_B64 = fs.readFileSync(path.join(ROOT, 'src', 'assets', 'rainiere-assessor.jpg')).toString('base64');
 const ogHtml = `<!DOCTYPE html><html><head><meta charset="UTF-8"><style>
-*{margin:0;box-sizing:border-box}body{width:1200px;height:630px;background:linear-gradient(150deg,#0f172a,#1e3a5f 55%,#0f172a);color:#fff;font-family:Georgia,serif;display:flex;flex-direction:column;justify-content:center;padding:0 80px}
-.k{font:600 20px Arial;letter-spacing:5px;text-transform:uppercase;color:#D4AF37;margin-bottom:26px}
-.cap{font:600 24px Arial;color:#cbd5e1;margin-top:18px}.n{font-size:150px;font-weight:bold;color:#D4AF37;line-height:1}
-.t{font-size:44px;line-height:1.2;margin-top:18px;max-width:1000px}
-.s{font:22px Arial;color:#94a3b8;margin-top:26px}
-</style></head><body><div class="k">Manual gratuito · Saga Financeira</div><div class="n">12,89% → 15,78%</div><div class="t">Em um dia, a taxa do Tesouro saltou. Veja o que isso fez com a sua carteira.</div><div class="cap">taxa anual do Tesouro Prefixado 2032, de 23/10 para 26/10</div><div class="s">Rainiere Rocha · Assessor de Investimentos · XP via InvestSmart</div></body></html>`;
+*{margin:0;box-sizing:border-box}
+body{width:1200px;height:630px;position:relative;overflow:hidden;background:linear-gradient(135deg,#0b1224 0%,#16305a 60%,#0b1224 100%);color:#fff;font-family:Georgia,'Times New Roman',serif}
+.foto{position:absolute;right:0;top:0;width:480px;height:630px;background:url(data:image/jpeg;base64,${FOTO_B64}) -372px 0/auto 630px no-repeat}
+.foto:after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,#0b1224 0%,rgba(11,18,36,.55) 28%,rgba(11,18,36,0) 60%),linear-gradient(0deg,rgba(11,18,36,.75) 0%,rgba(11,18,36,0) 35%)}
+.txt{position:absolute;left:56px;top:0;height:630px;width:640px;display:flex;flex-direction:column;justify-content:center}
+.k{display:inline-block;align-self:flex-start;font:700 22px Arial;letter-spacing:4px;text-transform:uppercase;color:#0b1224;background:#D4AF37;padding:9px 18px;border-radius:4px;margin-bottom:30px}
+.n{display:flex;align-items:baseline;gap:14px;font-weight:bold;line-height:1}
+.a{font-size:58px;color:#94a3b8;text-decoration:line-through;text-decoration-thickness:4px}
+.ar{font-size:44px;color:#D4AF37}
+.b{font-size:104px;color:#D4AF37}
+.cap{font:600 28px Arial;color:#e2e8f0;margin-top:18px}
+.t{font-size:40px;line-height:1.2;margin-top:28px;font-weight:bold}
+.s{position:absolute;left:56px;bottom:34px;font:600 22px Arial;color:#94a3b8}
+</style></head><body>
+<div class="foto"></div>
+<div class="txt">
+  <div class="k">Manual gratuito</div>
+  <div class="n"><span class="a">12,89%</span><span class="ar">→</span><span class="b">15,78%</span></div>
+  <div class="cap">taxa do Tesouro Prefixado 2032, em um dia</div>
+  <div class="t">Veja o que isso fez com a sua carteira.</div>
+</div>
+<div class="s">Rainiere Rocha · Assessor de Investimentos · XP via InvestSmart</div>
+</body></html>`;
 
 (async () => {
   fs.mkdirSync(path.dirname(PDF_OUT), { recursive: true });
