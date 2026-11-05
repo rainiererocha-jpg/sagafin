@@ -21,8 +21,8 @@ export function ComplianceNotice() {
           percentual fixo ao ano sobre o patrimônio, informado antes da contratação.
         </p>
         <p>
-          Seus dados (nome, e-mail, WhatsApp e faixa de patrimônio) são usados apenas para enviar o manual e, se
-          você pedir, agendar o diagnóstico, com base no seu consentimento. Para revogar, escreva para
+          Seus dados (nome, e-mail, WhatsApp e faixa de patrimônio) são usados apenas para enviar o manual, inscrever você no Diário Saga (e-mail diário de mercado) e, se você pedir, agendar o
+          diagnóstico, com base no seu consentimento. Para revogar, escreva para
           rainiere.assessoria@sagafin.com.br.
         </p>
       </div>
