@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { CheckCircle2, Copy, Download, MessageCircle } from "lucide-react";
-import { MarketDigestModal } from "@/components/MarketDigestModal";
 import { MANUAL_PDF, XP_CODE, isQualified, waDiagnosticoUrl, xpOpenAccountUrl } from "@/lib/campaign";
 
 const GOLD = "hsl(42 85% 55%)";
@@ -45,6 +44,11 @@ export function PosEleicoesResult({ faixa, nome }: { faixa: string; nome: string
         <Download className="h-4 w-4" aria-hidden /> Baixar o manual (PDF)
       </a>
 
+      <p className="text-[12.5px] leading-relaxed text-white/45">
+        Você também foi inscrito no Diário Saga, o resumo diário do mercado por e-mail. Para cancelar, use o link no fim de qualquer
+        edição.
+      </p>
+
       {qualificado ? (
         <div className="rounded-2xl border border-[hsl(42_85%_55%/0.25)] bg-[hsl(42_85%_55%/0.06)] p-6 space-y-4">
           <p className="font-serif text-xl text-foreground leading-snug">
@@ -71,7 +75,7 @@ export function PosEleicoesResult({ faixa, nome }: { faixa: string; nome: string
         </div>
       ) : (
         <div className="rounded-2xl border border-white/[0.08] bg-white/[0.02] p-6 space-y-3">
-          <p className="font-serif text-xl text-foreground">Enquanto isso, três ferramentas gratuitas:</p>
+          <p className="font-serif text-xl text-foreground">Enquanto isso, duas ferramentas gratuitas:</p>
           <ul className="space-y-2 text-[13.5px]">
             <li>
               <Link className="text-[hsl(42_85%_62%)] underline underline-offset-4" to="/diagnostico">
@@ -82,13 +86,6 @@ export function PosEleicoesResult({ faixa, nome }: { faixa: string; nome: string
               <Link className="text-[hsl(42_85%_62%)] underline underline-offset-4" to="/biblioteca">
                 Biblioteca com 11 e-books
               </Link>
-            </li>
-            <li>
-              <MarketDigestModal>
-                <button type="button" className="text-[hsl(42_85%_62%)] underline underline-offset-4">
-                  Newsletter Diário Saga
-                </button>
-              </MarketDigestModal>
             </li>
           </ul>
         </div>

@@ -3,6 +3,7 @@ import { Loader2 } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { useToast } from "@/hooks/use-toast";
 import { useUtm } from "@/hooks/useUtm";
+import { setSubscriberEmail } from "@/lib/tradingClient";
 import { CAMPAIGN, FAIXAS, ONDE_INVESTE, SOURCE } from "@/lib/campaign";
 
 const GOLD = "hsl(42 85% 55%)";
@@ -50,6 +51,16 @@ export function PosEleicoesForm({ onSuccess }: { onSuccess: (faixa: string, nome
     if (f.website) return onSuccess(f.faixa, f.nome);
 
     setEnviando(true);
+    // Inscreve no Diário Saga (mesma função do modal da home; reativa quem já cancelou). Falha aqui não bloqueia o manual.
+    if (supabase) {
+      try {
+        const { error: subError } = await supabase.rpc("subscribe_daily", { p_email: f.email.trim(), p_name: f.nome.trim() });
+        if (subError) throw subError;
+        setSubscriberEmail(f.email.trim());
+      } catch (err) {
+        console.error("[Diário Saga] inscrição falhou", err);
+      }
+    }
     try {
       if (supabase) {
         const { error } = await supabase.from("leads").insert({
@@ -121,8 +132,9 @@ export function PosEleicoesForm({ onSuccess }: { onSuccess: (faixa: string, nome
       <label htmlFor="pe-consent" className="flex items-start gap-3 text-[12px] leading-relaxed text-white/50 cursor-pointer">
         <input id="pe-consent" type="checkbox" className="mt-1 h-4 w-4 accent-[hsl(42_85%_55%)]" checked={f.consent} onChange={(e) => set("consent", e.target.checked)} />
         <span>
-          Autorizo a Saga Financeira a me enviar o manual e a entrar em contato por WhatsApp e e-mail sobre o meu pedido. Posso
-          revogar quando quiser.
+          Autorizo a Saga Financeira a me enviar o manual, a entrar em contato por WhatsApp e e-mail sobre o meu pedido e a me
+          inscrever no Diário Saga, o resumo diário do mercado por e-mail. Posso cancelar quando quiser, pelo link no fim de
+          cada e-mail.
         </span>
       </label>
 
