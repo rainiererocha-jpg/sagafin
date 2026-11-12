@@ -17,6 +17,7 @@ import {
 import { sbHeaders } from "./lib/supabase.mjs";
 import { AVISO_LEGAL, PROIBIDAS } from "./lib/compliance.mjs";
 import { carregarFeriados, diaDePregao } from "./lib/calendario.mjs";
+import { listarAssinantes, enviarResend, rodapeLgpd, unsubscribeUrl as montarUnsub } from "./lib/email.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -28,8 +29,6 @@ const MESALVA_AD = process.env.MESALVA_AD !== "off";
 const MODEL = "claude-sonnet-5-5";
 const MIN_WORDS = 200;
 // Remetente no domínio mesalva.app (verificado no Resend); sobrescrevível por env.
-const FROM = process.env.MAIL_FROM || "Rainiere Rocha · Saga Financeira <diario@mesalva.app>";
-const REPLY_TO = process.env.MAIL_REPLY_TO || "contato@sagafin.com.br";
 
 const RSS_FEEDS = [
   { nome: "InfoMoney", url: "https://www.infomoney.com.br/feed/" },
@@ -248,23 +247,6 @@ async function publicarPost({ hoje, slug, texto, feature }) {
   console.log(`✓ Post publicado: ${SITE_URL}/blog/${slug}`);
 }
 
-async function listarAssinantes() {
-  const url = env("SUPABASE_URL");
-  const todos = [];
-  const pagina = 1000;
-  for (let from = 0; ; from += pagina) {
-    const r = await fetchJson(
-      `${url}/rest/v1/daily_subscribers?status=eq.active&select=email,name,unsubscribe_token&order=created_at.asc`,
-      { headers: sbHeaders({ Range: `${from}-${from + pagina - 1}` }) }
-    );
-    if (!r.ok && r.status !== 416) fail(`Supabase (daily_subscribers) HTTP ${r.status}: ${r.text.slice(0, 300)}`);
-    const lote = Array.isArray(r.json) ? r.json : [];
-    todos.push(...lote);
-    if (lote.length < pagina) break;
-  }
-  return todos;
-}
-
 // ---------------------------------------------------------------- 5. Resend
 
 function htmlEmail({ hoje, slug, texto, unsubscribeUrl, nome, feature }) {
@@ -291,54 +273,19 @@ function htmlEmail({ hoje, slug, texto, unsubscribeUrl, nome, feature }) {
     <p style="margin:0 0 18px;font-size:15px;">Bom dia e bons investimentos,<br><strong>Rainiere Rocha</strong><br><span style="font-family:Arial,Helvetica,sans-serif;font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:#9a7a2e;">Assessor de investimentos · InvestSmart | XP</span></p>
   </td></tr>
   ${feature ? blocoEmail(feature) : ""}
-  <tr><td style="padding:16px 28px 24px;border-top:1px solid #e8e4dc;font-family:Arial,Helvetica,sans-serif;font-size:11px;line-height:1.55;color:#6f6a62;">
-    <p style="margin:0 0 10px;"><strong>Aviso legal.</strong> ${escapeHtml(AVISO_LEGAL)}</p>
-    <p style="margin:0;">Você recebe este e-mail porque se cadastrou em sagafin.com.br; seus dados são usados apenas para este envio (LGPD). Para cancelar, <a href="${unsubscribeUrl}" style="color:#9a7a2e;">clique aqui</a>.</p>
-  </td></tr>
+  ${rodapeLgpd({ unsubscribeUrl })}
 </table>
 </td></tr></table>
 </body></html>`;
 }
 
 async function enviarEmails({ hoje, slug, texto, assinantes, feature }) {
-  if (!assinantes.length) {
-    console.log("ℹ Nenhum assinante ativo; e-mail não enviado.");
-    return { enviados: 0, lotesComErro: 0 };
-  }
-  const apiKey = env("RESEND_API_KEY");
   const assunto = `Diário Saga · ${ddmm(hoje)} — ${texto.titulo}`;
-  let enviados = 0;
-  let lotesComErro = 0;
-  for (let i = 0; i < assinantes.length; i += 100) {
-    const lote = assinantes.slice(i, i + 100).map((s) => {
-      const unsubscribeUrl = `${SITE_URL}/api/unsubscribe?token=${s.unsubscribe_token}`;
-      return {
-        from: FROM,
-        to: [s.email],
-        reply_to: REPLY_TO,
-        subject: assunto,
-        html: htmlEmail({ hoje, slug, texto, unsubscribeUrl, nome: s.name, feature }),
-        headers: {
-          "List-Unsubscribe": `<${unsubscribeUrl}>`,
-          "List-Unsubscribe-Post": "List-Unsubscribe=One-Click",
-        },
-        tags: [{ name: "canal", value: "diario-saga" }],
-      };
-    });
-    const r = await fetchJson("https://api.resend.com/emails/batch", {
-      method: "POST",
-      headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
-      body: JSON.stringify(lote),
-    }, 60000);
-    if (!r.ok) {
-      lotesComErro++;
-      console.error(`✖ Resend lote ${i / 100 + 1}: HTTP ${r.status} ${r.text.slice(0, 300)}`);
-      continue;
-    }
-    enviados += lote.length;
-    console.log(`✓ Resend lote ${i / 100 + 1}: ${lote.length} e-mails aceitos`);
-  }
-  return { enviados, lotesComErro };
+  const mensagens = assinantes.map((s) => {
+    const unsubscribeUrl = montarUnsub(SITE_URL, s.unsubscribe_token);
+    return { to: s.email, subject: assunto, unsubscribeUrl, html: htmlEmail({ hoje, slug, texto, unsubscribeUrl, nome: s.name, feature }) };
+  });
+  return enviarResend(mensagens, { canal: "diario-saga" });
 }
 
 // ---------------------------------------------------------------- main

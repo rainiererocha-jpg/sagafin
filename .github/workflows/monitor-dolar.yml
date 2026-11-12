@@ -1,0 +1,49 @@
+name: Monitor do Dólar
+
+on:
+  schedule:
+    # 17:30 UTC = 14:30 em Brasília (dias úteis), depois da PTAX de fechamento (~13:10).
+    # Feriados da B3 são pulados pelo próprio script (scripts/feriados-b3.json).
+    - cron: "30 17 * * 1-5"
+  workflow_dispatch:
+    inputs:
+      force:
+        description: "Rodar mesmo em fim de semana/feriado ou se já enviou hoje (teste)"
+        type: boolean
+        default: false
+      dry_run:
+        description: "Calcular e mostrar sem gravar nem enviar e-mail"
+        type: boolean
+        default: false
+      test_to:
+        description: "Enviar só para este e-mail (teste)"
+        type: string
+        default: ""
+
+concurrency:
+  group: monitor-dolar
+  cancel-in-progress: false
+
+jobs:
+  monitorar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Calcular a oscilação do dólar e enviar o e-mail
+        run: node scripts/monitor-dolar.mjs
+        env:
+          TZ: America/Sao_Paulo
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          MAIL_OWNER: ${{ secrets.MAIL_OWNER }}
+          SITE_URL: https://sagafin.com.br
+          FORCE_RUN: ${{ inputs.force && 'true' || 'false' }}
+          DRY_RUN: ${{ inputs.dry_run && 'true' || 'false' }}
+          TEST_TO: ${{ inputs.test_to }}
