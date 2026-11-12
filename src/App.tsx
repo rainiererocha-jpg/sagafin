@@ -12,6 +12,7 @@ import DiagnosticoPage from "./pages/DiagnosticoPage";
 import PosEleicoesPage from "./pages/PosEleicoesPage";
 import Trading from "./pages/Trading";
 import TradingStudy from "./pages/TradingStudy";
+import ManualTastytrade from "./pages/ManualTastytrade";
 import AdminLayout from "./pages/admin/AdminLayout";
 import Approvals from "./pages/admin/Approvals";
 import AdminCalendar from "./pages/admin/Calendar";
@@ -38,6 +39,7 @@ const App = () => (
           <Route path="/diagnostico" element={<DiagnosticoPage />} />
           <Route path="/pos-eleicoes" element={<PosEleicoesPage />} />
           <Route path="/trading" element={<Trading />} />
+          <Route path="/trading/manual-tastytrade" element={<ManualTastytrade />} />
           <Route path="/trading/:slug" element={<TradingStudy />} />
           <Route path="/admin" element={<AdminLayout />}>
             <Route index element={<Approvals />} />

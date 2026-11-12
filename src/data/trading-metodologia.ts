@@ -30,3 +30,6 @@ export const EVIDENCIAS = [
 
 export const BRASIL_INTRO =
   "ADRs e ETFs brasileiros negociados nos EUA permitem estudar o Brasil com opções líquidas em dólar. O agente compara o preço do ADR com a ação na B3 convertida pelo câmbio: desconto ou prêmio acima de 1,5% entra na triagem como tema de valor relativo. EWZ tem uma das cadeias de opções mais líquidas entre ETFs de país; Petrobras, Vale, Itaú, Bradesco, Nubank e Mercado Livre têm spreads aceitáveis; os demais passam pelo filtro de liquidez da tastytrade.";
+
+export const AVISO_CURTO =
+  "Os Destaques de Trading Sagafin são estudos de caráter exclusivamente educacional, elaborados com apoio de inteligência artificial a partir de dados da tastytrade e fontes públicas. Não constituem recomendação de investimento, relatório de análise (Resolução CVM 20) nem consultoria de valores mobiliários. Resultados exibidos são hipotéticos, sem custos, e não representam operações reais. Operações com opções podem gerar perdas superiores ao capital investido. Rainiere Rocha é assessor de investimentos vinculado à InvestSmart (XP), registrado na CVM conforme a Resolução CVM 178/23, e não pode recomendar, administrar ou gerir investimentos.";

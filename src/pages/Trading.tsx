@@ -2,7 +2,6 @@ import { useEffect, useMemo, useState } from "react";
 import { Loader2, ArrowRight, Info } from "lucide-react";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
-import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { MarketDigestModal } from "@/components/MarketDigestModal";
 import { TradeStudyCard } from "@/components/trading/TradeStudyCard";
@@ -10,13 +9,16 @@ import { TrackRecordTable } from "@/components/trading/TrackRecordTable";
 import { MethodologySection } from "@/components/trading/MethodologySection";
 import { BrasilNaTastySection } from "@/components/trading/BrasilNaTastySection";
 import { PanelExterior } from "@/components/trading/PanelExterior";
+import { FunilAssessoria, BarraMobileAssessoria, MANUAL_PATH } from "@/components/trading/FunilAssessoria";
+import { Link } from "react-router-dom";
+import { MessageCircle, BookOpen } from "lucide-react";
+import { AVISO_CURTO } from "@/data/trading-metodologia";
+import { WA_ASSESSORIA_URL } from "@/data/tastytrade-referral";
 import {
   listStudies, getTrackRecord, getContexto, getPanel, type StudyPublic, type TrackRecord, type Contexto, type Panel, type Horizon,
   HORIZON_LABEL, HORIZON_ORDER, fmtNum, fmtPct,
 } from "@/lib/tradingClient";
 
-const AVISO_CURTO =
-  "Os Destaques de Trading Sagafin são estudos de caráter exclusivamente educacional, elaborados com apoio de inteligência artificial a partir de dados da tastytrade e fontes públicas. Não constituem recomendação de investimento, relatório de análise (Resolução CVM 20) nem consultoria de valores mobiliários. Resultados exibidos são hipotéticos, sem custos, e não representam operações reais. Operações com opções podem gerar perdas superiores ao capital investido. Rainiere Rocha é assessor de investimentos vinculado à InvestSmart (XP), registrado na CVM conforme a Resolução CVM 178/23, e não pode recomendar, administrar ou gerir investimentos.";
 
 export default function Trading() {
   const [studies, setStudies] = useState<StudyPublic[]>([]);
@@ -25,6 +27,11 @@ export default function Trading() {
   const [panel, setPanel] = useState<Panel | null>(null);
   const [loading, setLoading] = useState(true);
   const [tab, setTab] = useState<Horizon>("monthly");
+
+  useEffect(() => {
+    document.title = "Destaques de Trading | Sagafin";
+    return () => { document.title = "Sagafin"; };
+  }, []);
 
   useEffect(() => {
     Promise.allSettled([listStudies(), getTrackRecord(), getContexto(), getPanel()]).then(([s, t, c, p]) => {
@@ -52,7 +59,7 @@ export default function Trading() {
   }, [loading, porHorizonte, tab]);
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background pb-20 md:pb-0">
       <div className="fixed top-0 left-0 right-0 z-50"><div className="h-[42px]" /></div>
       <div className="pt-[42px]"><Header /></div>
 
@@ -71,6 +78,7 @@ export default function Trading() {
           {abertos.length > 0 && (
             <p className="text-xs text-muted-foreground/70 mt-3 tabular-nums">{abertos.length} estudo{abertos.length > 1 ? "s" : ""} em acompanhamento agora</p>
           )}
+          <p className="mt-5 text-xs tracking-[0.18em] uppercase text-muted-foreground/70">Curadoria de Rainiere Rocha · assessor de investimentos registrado na CVM · InvestSmart | XP</p>
         </div>
       </section>
 
@@ -79,6 +87,14 @@ export default function Trading() {
           <span className="text-label">Exterior em foco</span>
           <h2 className="text-3xl md:text-4xl font-serif text-foreground mt-3 mb-8">EWZ e dólar: <em className="not-italic text-gradient-gold font-semibold">o Brasil visto de fora</em></h2>
           <PanelExterior panel={panel} ctx={ctx} studies={studies} />
+        </div>
+      </section>
+
+      <section className="pb-16">
+        <div className="container mx-auto px-4 max-w-6xl">
+          <span className="text-label">Comece a investir em dólar</span>
+          <h2 className="text-2xl md:text-3xl font-serif text-foreground mt-3 mb-6">Três passos para operar nos EUA <em className="not-italic text-gradient-gold font-semibold">com acompanhamento</em></h2>
+          <FunilAssessoria />
         </div>
       </section>
 
@@ -144,16 +160,25 @@ export default function Trading() {
       <section className="pb-24">
         <div className="container mx-auto px-4 max-w-6xl">
           <div className="text-center p-12 bg-card/50 rounded-2xl border border-border">
-            <h3 className="text-2xl font-serif text-foreground mb-4">Quer o estudo completo de cada card <span className="text-gradient-gold">no seu e-mail</span>?</h3>
-            <p className="text-muted-foreground mb-6">Assine o Diário Saga. O cadastro libera a tese completa, os strikes e a gestão de risco de todos os estudos.</p>
+            <h3 className="text-2xl font-serif text-foreground mb-4">Quer operar em dólar <span className="text-gradient-gold">com acompanhamento</span>?</h3>
+            <p className="text-muted-foreground mb-8 max-w-2xl mx-auto">Rainiere Rocha, assessor registrado na CVM (InvestSmart/XP), ajuda a montar uma carteira em dólar que conversa com a sua carteira no Brasil. A primeira conversa é pelo WhatsApp, sem custo.</p>
+            <div className="flex flex-wrap justify-center gap-3 mb-6">
+              <a href={WA_ASSESSORIA_URL} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 h-12 px-6 rounded-lg bg-gold text-accent-foreground font-bold text-sm hover:shadow-lg">
+                <MessageCircle className="w-4 h-4" /> Falar com o assessor
+              </a>
+              <Link to={MANUAL_PATH} className="inline-flex items-center gap-2 h-12 px-6 rounded-lg border border-gold/50 text-gold font-semibold text-sm hover:bg-gold/10">
+                <BookOpen className="w-4 h-4" /> Ler o manual do iniciante
+              </Link>
+            </div>
             <MarketDigestModal>
-              <Button variant="gold" size="lg">Assinar e liberar os estudos <ArrowRight className="w-4 h-4 ml-2" /></Button>
+              <button type="button" className="text-xs text-muted-foreground hover:text-gold underline-offset-4 hover:underline">Só quero o estudo completo de cada card no e-mail (Diário Saga) <ArrowRight className="inline w-3 h-3 ml-1" /></button>
             </MarketDigestModal>
           </div>
           <p className="text-[11px] leading-relaxed text-muted-foreground/60 mt-10">{AVISO_CURTO}</p>
         </div>
       </section>
 
+      <BarraMobileAssessoria />
       <Footer />
     </div>
   );
