@@ -1,7 +1,7 @@
 // node --test scripts/monitor-dolar.test.mjs
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { analisar, assunto, htmlMonitor, blocoProtecao, ferramentaDoDia, FERRAMENTAS_PROTECAO, introProtecao } from "./monitor-dolar.mjs";
+import { analisar, assunto, htmlMonitor, blocoDolarDiario, blocoProtecao, ferramentaDoDia, FERRAMENTAS_PROTECAO, introProtecao } from "./monitor-dolar.mjs";
 
 function serie(n, { passo = 0.001, ultimo = null } = {}) {
   // Retornos alternando +passo/-passo, para desvio conhecido; o último retorno pode ser forçado.
@@ -67,4 +67,16 @@ test("e-mail: foto no cabeçalho e oferta Fee Fixo antes do rodapé", () => {
   assert.match(html, /A Maia cuida do resto/);
   assert.match(html, /Quero minha assinatura/);
   assert.ok(html.indexOf("A Maia cuida do resto") < html.indexOf("Aviso legal"));
+});
+
+test("bloco do dólar no Diário: quadro curto, uma ferramenta pela data de envio, sem tabela longa", () => {
+  const a = analisar(serie(70, { ultimo: 0.03 }), { janela: 60, zLimiar: 2 });
+  const html = blocoDolarDiario(a, { hoje: "2026-11-13" });
+  assert.match(html, /Fechamento de/);
+  assert.match(html, /Fora do padrão/);
+  assert.equal(FERRAMENTAS_PROTECAO.filter((f) => html.includes(f.nome)).length, 1);
+  assert.ok(html.includes(ferramentaDoDia("2026-11-13").nome));
+  assert.doesNotMatch(html, /Z-score/);
+  assert.doesNotMatch(html, /Hoje o dólar/);
+  assert.match(blocoDolarDiario(analisar(serie(70), { janela: 60, zLimiar: 2 })), /Dentro do padrão/);
 });

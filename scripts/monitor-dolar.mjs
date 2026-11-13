@@ -1,7 +1,9 @@
 // Monitor do Dólar — Sagafin
-// Todo dia útil lê a PTAX de fechamento do Banco Central, compara a variação do dia com os últimos
-// 60 dias (z-score dos retornos) e envia um e-mail curto aos assinantes do Diário Saga + ao dono.
-// Dia de alerta = |z| >= Z_LIMIAR (padrão 2). Sem LLM: tudo determinístico.
+// Todo dia útil (14h30) lê a PTAX de fechamento do Banco Central, compara a variação do dia com os
+// últimos 60 dias (z-score dos retornos) e grava o dia em cambio_diario.
+// E-MAIL SÓ EM DIA DE ALERTA (|z| >= Z_LIMIAR, padrão 2): nos dias normais o dólar vai dentro do
+// Diário Saga da manhã seguinte (blocoDolarDiario, usado por scripts/diario-saga.mjs).
+// Sem LLM: tudo determinístico.
 //
 // Env: SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, RESEND_API_KEY, SITE_URL, MAIL_OWNER (sempre recebe),
 //      MAIL_FROM / MAIL_REPLY_TO (opcionais), JANELA (60), Z_LIMIAR (2),
@@ -62,7 +64,7 @@ export async function coletarYahoo() {
   return { serie, fonte: "yahoo" };
 }
 
-async function coletar(hoje) {
+export async function coletar(hoje) {
   try {
     return await coletarPTAX({ hoje });
   } catch (e) {
@@ -216,6 +218,38 @@ export function blocoProtecao(a) {
     <p style="margin:4px 0 18px;font-size:15px;">Regra prática para dimensionar: a parte do patrimônio exposta ao dólar deve acompanhar a parte dos seus gastos e objetivos em dólar. Qual ferramenta e em que tamanho depende do seu perfil, prazo e objetivos, e isso se decide numa conversa, não num e-mail.</p>`;
 }
 
+/**
+ * Bloco do dólar para o Diário Saga (e-mail único da manhã): quadro curto com o último fechamento
+ * e uma ferramenta de proteção em rodízio pela data de envio (`hoje`).
+ */
+export function blocoDolarDiario(a, { hoje = a.data, fonte = "bcb" } = {}) {
+  const h2 = (t) => `<h2 style="font-family:Arial,Helvetica,sans-serif;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:#9a7a2e;margin:26px 0 10px;">${t}</h2>`;
+  const selo = a.alerta
+    ? `<span style="display:inline-block;background:#b4542b;color:#fff;font-family:Arial,Helvetica,sans-serif;font-size:10px;letter-spacing:.2em;text-transform:uppercase;padding:4px 8px;border-radius:3px;">Fora do padrão</span>`
+    : `<span style="display:inline-block;background:#e8e4dc;color:#6f6a62;font-family:Arial,Helvetica,sans-serif;font-size:10px;letter-spacing:.2em;text-transform:uppercase;padding:4px 8px;border-radius:3px;">Dentro do padrão</span>`;
+  const fonteTxt = fonte === "bcb" ? "PTAX de fechamento, Banco Central" : "Yahoo Finance (BRL=X)";
+  const frase = fraseDoDia(a).replace(/^Hoje o/, "O");
+  const leitura = a.alerta
+    ? "Um movimento desse tamanho acontece poucas vezes por ano; vale revisar com calma se a proteção cambial da carteira está no tamanho certo."
+    : "Oscilação dentro do padrão recente.";
+  return `${h2("Dólar")}
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#0b0b0b;border-radius:4px;margin:0 0 12px;"><tr>
+      <td style="padding:14px 18px;">
+        <div style="font-family:Arial,Helvetica,sans-serif;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:#d4a53c;">Fechamento de ${ddmm(a.data)}</div>
+        <div style="font-size:30px;color:#ffffff;line-height:1.15;margin-top:4px;">${brl(a.ptax)}</div>
+      </td>
+      <td align="right" style="padding:14px 18px;">
+        <div style="font-size:20px;color:${a.varPct >= 0 ? "#f0b25a" : "#8fd3a4"};">${pct(a.varPct)}</div>
+        <div style="margin-top:8px;">${selo}</div>
+      </td>
+    </tr></table>
+    <p style="margin:0 0 6px;">${escapeHtml(frase)} ${leitura}</p>
+    <p style="margin:0 0 14px;font-family:Arial,Helvetica,sans-serif;font-size:11px;color:#6f6a62;">Faixa dos últimos ${a.janela} dias úteis: ${fmt(a.min60, 2)} a ${fmt(a.max60, 2)}. Fonte: ${escapeHtml(fonteTxt)}.</p>
+    <p style="margin:0 0 10px;"><span style="font-family:Arial,Helvetica,sans-serif;font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:#9a7a2e;">Proteção cambial: ferramenta do dia</span></p>
+    ${cartaoFerramenta(ferramentaDoDia(hoje))}
+    <p style="margin:0 0 18px;font-family:Arial,Helvetica,sans-serif;font-size:13px;"><a href="${WA_URL}" style="color:#9a7a2e;">Conversar com Rainiere sobre proteção em dólar →</a></p>`;
+}
+
 export function htmlMonitor(a, { unsubscribeUrl: unsub, nome, fonte }) {
   const saudacao = nome ? `Olá, ${escapeHtml(nome.split(" ")[0])}.` : "Olá.";
   const corVar = a.varPct > 0 ? "#b4542b" : a.varPct < 0 ? "#2f7a4a" : "#1c1b19";
@@ -292,6 +326,14 @@ async function main() {
   console.log(`  assunto: ${assunto(a)}`);
 
   if (!DRY_RUN && !FORCE_RUN && (await jaEnviouHoje(a.data))) { console.log("ℹ E-mail de hoje já enviado; nada a fazer."); return; }
+
+  // Dia normal: só registra. O dólar do dia vai no Diário Saga da manhã seguinte.
+  if (!a.alerta && !TEST_TO && !FORCE_RUN) {
+    if (DRY_RUN) { console.log("ℹ DRY RUN: dia normal; nada gravado nem enviado."); return; }
+    await gravar(a, fonte, { enviadoAt: null, destinatarios: 0 });
+    console.log("ℹ Dia normal: registrado em cambio_diario, sem e-mail (vai no Diário de amanhã).");
+    return;
+  }
 
   // Destinatários: assinantes ativos + dono (MAIL_OWNER). TEST_TO restringe a um endereço.
   let destinatarios;

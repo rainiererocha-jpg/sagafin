@@ -9,7 +9,7 @@
 import { readFile } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
-import { escolherFeature, blocoEmail, blocoOfertaFeeFixo, blocoPost, EMAIL_HEAD_EXTRAS } from "./mesalva-ad.mjs";
+import { escolherFeature, blocoOfertaFeeFixo, blocoPost, EMAIL_HEAD_EXTRAS } from "./mesalva-ad.mjs";
 import {
   fail, env, hojeISO, dataExtenso, ddmm, fetchJson, stripHtml, contarPalavras,
   escapeHtml, fmt, fmtVar, extrairJson,
@@ -18,13 +18,16 @@ import { sbHeaders } from "./lib/supabase.mjs";
 import { AVISO_LEGAL, PROIBIDAS } from "./lib/compliance.mjs";
 import { carregarFeriados, diaDePregao } from "./lib/calendario.mjs";
 import { listarAssinantes, enviarResend, rodapeLgpd, unsubscribeUrl as montarUnsub, cabecalhoEmail } from "./lib/email.mjs";
+import { coletar as coletarDolar, analisar as analisarDolar, blocoDolarDiario } from "./monitor-dolar.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const SITE_URL = (process.env.SITE_URL || "https://sagafin.com.br").replace(/\/$/, "");
 const FORCE_RUN = process.env.FORCE_RUN === "true";
 const DRY_RUN = process.env.DRY_RUN === "true";
-// Bloco publicitário do MeSalva (uma funcionalidade por dia); MESALVA_AD=off desliga.
+// Até esta data o e-mail avisa que Diário e Monitor do Dólar viraram um só (a carta de 12/11 falava em dois).
+const AVISO_UNIFICACAO_ATE = "2026-11-20";
+// Bloco publicitário do MeSalva (uma funcionalidade por dia, só no post do blog); MESALVA_AD=off desliga.
 const MESALVA_AD = process.env.MESALVA_AD !== "off";
 const MODEL = "claude-sonnet-5-5";
 const MIN_WORDS = 200;
@@ -249,7 +252,7 @@ async function publicarPost({ hoje, slug, texto, feature }) {
 
 // ---------------------------------------------------------------- 5. Resend
 
-function htmlEmail({ hoje, slug, texto, unsubscribeUrl, nome, feature }) {
+function htmlEmail({ hoje, slug, texto, unsubscribeUrl, nome, dolar }) {
   const saudacao = nome ? `Bom dia, ${escapeHtml(nome.split(" ")[0])}.` : "Bom dia.";
   const postUrl = `${SITE_URL}/blog/${slug}`;
   return `<!doctype html>
@@ -262,27 +265,28 @@ function htmlEmail({ hoje, slug, texto, unsubscribeUrl, nome, feature }) {
     <div style="font-size:22px;color:#ffffff;margin-top:8px;line-height:1.3;">${escapeHtml(texto.titulo)}</div>`)}
   <tr><td style="padding:26px 28px 8px;font-size:16px;line-height:1.65;">
     <p style="margin:0 0 14px;">${saudacao}</p>
+    ${hoje <= AVISO_UNIFICACAO_ATE ? `<p style="margin:0 0 14px;font-size:14px;color:#6f6a62;">Novidade: o Diário Saga e o Monitor do Dólar agora chegam juntos, em um só e-mail, antes da abertura do mercado.</p>` : ""}
     <style>
       .ds h2{font-family:Arial,Helvetica,sans-serif;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:#9a7a2e;margin:22px 0 8px;}
       .ds p{margin:0 0 14px;} .ds ul{margin:0 0 14px 20px;padding:0;} .ds li{margin:0 0 6px;}
     </style>
     <div class="ds">${texto.html}</div>
     <p style="margin:22px 0 10px;font-family:Arial,Helvetica,sans-serif;font-size:13px;"><a href="${postUrl}" style="color:#9a7a2e;">Ler no site →</a></p>
+    ${dolar ? blocoDolarDiario(dolar.a, { hoje, fonte: dolar.fonte }) : ""}
     <p style="margin:0 0 18px;font-size:15px;">Bom dia e bons investimentos,<br><strong>Rainiere Rocha</strong><br><span style="font-family:Arial,Helvetica,sans-serif;font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:#9a7a2e;">Assessor de investimentos · InvestSmart | XP</span></p>
   </td></tr>
   ${blocoOfertaFeeFixo("diario-saga")}
-  ${feature ? blocoEmail(feature) : ""}
   ${rodapeLgpd({ unsubscribeUrl })}
 </table>
 </td></tr></table>
 </body></html>`;
 }
 
-async function enviarEmails({ hoje, slug, texto, assinantes, feature }) {
+async function enviarEmails({ hoje, slug, texto, assinantes, dolar }) {
   const assunto = `Diário Saga · ${ddmm(hoje)} — ${texto.titulo}`;
   const mensagens = assinantes.map((s) => {
     const unsubscribeUrl = montarUnsub(SITE_URL, s.unsubscribe_token);
-    return { to: s.email, subject: assunto, unsubscribeUrl, html: htmlEmail({ hoje, slug, texto, unsubscribeUrl, nome: s.name, feature }) };
+    return { to: s.email, subject: assunto, unsubscribeUrl, html: htmlEmail({ hoje, slug, texto, unsubscribeUrl, nome: s.name, dolar }) };
   });
   return enviarResend(mensagens, { canal: "diario-saga" });
 }
@@ -311,12 +315,21 @@ async function main() {
   const [noticias, agenda] = await Promise.all([coletarNoticias(), proximosEventos(hoje)]);
 
   const texto = await gerarTexto(montarPrompt({ hoje, cotacoes, noticias, agenda }));
+  // Dólar: último fechamento (PTAX) + ferramenta de proteção. Falha aqui não derruba o Diário.
+  let dolar = null;
+  try {
+    const { serie, fonte } = await coletarDolar(hoje);
+    dolar = { a: analisarDolar(serie), fonte };
+    console.log(`✓ Dólar: fechamento de ${dolar.a.data} R$ ${dolar.a.ptax.toFixed(4)} (${dolar.a.alerta ? "ALERTA" : "normal"})`);
+  } catch (e) {
+    console.warn(`⚠ Bloco do dólar indisponível (${e.message}); o Diário segue sem ele.`);
+  }
   const feature = MESALVA_AD ? escolherFeature(hoje) : null;
   console.log(feature ? `✓ Peça MeSalva do dia: ${feature.id} — ${feature.titulo}` : "ℹ Peça MeSalva desligada (MESALVA_AD=off).");
 
   if (DRY_RUN) {
     console.log("\n--- TÍTULO ---\n" + texto.titulo + "\n--- RESUMO ---\n" + texto.resumo + "\n--- HTML ---\n" + texto.html);
-    if (feature) console.log("\n--- BLOCO MESALVA (e-mail) ---\n" + blocoEmail(feature));
+    if (dolar) console.log("\n--- BLOCO DÓLAR (e-mail) ---\n" + blocoDolarDiario(dolar.a, { hoje, fonte: dolar.fonte }));
     console.log("\nℹ DRY RUN: nada publicado nem enviado.");
     return;
   }
@@ -324,7 +337,7 @@ async function main() {
   await publicarPost({ hoje, slug, texto, feature });
   const assinantes = await listarAssinantes();
   console.log(`✓ Assinantes ativos: ${assinantes.length}`);
-  const { enviados, lotesComErro } = await enviarEmails({ hoje, slug, texto, assinantes, feature });
+  const { enviados, lotesComErro } = await enviarEmails({ hoje, slug, texto, assinantes, dolar });
   console.log(`\nConcluído: post publicado, ${enviados} e-mails aceitos pelo Resend.`);
   if (lotesComErro) fail(`${lotesComErro} lote(s) de e-mail falharam (post já está publicado).`);
 }

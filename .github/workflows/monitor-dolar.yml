@@ -3,6 +3,8 @@ name: Monitor do Dólar
 on:
   schedule:
     # 17:30 UTC = 14:30 em Brasília (dias úteis), depois da PTAX de fechamento (~13:10).
+    # Registra o dia em cambio_diario; só envia e-mail em dia de ALERTA (oscilação fora do padrão).
+    # Nos dias normais o dólar vai no Diário Saga da manhã seguinte.
     # Feriados da B3 são pulados pelo próprio script (scripts/feriados-b3.json).
     - cron: "30 17 * * 1-5"
   workflow_dispatch:

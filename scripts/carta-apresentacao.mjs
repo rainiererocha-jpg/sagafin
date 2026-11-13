@@ -30,8 +30,8 @@ export const ASSUNTO = "Uma cortesia da sua assessoria: os conteúdos da Saga Fi
 
 // Serviços do site apresentados na carta. Só conteúdo educacional; nunca produto ou ativo (CVM 178).
 export const SERVICOS = [
-  { nome: "Diário Saga", onde: "No seu e-mail, dias úteis, às 6h", texto: "O resumo do mercado para começar o dia: juros, bolsa, dólar e as notícias que importam, em leitura de poucos minutos." },
-  { nome: "Monitor do Dólar", onde: "No seu e-mail, dias úteis, às 14h30", texto: "A cotação oficial do dia, um aviso quando a oscilação foge do normal e, a cada edição, uma ferramenta de proteção cambial explicada." },
+  { nome: "Diário Saga", onde: "No seu e-mail, dias úteis, por volta das 9h30", texto: "O resumo do mercado antes da abertura da bolsa: juros, bolsa, dólar e as notícias que importam, em leitura de poucos minutos." },
+  { nome: "Monitor do Dólar", onde: "Dentro do Diário Saga, todo dia útil", texto: "O fechamento oficial do dólar, uma ferramenta de proteção cambial explicada a cada edição e um aviso à parte nos raros dias em que a oscilação foge do normal." },
   { nome: "Biblioteca", onde: "/biblioteca", texto: "E-books gratuitos para baixar, dos primeiros passos aos temas mais avançados." },
   { nome: "Blog", onde: "/blog", texto: "Artigos sobre investimentos, planejamento e economia, em linguagem direta." },
   { nome: "Diagnóstico de carteira", onde: "/diagnostico", texto: "Um questionário rápido que devolve uma leitura educativa da sua carteira, feita com apoio de inteligência artificial." },
@@ -91,7 +91,7 @@ export function htmlCarta({ nome, unsubscribeUrl: unsub }) {
     ${h2("O que está à sua disposição")}
     ${SERVICOS.map(linhaServico).join("\n    ")}
     ${h2("O que muda no seu e-mail")}
-    <p style="margin:0 0 14px;">A partir do próximo dia útil, você passa a receber o <strong>Diário Saga</strong> pela manhã e o <strong>Monitor do Dólar</strong> à tarde. São leituras curtas e informativas. Se preferir não receber, basta <a href="${unsub}" style="color:#9a7a2e;">clicar aqui para cancelar</a>, a qualquer momento, sem precisar explicar.</p>
+    <p style="margin:0 0 14px;">A partir do próximo dia útil, você passa a receber o <strong>Diário Saga</strong>, um e-mail por dia útil, pela manhã, já com o Monitor do Dólar. É uma leitura curta e informativa. Se preferir não receber, basta <a href="${unsub}" style="color:#9a7a2e;">clicar aqui para cancelar</a>, a qualquer momento, sem precisar explicar.</p>
     ${h2("Um pedido")}
     <p style="margin:0 0 14px;">Se você conhece uma pessoa que gostaria de receber estes mesmos conteúdos, um familiar, um amigo ou um colega, eu teria prazer em enviá-los a ela também, como cortesia. Basta responder este e-mail com o nome e o e-mail dela, ou me avisar pelo WhatsApp.</p>
     <p style="margin:0 0 22px;">${botao(WA_INDICACAO, "Indicar uma pessoa", { claro: true })}</p>

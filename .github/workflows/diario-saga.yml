@@ -2,9 +2,11 @@ name: Diário Saga
 
 on:
   schedule:
-    # 09:00 UTC = 06:00 em Brasília (dias úteis). Feriados da B3 são
-    # pulados pelo próprio script (scripts/feriados-b3.json).
-    - cron: "0 9 * * 1-5"
+    # 12:10 UTC = 09:10 em Brasília (dias úteis): o agendador do GitHub costuma atrasar
+    # 5 a 20 min, então o e-mail chega perto das 9h30, antes da abertura da B3 (10h).
+    # E-mail único do dia: resumo do mercado + dólar (fechamento anterior) + proteção cambial.
+    # Feriados da B3 são pulados pelo próprio script (scripts/feriados-b3.json).
+    - cron: "10 12 * * 1-5"
   workflow_dispatch:
     inputs:
       force:
