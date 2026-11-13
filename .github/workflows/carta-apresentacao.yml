@@ -1,0 +1,46 @@
+name: Carta de apresentação aos clientes
+
+# Só manual. Cadastra os clientes da assessoria no Diário Saga e no Monitor do Dólar
+# e envia a carta de apresentação a quem acabou de ser cadastrado.
+on:
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Só mostrar as contagens, sem cadastrar nem enviar"
+        type: boolean
+        default: true
+      test_to:
+        description: "Enviar a carta só para este e-mail (teste; não cadastra ninguém)"
+        type: string
+        default: ""
+      reenviar:
+        description: "Reenviar a carta a todos os clientes já cadastrados (uso excepcional)"
+        type: boolean
+        default: false
+
+concurrency:
+  group: carta-apresentacao
+  cancel-in-progress: false
+
+jobs:
+  carta:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Cadastrar clientes e enviar a carta
+        run: node scripts/carta-apresentacao.mjs
+        env:
+          TZ: America/Sao_Paulo
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          SITE_URL: https://sagafin.com.br
+          DRY_RUN: ${{ inputs.dry_run && 'true' || 'false' }}
+          REENVIAR: ${{ inputs.reenviar && 'true' || 'false' }}
+          TEST_TO: ${{ inputs.test_to }}

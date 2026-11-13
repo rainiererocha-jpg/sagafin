@@ -32,7 +32,7 @@ export function unsubscribeUrl(siteUrl, token) {
 export function rodapeLgpd({ unsubscribeUrl: url, aviso = AVISO_LEGAL }) {
   return `<tr><td style="padding:16px 28px 24px;border-top:1px solid #e8e4dc;font-family:Arial,Helvetica,sans-serif;font-size:11px;line-height:1.55;color:#6f6a62;">
     <p style="margin:0 0 10px;"><strong>Aviso legal.</strong> ${escapeHtml(aviso)}</p>
-    <p style="margin:0;">Você recebe este e-mail porque se cadastrou em sagafin.com.br; seus dados são usados apenas para este envio (LGPD). Para cancelar, <a href="${url}" style="color:#9a7a2e;">clique aqui</a>.</p>
+    <p style="margin:0;">Você recebe este e-mail porque se cadastrou em sagafin.com.br ou é cliente da assessoria de Rainiere Rocha; seus dados são usados apenas para este envio (LGPD). Para cancelar, <a href="${url}" style="color:#9a7a2e;">clique aqui</a>.</p>
   </td></tr>`;
 }
 
