@@ -1,7 +1,7 @@
 // node --test scripts/monitor-dolar.test.mjs
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { analisar, assunto } from "./monitor-dolar.mjs";
+import { analisar, assunto, blocoProtecao, ferramentaDoDia, FERRAMENTAS_PROTECAO, introProtecao } from "./monitor-dolar.mjs";
 
 function serie(n, { passo = 0.001, ultimo = null } = {}) {
   // Retornos alternando +passo/-passo, para desvio conhecido; o último retorno pode ser forçado.
@@ -30,6 +30,28 @@ test("salto de 3% com desvio de 0,1%: alerta e assunto de alerta", () => {
   assert.equal(a.alerta, true);
   assert.match(assunto(a), /^⚠ Dólar oscilou acima do normal/);
   assert.ok(a.varPct > 2.9 && a.varPct < 3.1);
+});
+
+test("proteção: dia normal mostra 1 ferramenta; alerta mostra todas", () => {
+  const normal = analisar(serie(70), { janela: 60, zLimiar: 2 });
+  const htmlN = blocoProtecao(normal);
+  assert.match(htmlN, /ferramenta em foco/);
+  assert.equal(FERRAMENTAS_PROTECAO.filter((f) => htmlN.includes(f.nome)).length, 1);
+  const alta = analisar(serie(70, { ultimo: 0.03 }), { janela: 60, zLimiar: 2 });
+  const htmlA = blocoProtecao(alta);
+  assert.equal(FERRAMENTAS_PROTECAO.filter((f) => htmlA.includes(f.nome)).length, FERRAMENTAS_PROTECAO.length);
+  assert.match(introProtecao(alta), /alta forte/);
+  assert.match(introProtecao(analisar(serie(70, { ultimo: -0.03 }), { janela: 60, zLimiar: 2 })), /Queda forte/);
+});
+
+test("rodízio: dias úteis seguidos trazem ferramentas diferentes", () => {
+  const nomes = ["2026-11-09", "2026-11-10", "2026-11-11", "2026-11-12", "2026-11-13"].map((d) => ferramentaDoDia(d).nome);
+  assert.equal(new Set(nomes).size, 5);
+});
+
+test("conteúdo educacional: sem tickers de ativos", () => {
+  const texto = JSON.stringify(FERRAMENTAS_PROTECAO);
+  assert.doesNotMatch(texto, /\b[A-Z]{4}\d{1,2}\b/);
 });
 
 test("dia sem variação não dispara", () => {

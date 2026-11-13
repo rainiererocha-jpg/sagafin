@@ -140,6 +140,82 @@ function blocoSignificado(a) {
   return "Oscilação dentro do padrão recente. Nada a fazer por causa do câmbio hoje. O acompanhamento diário serve para separar ruído de sinal: só os dias fora da faixa normal merecem atenção.";
 }
 
+// Ferramentas de proteção cambial: conteúdo EDUCACIONAL (o que é, para quem serve, ponto de atenção).
+// Nunca citar produto, fundo, ticker ou emissor: isso viraria recomendação (CVM). A escolha concreta
+// fica para a conversa com o assessor (botão abaixo do bloco).
+export const FERRAMENTAS_PROTECAO = [
+  {
+    nome: "Fundos cambiais",
+    oQue: "Fundos que acompanham a variação do dólar, aplicados em reais, com valores de entrada baixos e sem precisar de conta no exterior.",
+    paraQuem: "Quem quer uma parcela do patrimônio atrelada ao dólar sem complicação operacional.",
+    atencao: "Compare a taxa de administração: ela come parte da proteção. Não rendem juros americanos, só a variação da moeda.",
+  },
+  {
+    nome: "ETFs e BDRs de ativos no exterior",
+    oQue: "Cotas negociadas na bolsa brasileira, em reais, que replicam índices ou empresas de fora. O valor sobe quando o dólar sobe.",
+    paraQuem: "Quem já investe em bolsa e quer diversificar fora do Brasil pela mesma conta.",
+    atencao: "O risco é duplo: câmbio e a própria bolsa lá fora. Se o mercado americano cair, a proteção cambial pode não compensar.",
+  },
+  {
+    nome: "Conta e investimentos no exterior",
+    oQue: "Dinheiro em dólar de fato, numa conta internacional, aplicado em títulos do Tesouro americano, renda fixa ou fundos de lá.",
+    paraQuem: "Quem tem objetivos em dólar de longo prazo (estudo dos filhos, aposentadoria, imóvel fora) e patrimônio para diversificar.",
+    atencao: "Há IOF na remessa, regras próprias de Imposto de Renda e obrigação de declarar. Vale entender o custo total antes.",
+  },
+  {
+    nome: "Compra programada de moeda",
+    oQue: "Comprar dólar aos poucos, em parcelas mensais, numa conta global ou cartão multimoeda, até chegar ao valor de um gasto futuro.",
+    paraQuem: "Quem tem uma despesa em dólar com data marcada, como viagem, intercâmbio ou compra no exterior.",
+    atencao: "Dilui o preço médio, mas não acerta o melhor dia. Confira IOF e spread cobrados na conversão.",
+  },
+  {
+    nome: "Ações de empresas exportadoras",
+    oQue: "Empresas brasileiras que faturam em dólar (minério, celulose, proteína, petróleo) tendem a se beneficiar quando o real se desvaloriza.",
+    paraQuem: "Quem investe em ações e quer uma proteção indireta dentro da bolsa local.",
+    atencao: "A relação com o dólar é imperfeita: preço da commodity, gestão e dívida da empresa pesam tanto quanto o câmbio.",
+  },
+  {
+    nome: "Contratos futuros e opções de dólar",
+    oQue: "Instrumentos da B3 (inclusive o mini contrato de dólar) que travam ou limitam o preço da moeda numa data futura. É o hedge usado por empresas.",
+    paraQuem: "Empresas com contas em dólar e investidores experientes que acompanham o mercado de perto.",
+    atencao: "Exigem margem de garantia e ajustes diários. Usados sem estratégia, podem gerar perdas maiores do que a variação que se queria proteger.",
+  },
+];
+
+/** Uma ferramenta por dia útil, em rodízio pela data (determinístico, sem estado). */
+export function ferramentaDoDia(dataISO) {
+  const dias = Math.floor(Date.parse(`${dataISO}T12:00:00Z`) / 86400000);
+  if (!Number.isFinite(dias)) return FERRAMENTAS_PROTECAO[0];
+  return FERRAMENTAS_PROTECAO[((dias % FERRAMENTAS_PROTECAO.length) + FERRAMENTAS_PROTECAO.length) % FERRAMENTAS_PROTECAO.length];
+}
+
+export function introProtecao(a) {
+  if (a.alerta && a.varPct > 0) {
+    return "Em dia de alta forte, a tentação é comprar dólar no susto, muitas vezes perto do pico. Proteção se monta com antecedência e aos poucos. Estas são as ferramentas mais usadas para isso:";
+  }
+  if (a.alerta && a.varPct < 0) {
+    return "Queda forte do dólar costuma ser o momento mais barato para quem tem gastos ou objetivos em moeda estrangeira começar ou completar a proteção. Estas são as ferramentas mais usadas:";
+  }
+  return "Proteção cambial se constrói em dias calmos como hoje, não no susto. A cada dia útil, apresentamos uma das ferramentas disponíveis para o investidor brasileiro:";
+}
+
+function cartaoFerramenta(f) {
+  const item = (rotulo, texto) => `<p style="margin:0 0 6px;font-size:15px;line-height:1.55;"><span style="font-family:Arial,Helvetica,sans-serif;font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:#9a7a2e;">${rotulo}</span><br>${escapeHtml(texto)}</p>`;
+  return `<div style="border-left:3px solid #d4a53c;background:#faf8f4;padding:12px 16px;margin:0 0 12px;">
+      <p style="margin:0 0 8px;font-size:17px;font-weight:bold;">${escapeHtml(f.nome)}</p>
+      ${item("O que é", f.oQue)}${item("Para quem faz sentido", f.paraQuem)}${item("Ponto de atenção", f.atencao)}
+    </div>`;
+}
+
+export function blocoProtecao(a) {
+  const lista = a.alerta ? FERRAMENTAS_PROTECAO : [ferramentaDoDia(a.data)];
+  const titulo = a.alerta ? "Como se proteger da variação do dólar" : "Proteção cambial: ferramenta em foco";
+  return `<h2 style="font-family:Arial,Helvetica,sans-serif;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:#9a7a2e;margin:22px 0 8px;">${titulo}</h2>
+    <p style="margin:0 0 14px;">${escapeHtml(introProtecao(a))}</p>
+    ${lista.map(cartaoFerramenta).join("\n    ")}
+    <p style="margin:4px 0 18px;font-size:15px;">Regra prática para dimensionar: a parte do patrimônio exposta ao dólar deve acompanhar a parte dos seus gastos e objetivos em dólar. Qual ferramenta e em que tamanho depende do seu perfil, prazo e objetivos, e isso se decide numa conversa, não num e-mail.</p>`;
+}
+
 export function htmlMonitor(a, { unsubscribeUrl: unsub, nome, fonte }) {
   const saudacao = nome ? `Olá, ${escapeHtml(nome.split(" ")[0])}.` : "Olá.";
   const corVar = a.varPct > 0 ? "#b4542b" : a.varPct < 0 ? "#2f7a4a" : "#1c1b19";
@@ -175,6 +251,7 @@ export function htmlMonitor(a, { unsubscribeUrl: unsub, nome, fonte }) {
     </table>
     <h2 style="font-family:Arial,Helvetica,sans-serif;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:#9a7a2e;margin:22px 0 8px;">O que isso significa</h2>
     <p style="margin:0 0 18px;">${escapeHtml(blocoSignificado(a))}</p>
+    ${blocoProtecao(a)}
     <p style="margin:0 0 22px;"><a href="${WA_URL}" style="display:inline-block;background:#d4a53c;color:#0b0b0b;font-family:Arial,Helvetica,sans-serif;font-weight:bold;font-size:13px;letter-spacing:.08em;text-transform:uppercase;padding:12px 18px;border-radius:4px;text-decoration:none;">Conversar com Rainiere sobre proteção em dólar</a></p>
     <p style="margin:0 0 18px;font-size:15px;"><strong>Rainiere Rocha</strong><br><span style="font-family:Arial,Helvetica,sans-serif;font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:#9a7a2e;">Assessor de investimentos · InvestSmart | XP</span></p>
     <p style="margin:0 0 8px;font-family:Arial,Helvetica,sans-serif;font-size:11px;color:#6f6a62;">Fonte: ${escapeHtml(fonteTxt)}. Cálculo: variação diária (log) comparada à média e ao desvio-padrão dos ${a.janela} dias úteis anteriores.</p>
