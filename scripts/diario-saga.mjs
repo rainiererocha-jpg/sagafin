@@ -9,7 +9,7 @@
 import { readFile } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
-import { escolherFeature, blocoEmail, blocoPost, EMAIL_HEAD_EXTRAS } from "./mesalva-ad.mjs";
+import { escolherFeature, blocoEmail, blocoOfertaFeeFixo, blocoPost, EMAIL_HEAD_EXTRAS } from "./mesalva-ad.mjs";
 import {
   fail, env, hojeISO, dataExtenso, ddmm, fetchJson, stripHtml, contarPalavras,
   escapeHtml, fmt, fmtVar, extrairJson,
@@ -17,7 +17,7 @@ import {
 import { sbHeaders } from "./lib/supabase.mjs";
 import { AVISO_LEGAL, PROIBIDAS } from "./lib/compliance.mjs";
 import { carregarFeriados, diaDePregao } from "./lib/calendario.mjs";
-import { listarAssinantes, enviarResend, rodapeLgpd, unsubscribeUrl as montarUnsub } from "./lib/email.mjs";
+import { listarAssinantes, enviarResend, rodapeLgpd, unsubscribeUrl as montarUnsub, cabecalhoEmail } from "./lib/email.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -258,10 +258,8 @@ function htmlEmail({ hoje, slug, texto, unsubscribeUrl, nome, feature }) {
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f4f2ee;padding:24px 12px;">
 <tr><td align="center">
 <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;background:#ffffff;border-radius:6px;overflow:hidden;font-family:Georgia,'Times New Roman',serif;color:#1c1b19;">
-  <tr><td style="background:#0b0b0b;padding:22px 28px;">
-    <div style="font-family:Arial,Helvetica,sans-serif;font-size:10px;letter-spacing:.25em;text-transform:uppercase;color:#d4a53c;">Diário Saga · ${escapeHtml(dataExtenso(hoje))}</div>
-    <div style="font-size:22px;color:#ffffff;margin-top:8px;line-height:1.3;">${escapeHtml(texto.titulo)}</div>
-  </td></tr>
+  ${cabecalhoEmail(`    <div style="font-family:Arial,Helvetica,sans-serif;font-size:10px;letter-spacing:.25em;text-transform:uppercase;color:#d4a53c;">Diário Saga · ${escapeHtml(dataExtenso(hoje))}</div>
+    <div style="font-size:22px;color:#ffffff;margin-top:8px;line-height:1.3;">${escapeHtml(texto.titulo)}</div>`)}
   <tr><td style="padding:26px 28px 8px;font-size:16px;line-height:1.65;">
     <p style="margin:0 0 14px;">${saudacao}</p>
     <style>
@@ -272,6 +270,7 @@ function htmlEmail({ hoje, slug, texto, unsubscribeUrl, nome, feature }) {
     <p style="margin:22px 0 10px;font-family:Arial,Helvetica,sans-serif;font-size:13px;"><a href="${postUrl}" style="color:#9a7a2e;">Ler no site →</a></p>
     <p style="margin:0 0 18px;font-size:15px;">Bom dia e bons investimentos,<br><strong>Rainiere Rocha</strong><br><span style="font-family:Arial,Helvetica,sans-serif;font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:#9a7a2e;">Assessor de investimentos · InvestSmart | XP</span></p>
   </td></tr>
+  ${blocoOfertaFeeFixo("diario-saga")}
   ${feature ? blocoEmail(feature) : ""}
   ${rodapeLgpd({ unsubscribeUrl })}
 </table>

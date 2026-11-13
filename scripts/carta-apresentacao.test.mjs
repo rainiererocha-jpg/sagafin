@@ -39,3 +39,13 @@ test("carta: passa no compliance e não cita tickers", () => {
   assert.equal(checarCompliance(html), null);
   assert.doesNotMatch(JSON.stringify(SERVICOS), /\b[A-Z]{4}\d{1,2}\b/);
 });
+
+test("carta: foto no cabeçalho e oferta Fee Fixo do MeSalva com aviso de publicidade", () => {
+  const html = htmlCarta({ nome: "Teste", unsubscribeUrl: "#" });
+  assert.match(html, /email\/rainiere-cabecalho\.jpg/);
+  assert.match(html, /alt="Rainiere Rocha"/);
+  assert.match(html, /A Maia cuida do resto/);
+  assert.match(html, /Quero minha assinatura/);
+  assert.match(html, /produto independente de Rainiere Rocha/);
+  assert.ok(html.indexOf("A Maia cuida do resto") < html.indexOf("Aviso legal"), "oferta antes do rodapé");
+});

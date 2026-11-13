@@ -6,6 +6,21 @@ import { AVISO_LEGAL } from "./compliance.mjs";
 export const MAIL_FROM = process.env.MAIL_FROM || "Rainiere Rocha · Saga Financeira <diario@mesalva.app>";
 export const MAIL_REPLY_TO = process.env.MAIL_REPLY_TO || "contato@sagafin.com.br";
 
+export const FOTO_CABECALHO = "https://sagafin.com.br/email/rainiere-cabecalho.jpg";
+
+/**
+ * Cabeçalho preto padrão dos e-mails: texto à esquerda, foto do Rainiere à direita (já fundida no preto).
+ * `conteudoHtml` é o HTML da coluna de texto. Sem imagens carregadas, o e-mail continua legível.
+ */
+export function cabecalhoEmail(conteudoHtml) {
+  return `<tr><td bgcolor="#0b0b0b" style="background:#0b0b0b;padding:0;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
+      <td valign="middle" style="padding:22px 12px 22px 28px;">${conteudoHtml}</td>
+      <td width="150" valign="bottom" align="right" style="width:150px;padding:0;font-size:0;line-height:0;"><img src="${FOTO_CABECALHO}" width="150" height="150" alt="Rainiere Rocha" style="display:block;width:150px;height:150px;border:0;"></td>
+    </tr></table>
+  </td></tr>`;
+}
+
 /** Assinantes ativos do Diário Saga (paginado). */
 export async function listarAssinantes() {
   const url = env("SUPABASE_URL");

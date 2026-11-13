@@ -14,8 +14,8 @@ import { fail, env, hojeISO, dataExtenso, ddmm, fetchJson, escapeHtml, fmt } fro
 import { sbSelect, sbInsert } from "./lib/supabase.mjs";
 import { AVISO_LEGAL } from "./lib/compliance.mjs";
 import { carregarFeriados, diaDePregao, somarDias } from "./lib/calendario.mjs";
-import { listarAssinantes, enviarResend, rodapeLgpd, unsubscribeUrl } from "./lib/email.mjs";
-import { EMAIL_HEAD_EXTRAS } from "./mesalva-ad.mjs";
+import { listarAssinantes, enviarResend, rodapeLgpd, unsubscribeUrl, cabecalhoEmail } from "./lib/email.mjs";
+import { EMAIL_HEAD_EXTRAS, blocoOfertaFeeFixo } from "./mesalva-ad.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const SITE_URL = (process.env.SITE_URL || "https://sagafin.com.br").replace(/\/$/, "");
@@ -231,12 +231,10 @@ export function htmlMonitor(a, { unsubscribeUrl: unsub, nome, fonte }) {
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f4f2ee;padding:24px 12px;">
 <tr><td align="center">
 <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;background:#ffffff;border-radius:6px;overflow:hidden;font-family:Georgia,'Times New Roman',serif;color:#1c1b19;">
-  <tr><td style="background:#0b0b0b;padding:22px 28px;">
-    <div style="font-family:Arial,Helvetica,sans-serif;font-size:10px;letter-spacing:.25em;text-transform:uppercase;color:#d4a53c;">Monitor do Dólar · Saga Financeira · ${escapeHtml(dataExtenso(a.data))}</div>
+  ${cabecalhoEmail(`    <div style="font-family:Arial,Helvetica,sans-serif;font-size:10px;letter-spacing:.25em;text-transform:uppercase;color:#d4a53c;">Monitor do Dólar · Saga Financeira · ${escapeHtml(dataExtenso(a.data))}</div>
     <div style="font-size:40px;color:#ffffff;margin-top:10px;line-height:1.1;">${brl(a.ptax)}</div>
     <div style="font-size:18px;margin-top:6px;color:${a.varPct >= 0 ? "#f0b25a" : "#8fd3a4"};">${pct(a.varPct)} no dia</div>
-    <div style="margin-top:12px;">${selo}</div>
-  </td></tr>
+    <div style="margin-top:12px;">${selo}</div>`)}
   <tr><td style="padding:26px 28px 8px;font-size:16px;line-height:1.65;">
     <p style="margin:0 0 14px;">${saudacao}</p>
     <p style="margin:0 0 18px;font-size:18px;line-height:1.5;">${escapeHtml(fraseDoDia(a))}</p>
@@ -256,6 +254,7 @@ export function htmlMonitor(a, { unsubscribeUrl: unsub, nome, fonte }) {
     <p style="margin:0 0 18px;font-size:15px;"><strong>Rainiere Rocha</strong><br><span style="font-family:Arial,Helvetica,sans-serif;font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:#9a7a2e;">Assessor de investimentos · InvestSmart | XP</span></p>
     <p style="margin:0 0 8px;font-family:Arial,Helvetica,sans-serif;font-size:11px;color:#6f6a62;">Fonte: ${escapeHtml(fonteTxt)}. Cálculo: variação diária (log) comparada à média e ao desvio-padrão dos ${a.janela} dias úteis anteriores.</p>
   </td></tr>
+  ${blocoOfertaFeeFixo("monitor-dolar")}
   ${rodapeLgpd({ unsubscribeUrl: unsub, aviso: "O Monitor do Dólar é um informativo educacional e automático; não é previsão nem recomendação de compra ou venda de moeda ou de qualquer ativo. " + AVISO_LEGAL })}
 </table>
 </td></tr></table>

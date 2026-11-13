@@ -1,7 +1,7 @@
 // node --test scripts/monitor-dolar.test.mjs
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { analisar, assunto, blocoProtecao, ferramentaDoDia, FERRAMENTAS_PROTECAO, introProtecao } from "./monitor-dolar.mjs";
+import { analisar, assunto, htmlMonitor, blocoProtecao, ferramentaDoDia, FERRAMENTAS_PROTECAO, introProtecao } from "./monitor-dolar.mjs";
 
 function serie(n, { passo = 0.001, ultimo = null } = {}) {
   // Retornos alternando +passo/-passo, para desvio conhecido; o último retorno pode ser forçado.
@@ -58,4 +58,13 @@ test("dia sem variação não dispara", () => {
   const a = analisar(serie(70, { ultimo: 0 }), { janela: 60, zLimiar: 2 });
   assert.equal(a.alerta, false);
   assert.equal(a.ultimos5.length, 5);
+});
+
+test("e-mail: foto no cabeçalho e oferta Fee Fixo antes do rodapé", () => {
+  const a = analisar(serie(70), { janela: 60, zLimiar: 2 });
+  const html = htmlMonitor(a, { unsubscribeUrl: "#", nome: "Teste", fonte: "bcb" });
+  assert.match(html, /email\/rainiere-cabecalho\.jpg/);
+  assert.match(html, /A Maia cuida do resto/);
+  assert.match(html, /Quero minha assinatura/);
+  assert.ok(html.indexOf("A Maia cuida do resto") < html.indexOf("Aviso legal"));
 });

@@ -14,8 +14,8 @@ import { fileURLToPath } from "node:url";
 import { fail, escapeHtml } from "./lib/util.mjs";
 import { sbSelect, sbInsert } from "./lib/supabase.mjs";
 import { AVISO_LEGAL, checarCompliance } from "./lib/compliance.mjs";
-import { listarAssinantes, enviarResend, rodapeLgpd, unsubscribeUrl } from "./lib/email.mjs";
-import { EMAIL_HEAD_EXTRAS } from "./mesalva-ad.mjs";
+import { listarAssinantes, enviarResend, rodapeLgpd, unsubscribeUrl, cabecalhoEmail } from "./lib/email.mjs";
+import { EMAIL_HEAD_EXTRAS, blocoOfertaFeeFixo } from "./mesalva-ad.mjs";
 
 const SITE_URL = (process.env.SITE_URL || "https://sagafin.com.br").replace(/\/$/, "");
 const DRY_RUN = process.env.DRY_RUN === "true";
@@ -81,10 +81,9 @@ export function htmlCarta({ nome, unsubscribeUrl: unsub }) {
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f4f2ee;padding:24px 12px;">
 <tr><td align="center">
 <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;background:#ffffff;border-radius:6px;overflow:hidden;font-family:Georgia,'Times New Roman',serif;color:#1c1b19;">
-  <tr><td style="background:#0b0b0b;padding:24px 28px;">
-    <div style="font-family:Arial,Helvetica,sans-serif;font-size:10px;letter-spacing:.25em;text-transform:uppercase;color:#d4a53c;">Saga Financeira · Carta aos clientes</div>
-    <div style="font-size:28px;color:#ffffff;margin-top:10px;line-height:1.2;">Conteúdo para você decidir melhor, como cortesia da sua assessoria</div>
-  </td></tr>
+  ${cabecalhoEmail(`<div style="font-family:Arial,Helvetica,sans-serif;font-size:10px;letter-spacing:.25em;text-transform:uppercase;color:#d4a53c;">Saga Financeira · Carta aos clientes</div>
+    <div style="font-size:24px;color:#ffffff;margin-top:10px;line-height:1.25;">Conteúdo para você decidir melhor, como cortesia da sua assessoria</div>
+    <div style="font-family:Arial,Helvetica,sans-serif;font-size:12px;color:#cfc9bd;margin-top:10px;">Rainiere Rocha · seu assessor de investimentos</div>`)}
   <tr><td style="padding:26px 28px 8px;font-size:16px;line-height:1.65;">
     <p style="margin:0 0 14px;">${saudacao}</p>
     <p style="margin:0 0 14px;">Você é cliente da minha assessoria de investimentos, e quero que isso signifique mais do que a conversa que temos de tempos em tempos. Por isso criei a <strong>Saga Financeira</strong>: um conjunto de conteúdos educativos para acompanhar o mercado com calma e entender o que acontece com o seu dinheiro.</p>
@@ -102,6 +101,7 @@ export function htmlCarta({ nome, unsubscribeUrl: unsub }) {
     <p style="margin:0 0 18px;">Um abraço,</p>
     <p style="margin:0 0 18px;font-size:15px;"><strong>Rainiere Rocha</strong><br><span style="font-family:Arial,Helvetica,sans-serif;font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:#9a7a2e;">Assessor de investimentos · InvestSmart | XP</span></p>
   </td></tr>
+  ${blocoOfertaFeeFixo("carta-apresentacao")}
   ${rodapeLgpd({ unsubscribeUrl: unsub, aviso: "Os conteúdos da Saga Financeira têm caráter exclusivamente educacional e informativo; não são recomendação de compra ou venda de qualquer ativo. " + AVISO_LEGAL })}
 </table>
 </td></tr></table>

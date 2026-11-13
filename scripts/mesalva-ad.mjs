@@ -102,6 +102,50 @@ ${barraCham()}
 </td></tr>`;
 }
 
+// Oferta fixa para clientes da assessoria no modelo Fee Fixo: assinatura do MeSalva como cortesia.
+// Vai em todos os e-mails (carta, Diário, Monitor do Dólar). Ativação manual, pelo WhatsApp do Rainiere.
+export const OFERTA_FEE_FIXO = {
+  kicker: "Cortesia para clientes Fee Fixo",
+  titulo: "Eu cuido dos seus investimentos. A Maia cuida do resto.",
+  texto: "Cliente da assessoria no modelo Fee Fixo ganha a assinatura do MeSalva enquanto for cliente: contas, gastos e metas organizados, com a Maia, uma mini expert de organização financeira disponível 24 horas.",
+  cta: "Quero minha assinatura",
+  condicao: "Válida para clientes ativos no modelo Fee Fixo; a liberação é feita pelo Rainiere.",
+  whatsapp: "https://wa.me/5562994160930?text=" + encodeURIComponent("Olá, Rainiere. Sou cliente Fee Fixo e quero ativar a minha assinatura de cortesia do MeSalva."),
+};
+
+export function blocoOfertaFeeFixo(campaign = "diario-saga") {
+  const O = OFERTA_FEE_FIXO;
+  const saiba = linkMesalva({ id: "oferta-fee-fixo", anchor: "" }, "email", campaign);
+  const fonte = B.font.emailStack;
+  return `<tr><td style="padding:0 28px 24px;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="${L.bg}" style="border-collapse:separate;background-color:${L.bg};border:1px solid ${L.border};border-radius:${B.radius}px;">
+<tr><td style="padding:16px;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="${L.card}" style="border-collapse:separate;overflow:hidden;background-color:${L.card};border-radius:12px;">
+${barraCham()}
+<tr><td style="padding:22px 24px 8px;font-family:${fonte};color:${L.ink};">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
+<td align="left" style="font-family:${fonte};font-size:18px;">${WORDMARK}</td>
+<td align="right" style="font-family:${fonte};font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:${L.muted};">Publicidade</td>
+</tr></table>
+<p style="margin:18px 0 8px;font-family:${fonte};font-size:10.5px;letter-spacing:0.2em;text-transform:uppercase;font-weight:700;color:${VIOLETA};">${esc(O.kicker)}</p>
+<p style="margin:0 0 10px;font-family:${fonte};font-size:21px;line-height:1.25;font-weight:800;color:${L.ink};">${esc(O.titulo)}</p>
+<p style="margin:0 0 18px;font-family:${fonte};font-size:14.5px;line-height:1.6;color:${L.ink2};">${esc(O.texto)}</p>
+<table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr>
+<td bgcolor="${VIOLETA}" style="border-radius:10px;background-color:${VIOLETA};">
+<a href="${O.whatsapp}" style="display:inline-block;padding:13px 22px;font-family:${fonte};font-size:14px;font-weight:700;color:#ffffff;text-decoration:none;">${esc(O.cta)} &rarr;</a>
+</td>
+<td style="padding-left:16px;"><a href="${saiba}" style="font-family:${fonte};font-size:13.5px;font-weight:700;color:${VIOLETA};text-decoration:underline;">Conhecer o MeSalva</a></td>
+</tr></table>
+<p style="margin:16px 0 0;font-family:${fonte};font-size:11.5px;line-height:1.5;color:${L.ink2};">${esc(O.condicao)}</p>
+</td></tr>
+<tr><td style="padding:14px 24px 18px;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="border-top:1px solid ${L.border};padding-top:10px;font-family:Arial,Helvetica,sans-serif;font-size:10.5px;line-height:1.5;color:${L.ink2};">${esc(B.compliance)}</td></tr></table>
+</td></tr>
+</table>
+</td></tr></table>
+</td></tr>`;
+}
+
 // Mesma peça para o conteudo_html do post (sem <style>, só inline). Variante escura:
 // o site é escuro e o .post-content herda justify/cores, então tudo é explícito.
 export function blocoPost(feature) {
