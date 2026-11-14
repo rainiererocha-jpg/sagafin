@@ -75,7 +75,7 @@ export function HeroSection() {
             style={{ background: "linear-gradient(to right, hsl(42 85% 55% / 0.6), transparent)" }}
           />
           <span className="text-label">
-            XP Investimentos · Goiânia, Brasil
+            InvestSmart | XP · Goiânia, Brasil
           </span>
         </motion.div>
 
@@ -143,8 +143,9 @@ export function HeroSection() {
           className="text-muted-foreground leading-relaxed max-w-[360px] mb-11"
           style={{ fontSize: "clamp(0.82rem, 1.1vw, 0.9rem)" }}
         >
-          Assessoria personalizada com estratégia, tecnologia e visão de longo
-          prazo. Proteja e multiplique seu patrimônio com quem entende do mercado.
+          No mercado financeiro desde 2018. Você fala direto comigo, não com uma
+          central. Cada carteira é montada para o seu momento e acompanhada de
+          perto, com a estrutura da XP por trás.
         </motion.p>
 
         {/* CTAs */}
@@ -173,15 +174,15 @@ export function HeroSection() {
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 1.18 }}
-          className="flex items-start gap-8 pt-8 border-t border-white/[0.07]"
+          className="flex items-start gap-5 sm:gap-8 pt-8 border-t border-white/[0.07]"
         >
           {[
             { value: "100+", label: "Clientes Ativos" },
-            { value: "R$ 1M+", label: "Sob Assessoria" },
-            { value: "6+", label: "Anos de Mercado" },
+            { value: "R$ 5M+", label: "Em Custódia" },
+            { value: "Desde 2018", label: "No Mercado Financeiro" },
           ].map((stat, i) => (
-            <div key={i} className={i > 0 ? "border-l border-white/10 pl-8" : ""}>
-              <p className="font-serif font-bold text-foreground" style={{ fontSize: "clamp(1.4rem, 2.5vw, 2rem)" }}>
+            <div key={i} className={i > 0 ? "border-l border-white/10 pl-5 sm:pl-8" : ""}>
+              <p className="font-serif font-bold text-foreground whitespace-nowrap" style={{ fontSize: "clamp(1.4rem, 2.5vw, 2rem)" }}>
                 {stat.value}
               </p>
               <p className="text-[10.5px] text-muted-foreground/60 tracking-[0.18em] uppercase mt-1 font-medium">

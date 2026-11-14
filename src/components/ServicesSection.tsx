@@ -160,22 +160,24 @@ export function ServicesSection() {
             </p>
 
             <p className="text-muted-foreground text-sm leading-relaxed max-w-[380px] mb-10">
-              Credenciado à XP Investimentos, especializado em assessoria personalizada,
-              consórcios, crédito, derivativos, planejamento patrimonial e gestão de risco.
-              Atendo clientes em Goiânia e em todo o Brasil com acompanhamento individualizado
-              e estratégias sob medida.
+              Assessor de investimentos desde 2018, vinculado à InvestSmart, escritório
+              credenciado à XP Investimentos. Seu dinheiro fica custodiado na XP, no seu nome.
+              Meu trabalho é entender seus objetivos, explicar cada decisão antes de ela ser
+              tomada e revisar a carteira com você ao longo do tempo. Atendo em Goiânia e em
+              todo o Brasil, com investimentos, planejamento patrimonial, proteção de carteira,
+              consórcios e crédito.
             </p>
 
             {/* Stats */}
-            <div className="flex items-start gap-8 mb-10 pt-6 border-t border-white/[0.07]">
+            <div className="flex items-start gap-5 sm:gap-8 mb-10 pt-6 border-t border-white/[0.07]">
               {[
                 { value: "100+", label: "Clientes Ativos" },
-                { value: "R$ 1M+", label: "Sob Assessoria" },
-                { value: "6+", label: "Anos de Mercado" },
+                { value: "R$ 5M+", label: "Em Custódia" },
+                { value: "Desde 2018", label: "No Mercado Financeiro" },
               ].map((stat, i) => (
-                <div key={i} className={i > 0 ? "border-l border-white/10 pl-8" : ""}>
+                <div key={i} className={i > 0 ? "border-l border-white/10 pl-5 sm:pl-8" : ""}>
                   <p
-                    className="font-serif font-bold text-foreground"
+                    className="font-serif font-bold text-foreground whitespace-nowrap"
                     style={{ fontSize: "clamp(1.35rem, 2.2vw, 1.8rem)" }}
                   >
                     {stat.value}
