@@ -103,10 +103,10 @@ export const bibliotecaItems: BibliotecaItem[] = [
   {
     id: "eb-derivativos",
     titulo: "Derivativos: 10 Estratégias",
-    descricao: "Os instrumentos mais poderosos do mercado: opções, futuros, swaps e 10 estratégias — do protective put ao Iron Condor — com gestão de risco profissional e casos reais.",
+    descricao: "Os instrumentos mais poderosos do mercado: opções, futuros e 10 estratégias — da venda coberta ao Iron Condor — com gráficos, gestão de risco de verdade e os grandes desastres que ensinam.",
     categoria: "Ebooks",
     tipo: "ebook",
-    arquivo: "ebooks/derivativos-10-estrategias.pdf",
+    arquivo: "https://sagafin.com.br/ebooks/derivativos-10-estrategias.pdf",
     tags: ["derivativos", "opções", "gestão de risco"],
   },
   {
