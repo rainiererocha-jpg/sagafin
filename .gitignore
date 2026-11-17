@@ -51,3 +51,4 @@ credentials*.json
 client_secret*.json
 supabase/.temp/
 supabase/.branches/
+saida-social/

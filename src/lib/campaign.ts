@@ -29,8 +29,16 @@ export const XP_OUVIDORIA = "0800 722 3730";
 export const xpOpenAccountUrl = () =>
   XP_CODE ? `https://cadastro.xpi.com.br/desktop/step/1?assessor=${encodeURIComponent(XP_CODE)}` : "";
 
-export const waDiagnosticoUrl = (nome: string, faixa: string) => {
+export const waDiagnosticoUrl = (nome: string, faixa: string, manual = "Manual Pós-Eleições") => {
   const primeiro = nome.trim().split(/\s+/)[0] ?? "";
-  const msg = `Olá, Rainiere! Sou ${primeiro}. Baixei o Manual Pós-Eleições e tenho ${faixaLabel(faixa)} investidos. Quero agendar o diagnóstico da minha carteira.`;
+  const msg = `Olá, Rainiere! Sou ${primeiro}. Baixei o ${manual} e tenho ${faixaLabel(faixa)} investidos. Quero agendar o diagnóstico da minha carteira.`;
   return `https://wa.me/${WHATSAPP}?text=${encodeURIComponent(msg)}`;
 };
+
+// Funil social "comente EU QUERO" (Instagram/Facebook/LinkedIn → /manual).
+export const MANUAL_INVESTIDOR = {
+  source: "manual-investidor",
+  campaign: "funil-social-eu-quero",
+  pdf: "/ebooks/manual-completo-investidor.pdf",
+  nome: "Manual Completo do Investidor",
+} as const;

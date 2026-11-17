@@ -8,7 +8,22 @@ const botaoOuro = { background: `linear-gradient(135deg, ${GOLD}, hsl(38 78% 42%
 const botaoBase =
   "inline-flex items-center justify-center gap-2 px-6 py-4 text-[11px] tracking-[0.18em] uppercase font-semibold rounded-sm transition-opacity hover:opacity-90";
 
-export function PosEleicoesResult({ faixa, nome }: { faixa: string; nome: string }) {
+type ResultProps = {
+  faixa: string;
+  nome: string;
+  /** PDF a baixar e texto de apoio (default: Manual Pós-Eleições). */
+  pdf?: string;
+  leitura?: string;
+  nomeManual?: string;
+};
+
+export function PosEleicoesResult({
+  faixa,
+  nome,
+  pdf = MANUAL_PDF,
+  leitura = "Leitura de 12 minutos, em linguagem simples.",
+  nomeManual = "Manual Pós-Eleições",
+}: ResultProps) {
   const [copiado, setCopiado] = useState(false);
   const qualificado = isQualified(faixa);
   const primeiro = nome.trim().split(/\s+/)[0];
@@ -29,12 +44,12 @@ export function PosEleicoesResult({ faixa, nome }: { faixa: string; nome: string
         <CheckCircle2 className="h-7 w-7 shrink-0 text-[hsl(42_85%_55%)]" aria-hidden />
         <div>
           <h2 className="font-serif text-2xl text-foreground leading-tight">Pronto, {primeiro}. O manual é seu.</h2>
-          <p className="text-[13.5px] text-white/55 mt-1">Leitura de 12 minutos, em linguagem simples.</p>
+          <p className="text-[13.5px] text-white/55 mt-1">{leitura}</p>
         </div>
       </div>
 
       <a
-        href={MANUAL_PDF}
+        href={pdf}
         target="_blank"
         rel="noopener noreferrer"
         download
@@ -60,7 +75,7 @@ export function PosEleicoesResult({ faixa, nome }: { faixa: string; nome: string
             48 horas, sem compromisso. Atendo 5 carteiras por semana.
           </p>
           <a
-            href={waDiagnosticoUrl(nome, faixa)}
+            href={waDiagnosticoUrl(nome, faixa, nomeManual)}
             target="_blank"
             rel="noopener noreferrer"
             className={`${botaoBase} w-full text-background`}

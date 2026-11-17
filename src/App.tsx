@@ -10,6 +10,7 @@ import PostPage from "./pages/PostPage";
 import Biblioteca from "./pages/Biblioteca";
 import DiagnosticoPage from "./pages/DiagnosticoPage";
 import PosEleicoesPage from "./pages/PosEleicoesPage";
+import ManualPage from "./pages/ManualPage";
 import Trading from "./pages/Trading";
 import TradingStudy from "./pages/TradingStudy";
 import ManualTastytrade from "./pages/ManualTastytrade";
@@ -38,6 +39,8 @@ const App = () => (
           <Route path="/biblioteca" element={<Biblioteca />} />
           <Route path="/diagnostico" element={<DiagnosticoPage />} />
           <Route path="/pos-eleicoes" element={<PosEleicoesPage />} />
+          <Route path="/manual" element={<ManualPage />} />
+          <Route path="/guia" element={<ManualPage />} />
           <Route path="/trading" element={<Trading />} />
           <Route path="/trading/manual-tastytrade" element={<ManualTastytrade />} />
           <Route path="/trading/:slug" element={<TradingStudy />} />
