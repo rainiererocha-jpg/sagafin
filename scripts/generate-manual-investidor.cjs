@@ -7,6 +7,7 @@
 const fs = require('fs');
 const path = require('path');
 const { capitulos, glossario } = require('./manual-investidor/conteudo.cjs');
+const { fotoDataUri, fundoCss, svgPlanejamento } = require('./brand/fundo.cjs');
 
 const ROOT = path.join(__dirname, '..');
 const PDF_OUT = path.join(ROOT, 'public', 'ebooks', 'manual-completo-investidor.pdf');
@@ -28,23 +29,26 @@ const FONTS = `<link rel="preconnect" href="https://fonts.googleapis.com"><link 
 const CSS = `
 @page{size:A4;margin:0;}
 *{margin:0;padding:0;box-sizing:border-box;}
-:root{--gold:#d4a53c;--gold-d:#9a7a2e;--ink:#17150f;--muted:#5d574c;--paper:#fbf8f2;--line:#e6dfd1;}
+:root{--fundo-capa:${fundoCss({ brilhoX: 74, brilhoY: 72 })};--fundo-cta:${fundoCss({ brilhoX: 80, brilhoY: 55 })};--gold:#d4a53c;--gold-d:#9a7a2e;--ink:#17150f;--muted:#5d574c;--paper:#fbf8f2;--line:#e6dfd1;}
 body{font-family:Inter,Arial,sans-serif;font-size:10.5pt;color:var(--ink);line-height:1.62;background:var(--paper);-webkit-print-color-adjust:exact;print-color-adjust:exact;}
 .page{width:210mm;height:297mm;overflow:hidden;padding:22mm 20mm 20mm;position:relative;page-break-after:always;background:var(--paper);}
 .page:last-child{page-break-after:auto;}
 .dark{background:#0b0b0b;color:#efe9dc;}
 .serif{font-family:'Cormorant Garamond',Georgia,serif;}
 .eyebrow{font-size:7.5pt;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);font-weight:600;}
-.cover{display:flex;flex-direction:column;justify-content:space-between;padding:26mm 22mm;}
-.cover .brand{display:flex;justify-content:space-between;align-items:center;font-size:8pt;letter-spacing:.25em;text-transform:uppercase;color:#a49d8e;}
-.cover h1{font-family:'Cormorant Garamond',Georgia,serif;font-weight:600;font-size:46pt;line-height:1.02;color:#fff;margin:14px 0 18px;}
+.cover{padding:0;overflow:hidden;background:var(--fundo-capa);}
+.cover .brand{position:absolute;top:18mm;left:20mm;right:20mm;display:flex;justify-content:space-between;align-items:center;font-size:8pt;letter-spacing:.25em;text-transform:uppercase;color:#a49d8e;z-index:3;}
+.cover .topo{position:absolute;top:36mm;left:20mm;right:20mm;z-index:3;}
+.cover h1{font-family:'Cormorant Garamond',Georgia,serif;font-weight:600;font-size:50pt;line-height:.98;color:#fff;margin:12px 0 14px;}
 .cover h1 em{font-style:normal;color:var(--gold);}
-.cover .sub{font-size:12.5pt;color:#c9c2b3;max-width:135mm;line-height:1.55;}
-.cover .rule{width:56px;height:2px;background:var(--gold);margin:28px 0;}
-.cover .trilha{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:8px;}
-.cover .trilha div{border:1px solid rgba(212,165,60,.28);border-radius:6px;padding:10px 12px;font-size:8.5pt;color:#d8d1c2;}
-.cover .trilha b{display:block;color:var(--gold);font-size:7pt;letter-spacing:.2em;text-transform:uppercase;margin-bottom:3px;}
-.cover .autor{font-size:9pt;color:#a49d8e;}
+.cover .sub{font-size:12pt;color:#d2cbbd;max-width:118mm;line-height:1.5;}
+.cover .pilares{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap;}
+.cover .pilares span{font-size:7.5pt;letter-spacing:.18em;text-transform:uppercase;color:#0b0b0b;background:var(--gold);padding:5px 10px;border-radius:99px;font-weight:600;}
+.cover .foto{position:absolute;right:-8mm;bottom:0;height:150mm;z-index:2;filter:drop-shadow(0 10px 30px rgba(0,0,0,.55));}
+.cover .trilha{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px;}
+.cover .trilha div{border:1px solid rgba(212,165,60,.35);background:rgba(11,11,11,.72);border-radius:6px;padding:9px 12px;font-size:8.5pt;color:#e0d9ca;}
+.cover .trilha b{display:block;color:var(--gold);font-size:7pt;letter-spacing:.2em;text-transform:uppercase;margin-bottom:2px;}
+.cover .autor{position:absolute;left:20mm;bottom:18mm;font-size:8pt;line-height:1.45;color:#b8b0a0;z-index:3;width:50mm;}
 .cover .autor b{color:#fff;font-weight:600;font-size:11pt;display:block;letter-spacing:.02em;}
 .toc h2{font-family:'Cormorant Garamond',Georgia,serif;font-size:30pt;font-weight:600;margin:8px 0 14px;}
 .toc ol{list-style:none;}
@@ -78,14 +82,16 @@ tr:nth-child(odd) td{background:#f4efe4;}
 .gloss dl{display:grid;grid-template-columns:42mm 1fr;gap:0;}
 .gloss dt{font-weight:600;padding:7px 0;border-bottom:1px solid var(--line);}
 .gloss dd{padding:7px 0;border-bottom:1px solid var(--line);color:var(--muted);}
-.cta{display:flex;flex-direction:column;justify-content:center;padding:30mm 24mm;}
-.cta h2{font-family:'Cormorant Garamond',Georgia,serif;font-size:34pt;line-height:1.08;color:#fff;font-weight:600;margin:14px 0 16px;}
+.cta{padding:24mm 20mm;overflow:hidden;background:var(--fundo-cta);}
+.cta .txt{position:relative;z-index:3;width:112mm;}
+.cta h2{font-family:'Cormorant Garamond',Georgia,serif;font-size:32pt;line-height:1.06;color:#fff;font-weight:600;margin:12px 0 14px;}
 .cta h2 em{font-style:normal;color:var(--gold);}
-.cta p{color:#c9c2b3;font-size:11.5pt;max-width:150mm;}
-.cta .passos{margin:22px 0;display:grid;gap:10px;}
-.cta .passos div{border:1px solid rgba(212,165,60,.3);border-radius:6px;padding:12px 14px;color:#e6dfd1;font-size:10pt;}
+.cta p{color:#d2cbbd;font-size:10.5pt;}
+.cta .passos{margin:18px 0;display:grid;gap:9px;}
+.cta .passos div{border:1px solid rgba(212,165,60,.35);background:rgba(11,11,11,.7);border-radius:6px;padding:10px 12px;color:#e6dfd1;font-size:9.5pt;}
 .cta .passos b{color:var(--gold);}
-.cta .aviso{font-size:7.2pt;line-height:1.5;color:#8b8476;margin-top:26px;}
+.cta .foto{position:absolute;right:-10mm;bottom:66mm;height:110mm;z-index:2;filter:drop-shadow(0 10px 30px rgba(0,0,0,.55));}
+.cta .aviso{position:absolute;left:20mm;right:20mm;bottom:14mm;font-size:6.8pt;line-height:1.5;color:#8b8476;z-index:3;}
 `;
 
 function foot(n) {
@@ -93,21 +99,24 @@ function foot(n) {
 }
 
 function htmlManual() {
+  const foto = fotoDataUri('webp');
   const capa = `
 <section class="page dark cover">
+  ${svgPlanejamento(794, 1123)}
   <div class="brand"><span>Saga Financeira</span><span>${VERSAO}</span></div>
-  <div>
+  <div class="topo">
     <div class="eyebrow">Manual gratuito · Biblioteca Saga</div>
     <h1>Manual Completo<br>do <em>Investidor</em></h1>
-    <p class="sub">Da organização financeira ao mercado futuro: o caminho completo, em 12 capítulos objetivos, para investir com método e sem achismo.</p>
-    <div class="rule"></div>
-    <div class="trilha">
+    <p class="sub">Da organização financeira ao mercado futuro: o caminho completo, em 12 capítulos, para investir com método e sem achismo.</p>
+    <div class="pilares"><span>Planejamento</span><span>Organização</span><span>Investimento</span></div>
+  <div class="trilha">
       <div><b>Base</b>Orçamento, reserva, perfil e objetivos</div>
       <div><b>Carteira</b>Renda fixa, crédito, FIIs, ações, exterior, PGBL</div>
       <div><b>Avançado</b>FIRE, opções e mercado futuro</div>
     </div>
   </div>
-  <div class="autor"><b>Rainiere Rocha</b>Assessor de Investimentos · XP Investimentos via InvestSmart · Goiânia</div>
+  <img class="foto" src="${foto}" alt="Rainiere Rocha">
+  <div class="autor"><b>Rainiere Rocha</b>Assessor de Investimentos<br>XP Investimentos via InvestSmart<br>Goiânia</div>
 </section>`;
 
   const toc = `
@@ -147,6 +156,9 @@ function htmlManual() {
 
   const cta = `
 <section class="page dark cta">
+  ${svgPlanejamento(794, 1123, { opacidade: 0.7 })}
+  <img class="foto" src="${foto}" alt="Rainiere Rocha">
+  <div class="txt">
   <div class="eyebrow">Próximo passo</div>
   <h2>Conhecimento organizado.<br>Agora, a <em>sua</em> carteira.</h2>
   <p>Este manual mostra o mapa. O diagnóstico mostra onde você está nele. Se você tem a partir de R$ 100 mil investidos, eu olho a sua carteira e devolvo o que está coerente com seus objetivos e o que merece atenção.</p>
@@ -156,6 +168,7 @@ function htmlManual() {
     <div><b>3.</b> Em 20 minutos, por vídeo ou áudio, você recebe o diagnóstico. Sem compromisso.</div>
   </div>
   <p>Todo dia útil, às 9h30, o <b style="color:#d4a53c">Diário Saga</b> chega no seu e-mail com o resumo do mercado. Você já está inscrito.</p>
+  </div>
   <p class="aviso">${AVISO}</p>
 </section>`;
 
@@ -165,14 +178,16 @@ function htmlManual() {
 function htmlOg() {
   return `<!doctype html><html><head><meta charset="utf-8">${FONTS}<style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{width:1200px;height:630px;background:#0b0b0b;color:#fff;font-family:Inter,sans-serif;display:flex;align-items:center;padding:0 80px;position:relative;overflow:hidden}
-body:after{content:"";position:absolute;right:-160px;top:-160px;width:620px;height:620px;border-radius:50%;background:radial-gradient(circle,rgba(212,165,60,.22),transparent 65%)}
+body{width:1200px;height:630px;background:${fundoCss({ brilhoX: 78, brilhoY: 70 })};color:#fff;font-family:Inter,sans-serif;position:relative;overflow:hidden}
+.t{position:absolute;left:72px;top:96px;width:640px;z-index:2}
 .e{font-size:16px;letter-spacing:.3em;text-transform:uppercase;color:#d4a53c;font-weight:600}
-h1{font-family:'Cormorant Garamond',serif;font-size:84px;line-height:1;font-weight:600;margin:18px 0 22px}
+h1{font-family:'Cormorant Garamond',serif;font-size:82px;line-height:.98;font-weight:600;margin:18px 0 20px}
 h1 em{font-style:normal;color:#d4a53c}
-p{font-size:24px;color:#c9c2b3;max-width:760px;line-height:1.4}
-.b{position:absolute;bottom:44px;left:80px;font-size:15px;letter-spacing:.25em;text-transform:uppercase;color:#8b8476}
-</style></head><body><div><div class="e">Gratuito · 12 capítulos</div><h1>Manual Completo<br>do <em>Investidor</em></h1><p>Da organização financeira ao mercado futuro.</p></div><div class="b">Saga Financeira · Rainiere Rocha</div></body></html>`;
+p{font-size:25px;color:#d2cbbd;line-height:1.4}
+.pl{display:flex;gap:10px;margin-top:26px}.pl span{font-size:14px;letter-spacing:.18em;text-transform:uppercase;color:#0b0b0b;background:#d4a53c;padding:7px 14px;border-radius:99px;font-weight:600}
+img{position:absolute;right:-10px;bottom:0;height:600px;z-index:1;filter:drop-shadow(0 10px 30px rgba(0,0,0,.5))}
+.b{position:absolute;bottom:40px;left:72px;font-size:15px;letter-spacing:.25em;text-transform:uppercase;color:#8b8476;z-index:2}
+</style></head><body>${svgPlanejamento(1200, 630, { opacidade: 0.8 })}<img src="${fotoDataUri('webp')}" alt=""><div class="t"><div class="e">Gratuito · 12 capítulos</div><h1>Manual Completo<br>do <em>Investidor</em></h1><p>Da organização financeira ao mercado futuro.</p><div class="pl"><span>Planejamento</span><span>Organização</span><span>Investimento</span></div></div><div class="b">Saga Financeira · Rainiere Rocha</div></body></html>`;
 }
 
 async function main() {

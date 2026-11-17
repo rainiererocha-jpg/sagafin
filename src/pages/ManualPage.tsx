@@ -7,6 +7,9 @@ import { ComplianceNotice } from "@/components/ComplianceNotice";
 import { PosEleicoesForm } from "@/components/campaign/PosEleicoesForm";
 import { PosEleicoesResult } from "@/components/campaign/PosEleicoesResult";
 import { MANUAL_INVESTIDOR } from "@/lib/campaign";
+import { FundoPlanejamento, FUNDO_DEGRADE } from "@/components/campaign/FundoPlanejamento";
+
+const FOTO = "/brand/rainiere-recorte.webp";
 
 // Landing do funil social: "comente EU QUERO / MANUAL / GUIA" → DM com link → aqui.
 const TITULO = "Manual Completo do Investidor (grátis) | Saga Financeira";
@@ -70,30 +73,55 @@ export default function ManualPage() {
       </div>
 
       <main>
-        <section className="container mx-auto px-6 lg:px-10 max-w-3xl pt-14 pb-10">
-          <HeroFadeIn>
-            <p className="text-[10.5px] tracking-[0.25em] uppercase text-[hsl(42_85%_62%)] font-medium mb-5">
-              Manual gratuito · 12 capítulos
-            </p>
-            <h1 className="font-serif text-4xl sm:text-5xl leading-[1.08] text-foreground mb-6" style={{ textWrap: "balance" }}>
-              Manual Completo do Investidor: da organização financeira ao mercado futuro.
-            </h1>
-            <p className="text-[16px] leading-relaxed text-white/60 mb-8 max-w-xl">
-              Tudo o que a Biblioteca Saga ensina, condensado num único PDF: o que fazer antes de investir, como montar a carteira e
-              como funcionam opções, mini-índice e mini-dólar. Linguagem simples, exemplos com números e sem promessa de
-              rentabilidade.
-            </p>
-            <a
-              href="#formulario"
-              className="inline-block px-8 py-4 text-[11px] tracking-[0.2em] uppercase font-semibold text-background rounded-sm"
-              style={{ background: "linear-gradient(135deg, hsl(42 85% 55%), hsl(38 78% 42%))" }}
-            >
-              Eu quero o manual
-            </a>
-          </HeroFadeIn>
+        <section className="relative overflow-hidden border-b border-[hsl(42_85%_55%/0.15)]" style={{ background: FUNDO_DEGRADE }}>
+          <FundoPlanejamento className="opacity-80" />
+          <div className="relative container mx-auto px-6 lg:px-10 max-w-6xl grid md:grid-cols-[1.05fr_0.95fr] items-end gap-6 md:gap-4 pt-12 md:pt-16">
+            <HeroFadeIn>
+              <div className="pb-4 md:pb-16 min-w-0">
+                <p className="text-[10.5px] tracking-[0.25em] uppercase text-[hsl(42_85%_62%)] font-medium mb-5">
+                  Manual gratuito · 12 capítulos
+                </p>
+                <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl leading-[1.04] text-white mb-5" style={{ textWrap: "balance" }}>
+                  Manual Completo do <span className="text-[hsl(42_85%_58%)]">Investidor</span>
+                </h1>
+                <p className="text-[16px] leading-relaxed text-white/70 mb-6 max-w-xl">
+                  Da organização financeira ao mercado futuro, condensado num único PDF: o que fazer antes de investir, como
+                  montar a carteira e como funcionam opções, mini-índice e mini-dólar. Linguagem simples, exemplos com números e
+                  sem promessa de rentabilidade.
+                </p>
+                <ul className="flex flex-wrap gap-2 mb-8" aria-label="Pilares do manual">
+                  {["Planejamento", "Organização", "Investimento"].map((p) => (
+                    <li
+                      key={p}
+                      className="text-[10.5px] tracking-[0.18em] uppercase font-semibold text-[#0b0b0b] bg-[hsl(42_85%_55%)] px-3 py-1.5 rounded-full"
+                    >
+                      {p}
+                    </li>
+                  ))}
+                </ul>
+                <a
+                  href="#formulario"
+                  className="inline-block px-8 py-4 text-[11px] tracking-[0.2em] uppercase font-semibold text-background rounded-sm"
+                  style={{ background: "linear-gradient(135deg, hsl(42 85% 55%), hsl(38 78% 42%))" }}
+                >
+                  Eu quero o manual
+                </a>
+              </div>
+            </HeroFadeIn>
+            <div className="relative flex justify-center md:justify-end min-w-0">
+              <img
+                src={FOTO}
+                alt="Rainiere Rocha, assessor de investimentos, no escritório com notebook e livros de investimento"
+                width={887}
+                height={900}
+                className="relative w-full max-w-[340px] sm:max-w-[420px] md:max-w-[520px] h-auto drop-shadow-[0_18px_40px_rgba(0,0,0,0.55)]"
+                fetchPriority="high"
+              />
+            </div>
+          </div>
         </section>
 
-        <section className="container mx-auto px-6 lg:px-10 max-w-3xl pb-12">
+        <section className="container mx-auto px-6 lg:px-10 max-w-3xl pt-12 pb-12">
           <div className="rounded-2xl border border-white/[0.08] bg-white/[0.02] p-6 sm:p-8">
             {resultado ? (
               <PosEleicoesResult
@@ -142,7 +170,7 @@ export default function ManualPage() {
 
         <section className="container mx-auto px-6 lg:px-10 max-w-3xl pb-14">
           <div className="flex items-center gap-4 mb-4">
-            <img src="/rr-monogram-logo.png" alt="Rainiere Rocha" className="h-14 w-14 rounded-md object-cover" loading="lazy" />
+            <img src="/email/rainiere-cabecalho.jpg" alt="Rainiere Rocha" width={56} height={56} className="h-14 w-14 rounded-full object-cover ring-1 ring-[hsl(42_85%_55%/0.5)]" loading="lazy" />
             <div>
               <p className="font-serif text-xl text-foreground leading-tight">Rainiere Rocha</p>
               <p className="text-[11px] tracking-[0.18em] uppercase text-white/45 mt-0.5">

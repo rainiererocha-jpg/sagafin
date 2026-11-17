@@ -1,6 +1,15 @@
 // Renderiza carrossel (1080×1350) e stories (1080×1920) em PNG com Playwright, na identidade do site
 // (preto #0b0b0b, dourado #d4a53c, Cormorant Garamond + Inter). Sem dependência de fontes locais.
+import { createRequire } from "node:module";
 import { escapeHtml as esc } from "../lib/util.mjs";
+
+const { fotoDataUri, fundoCss, svgPlanejamento } = createRequire(import.meta.url)("../brand/fundo.cjs");
+
+/** Camada de fundo com degradê + elementos de planejamento + foto recortada do Rainiere. */
+function fundoComFoto(w, h, { brilhoX, brilhoY, foto }) {
+  return `<div style="position:absolute;inset:0;background:${fundoCss({ brilhoX, brilhoY })}"></div>${svgPlanejamento(w, h, { opacidade: 0.85 })}
+<img src="${fotoDataUri("webp")}" alt="" style="position:absolute;${foto};filter:drop-shadow(0 18px 40px rgba(0,0,0,.55))">`;
+}
 
 const FONTS = `<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">`;
 
@@ -12,7 +21,8 @@ body{font-family:Inter,Arial,sans-serif;color:#efe9dc;overflow:hidden;position:r
 .gold{color:#d4a53c}
 .eyebrow{font-size:26px;letter-spacing:.3em;text-transform:uppercase;color:#d4a53c;font-weight:600}
 .glow{position:absolute;border-radius:50%;background:radial-gradient(circle,rgba(212,165,60,.20),transparent 65%);pointer-events:none}
-.brand{position:absolute;left:84px;right:84px;bottom:64px;display:flex;justify-content:space-between;align-items:center;font-size:22px;letter-spacing:.22em;text-transform:uppercase;color:#8b8476}
+.brand{position:absolute;z-index:5;left:84px;right:84px;bottom:64px;display:flex;justify-content:space-between;align-items:center;font-size:22px;letter-spacing:.22em;text-transform:uppercase;color:#8b8476}
+.com-foto .brand span{display:none}
 .brand b{color:#efe9dc;font-weight:600;letter-spacing:.18em}
 .rule{width:90px;height:3px;background:#d4a53c}
 .wrap{position:absolute;left:84px;right:84px;top:100px;bottom:150px;display:flex;flex-direction:column;justify-content:center}
@@ -53,17 +63,16 @@ function slideConteudo(s, meta, i, total) {
 }
 
 function slideCta(meta) {
-  return `<div class="glow" style="width:1100px;height:1100px;left:-10px;top:-420px"></div>
-<div class="wrap">
+  return `${fundoComFoto(1080, 1350, { brilhoX: 78, brilhoY: 78, foto: "right:-80px;bottom:0;height:650px" })}
+<div style="position:absolute;left:84px;right:84px;top:110px">
   <div class="eyebrow">Material gratuito</div>
-  <h2 class="serif" style="font-size:92px;line-height:1.02;font-weight:600;color:#fff;margin:40px 0 30px">Quer ir além<br>deste post?</h2>
-  <p style="font-size:38px;line-height:1.45;color:#c9c2b3;max-width:880px">Receba o <b style="color:#fff">Manual Completo do Investidor</b>: da organização financeira ao mercado futuro, em 12 capítulos.</p>
-  <div style="margin-top:56px;border:3px solid #d4a53c;border-radius:18px;padding:40px 44px;background:rgba(212,165,60,.07)">
-    <div style="font-size:30px;letter-spacing:.2em;text-transform:uppercase;color:#c9c2b3">Comente</div>
-    <div class="serif gold" style="font-size:132px;font-weight:700;line-height:1.05">${esc(meta.cta)}</div>
-    <div style="font-size:30px;color:#c9c2b3">que eu te mando o link no direct.</div>
+  <h2 class="serif" style="font-size:88px;line-height:1.02;font-weight:600;color:#fff;margin:34px 0 24px">Quer ir além<br>deste post?</h2>
+  <p style="font-size:36px;line-height:1.42;color:#d2cbbd;max-width:860px">Receba o <b style="color:#fff">Manual Completo do Investidor</b>: da organização financeira ao mercado futuro, em 12 capítulos.</p>
+  <div style="display:inline-block;margin-top:40px;border:3px solid #d4a53c;border-radius:18px;padding:26px 36px;background:rgba(11,11,11,.82)">
+    <div style="font-size:26px;letter-spacing:.2em;text-transform:uppercase;color:#c9c2b3">Comente</div>
+    <div class="serif gold" style="font-size:96px;font-weight:700;line-height:1.05;white-space:nowrap">${esc(meta.cta)}</div>
+    <div style="font-size:26px;color:#c9c2b3">que eu te mando o link no direct.</div>
   </div>
-  <p style="font-size:26px;color:#8b8476;margin-top:40px">Ou acesse sagafin.com.br/manual</p>
 </div>`;
 }
 
@@ -89,22 +98,22 @@ function storyInsight(s) {
 }
 
 function storyCta(meta) {
-  return `<div class="glow" style="width:1400px;height:1400px;left:-200px;top:-300px"></div>
-<div class="wrap-s">
+  return `${fundoComFoto(1080, 1920, { brilhoX: 70, brilhoY: 82, foto: "right:-30px;bottom:0;height:820px" })}
+<div style="position:absolute;left:90px;right:90px;top:210px">
   <div class="eyebrow">Grátis para você</div>
-  <h2 class="serif" style="font-size:110px;line-height:1.02;font-weight:600;color:#fff;margin:60px 0 40px">Manual Completo<br>do <span class="gold">Investidor</span></h2>
-  <p style="font-size:46px;line-height:1.45;color:#c9c2b3">Da organização financeira ao mercado futuro. 12 capítulos, linguagem simples.</p>
-  <div style="margin-top:90px;border:3px solid #d4a53c;border-radius:22px;padding:46px;text-align:center;background:rgba(212,165,60,.08)">
-    <div style="font-size:36px;letter-spacing:.18em;text-transform:uppercase;color:#c9c2b3">Responda este story com</div>
-    <div class="serif gold" style="font-size:140px;font-weight:700;line-height:1.1">${esc(meta.cta)}</div>
-    <div style="font-size:36px;color:#c9c2b3">ou toque no link: sagafin.com.br/manual</div>
+  <h2 class="serif" style="font-size:112px;line-height:1.0;font-weight:600;color:#fff;margin:44px 0 30px">Manual Completo<br>do <span class="gold">Investidor</span></h2>
+  <p style="font-size:44px;line-height:1.42;color:#d2cbbd">Da organização financeira ao mercado futuro. 12 capítulos, linguagem simples.</p>
+  <div style="margin-top:56px;border:3px solid #d4a53c;border-radius:22px;padding:34px 40px;text-align:center;background:rgba(11,11,11,.82)">
+    <div style="font-size:32px;letter-spacing:.18em;text-transform:uppercase;color:#c9c2b3">Responda este story com</div>
+    <div class="serif gold" style="font-size:128px;font-weight:700;line-height:1.08">${esc(meta.cta)}</div>
+    <div style="font-size:32px;color:#c9c2b3">ou toque no link: sagafin.com.br/manual</div>
   </div>
 </div>`;
 }
 
-function pagina(inner, w, h) {
+function pagina(inner, w, h, classe = "") {
   return `<!doctype html><html><head><meta charset="utf-8">${FONTS}<style>${BASE_CSS} body{width:${w}px;height:${h}px}</style></head>
-<body>${inner}<div class="brand"><b>Saga Financeira</b><span>Conteúdo educacional</span></div></body></html>`;
+<body class="${classe}">${inner}<div class="brand"><b>Saga Financeira</b><span>Conteúdo educacional</span></div></body></html>`;
 }
 
 /** Monta o HTML de cada peça. `conteudo` = saída validada do modelo. */
@@ -114,11 +123,11 @@ export function montarHtml(conteudo, meta) {
   const carrossel = [
     pagina(slideCapa(slides[0], meta), 1080, 1350),
     ...slides.slice(1).map((s, i) => pagina(slideConteudo(s, meta, i + 1, total), 1080, 1350)),
-    pagina(slideCta(meta), 1080, 1350),
+    pagina(slideCta(meta), 1080, 1350, "com-foto"),
   ];
   const stories = [
     ...(conteudo.stories || []).map((s) => pagina(s.tipo === "dado" ? storyDado({ ...s, data: meta.ddmm }) : storyInsight(s), 1080, 1920)),
-    pagina(storyCta(meta), 1080, 1920),
+    pagina(storyCta(meta), 1080, 1920, "com-foto"),
   ];
   return { carrossel, stories };
 }
