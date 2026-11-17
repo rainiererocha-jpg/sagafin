@@ -36,3 +36,24 @@ Antes de marcar, deixa eu entender onde você está: hoje o seu dinheiro está m
 
 ## Registro
 Atualizar a linha do lead em `leads` (status: contatado, diagnóstico marcado, diagnóstico feito, fee-based, sem interesse).
+
+---
+
+# Variação: Manual Completo do Investidor (funil social "EU QUERO")
+
+Lead vem de `leads` com `source = manual-investidor` (Instagram, Facebook ou LinkedIn; ver `utm_source`). Mesmas regras do roteiro
+acima. Qualificado = faixa a partir de R$ 100 mil. Quem tem menos que isso recebe só o Diário Saga e a sequência de conteúdo, sem
+abordagem comercial.
+
+## Mensagem 1 (em até 2 horas do cadastro)
+"Oi, [Nome]! Aqui é o Rainiere, da Saga Financeira. Vi que você pegou o Manual Completo do Investidor pelo [Instagram/LinkedIn].
+Uma pergunta rápida pra eu te mandar o capítulo que mais faz sentido: hoje o seu foco é organizar a carteira que já tem, investir
+fora do Brasil, ou reduzir imposto?"
+
+## Ponte para o diagnóstico (conforme a resposta)
+- Organizar a carteira → capítulos 3 e 4: "Quer que eu olhe se a sua carteira está coerente com o prazo de cada objetivo?"
+- Exterior → capítulo 8: "Quer ver quanto da sua carteira hoje depende só do Brasil?"
+- Imposto → capítulo 9 (PGBL): "Você faz a declaração completa? Dá pra simular quanto do IR volta com o PGBL."
+
+Daqui em diante, seguir as etapas **Agendamento**, **Fechamento fee-based** e **Registro** do roteiro acima. Na mensagem do
+agendamento, troque "Manual Pós-Eleições" por "Manual Completo do Investidor".

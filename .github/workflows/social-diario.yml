@@ -1,0 +1,64 @@
+name: Motor Social
+
+on:
+  schedule:
+    # 12:40 UTC = 09:40 em Brasília (dias úteis), depois do Diário Saga (09:10 + atraso do agendador).
+    # Se o Diário ainda não saiu, o script não faz nada; a segunda execução (13:20 UTC) cobre o atraso.
+    - cron: "40 12 * * 1-5"
+    - cron: "20 13 * * 1-5"
+  workflow_dispatch:
+    inputs:
+      pilar:
+        description: "Forçar pilar (vazio = calendário)"
+        type: choice
+        options: ["", "mercado", "evergreen", "trading"]
+        default: ""
+      force:
+        description: "Rodar mesmo em fim de semana/feriado ou se já houver peça hoje"
+        type: boolean
+        default: false
+      dry_run:
+        description: "Só gerar (artefato com PNG/JSON), sem gravar nem enviar e-mail"
+        type: boolean
+        default: false
+
+concurrency:
+  group: social-diario
+  cancel-in-progress: false
+
+jobs:
+  gerar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Instalar Playwright (render dos PNG)
+        run: |
+          npm i --no-save playwright
+          npx playwright install --with-deps chromium
+
+      - name: Gerar carrossel, stories e legendas
+        run: node scripts/social-diario.mjs
+        env:
+          TZ: America/Sao_Paulo
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          APROVADOR_EMAIL: ${{ secrets.APROVADOR_EMAIL }}
+          SITE_URL: https://sagafin.com.br
+          PILAR: ${{ inputs.pilar }}
+          FORCE_RUN: ${{ inputs.force && 'true' || 'false' }}
+          DRY_RUN: ${{ inputs.dry_run && 'true' || 'false' }}
+
+      - name: Guardar prévia (dry run)
+        if: ${{ inputs.dry_run }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: saida-social
+          path: saida-social/

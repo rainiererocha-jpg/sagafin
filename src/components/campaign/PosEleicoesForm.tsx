@@ -28,7 +28,15 @@ function Opcao({ ativo, onClick, children }: { ativo: boolean; onClick: () => vo
 const campo =
   "w-full rounded-xl border border-white/[0.1] bg-white/[0.03] px-4 py-3 text-[14px] text-foreground placeholder:text-white/30 focus:outline-none focus:border-[hsl(42_85%_55%/0.6)]";
 
-export function PosEleicoesForm({ onSuccess }: { onSuccess: (faixa: string, nome: string) => void }) {
+type FormProps = {
+  onSuccess: (faixa: string, nome: string, email: string) => void;
+  /** Origem/campanha gravadas em `leads` (default: campanha pós-eleições). */
+  source?: string;
+  campaign?: string;
+  ctaLabel?: string;
+};
+
+export function PosEleicoesForm({ onSuccess, source = SOURCE, campaign = CAMPAIGN, ctaLabel = "Quero o manual gratuito" }: FormProps) {
   const { toast } = useToast();
   const utm = useUtm();
   const [enviando, setEnviando] = useState(false);
@@ -48,7 +56,7 @@ export function PosEleicoesForm({ onSuccess }: { onSuccess: (faixa: string, nome
     if (!f.consent) return setErro("Para receber o manual, marque o consentimento.");
 
     // Honeypot: robô preenche; mostra sucesso e não grava.
-    if (f.website) return onSuccess(f.faixa, f.nome);
+    if (f.website) return onSuccess(f.faixa, f.nome, "");
 
     setEnviando(true);
     // Inscreve no Diário Saga (mesma função do modal da home; reativa quem já cancelou). Falha aqui não bloqueia o manual.
@@ -69,8 +77,8 @@ export function PosEleicoesForm({ onSuccess }: { onSuccess: (faixa: string, nome
           phone: digitos,
           investment_range: f.faixa,
           where_invests: f.onde,
-          source: SOURCE,
-          campaign: CAMPAIGN,
+          source,
+          campaign,
           utm_source: utm.utm_source ?? null,
           utm_medium: utm.utm_medium ?? null,
           utm_campaign: utm.utm_campaign ?? null,
@@ -88,7 +96,7 @@ export function PosEleicoesForm({ onSuccess }: { onSuccess: (faixa: string, nome
     } finally {
       setEnviando(false);
     }
-    onSuccess(f.faixa, f.nome);
+    onSuccess(f.faixa, f.nome, f.email.trim().toLowerCase());
   }
 
   return (
@@ -146,7 +154,7 @@ export function PosEleicoesForm({ onSuccess }: { onSuccess: (faixa: string, nome
         className="w-full py-4 text-[11px] tracking-[0.2em] uppercase font-semibold text-background rounded-sm transition-opacity hover:opacity-90 disabled:opacity-60 flex items-center justify-center gap-2"
         style={{ background: `linear-gradient(135deg, ${GOLD}, hsl(38 78% 42%))` }}
       >
-        {enviando ? (<><Loader2 className="h-4 w-4 animate-spin" aria-hidden /> Enviando…</>) : "Quero o manual gratuito"}
+        {enviando ? (<><Loader2 className="h-4 w-4 animate-spin" aria-hidden /> Enviando…</>) : ctaLabel}
       </button>
     </form>
   );
