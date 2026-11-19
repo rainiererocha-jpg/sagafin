@@ -18,6 +18,8 @@ const base = () => ({
 });
 
 test("detecta palavra-chave com variações", () => {
+  assert.equal(detectarPalavraChave("SAGA!!"), "saga");
+  assert.equal(detectarPalavraChave("quero o saga"), "saga");
   assert.equal(detectarPalavraChave("EU QUERO!!"), "eu quero");
   assert.equal(detectarPalavraChave("euquero"), "eu quero");
   assert.equal(detectarPalavraChave("Quero sim"), "quero");
@@ -37,7 +39,7 @@ test("link do manual leva UTM", () => {
   const u = new URL(linkManual("instagram", "abc12345"));
   assert.equal(u.pathname, "/manual");
   assert.equal(u.searchParams.get("utm_source"), "instagram");
-  assert.equal(u.searchParams.get("utm_campaign"), "eu-quero");
+  assert.equal(u.searchParams.get("utm_campaign"), "saga");
   assert.equal(u.searchParams.get("utm_content"), "abc12345");
 });
 
@@ -67,25 +69,25 @@ test("validar barra expressões vedadas e estrutura errada", () => {
 
 test("legendas recebem CTA, link rastreável e aviso", () => {
   const l = legendasFinais(base(), { utm: "abc12345", site: "https://sagafin.com.br" });
-  assert.match(l.caption_instagram, /Comente EU QUERO/);
+  assert.match(l.caption_instagram, /Comente SAGA/);
   assert.match(l.caption_instagram, /#Investimentos #Dolar/);
   assert.match(l.caption_instagram, /Não é recomendação/);
   assert.match(l.caption_facebook, /utm_source=facebook/);
-  assert.match(l.caption_linkedin, /utm_source=linkedin&utm_medium=social&utm_campaign=eu-quero&utm_content=abc12345/);
+  assert.match(l.caption_linkedin, /utm_source=linkedin&utm_medium=social&utm_campaign=saga&utm_content=abc12345/);
   assert.ok(l.caption_instagram.length <= 2200);
   const longa = legendasFinais({ ...base(), caption_instagram: "z".repeat(5000) }, { utm: "u", site: "https://sagafin.com.br" });
   assert.ok(longa.caption_instagram.length <= 2200);
-  assert.match(longa.caption_instagram, /Comente EU QUERO[\s\S]*Não é recomendação/);
+  assert.match(longa.caption_instagram, /Comente SAGA[\s\S]*Não é recomendação/);
 });
 
 test("render monta capa + conteúdo + CTA e stories + CTA, escapando HTML", () => {
   const c = base();
   c.slides[1].titulo = "<script>x</script>";
-  const h = montarHtml(c, { eyebrow: "Diário Saga · 17/11", eyebrowCurto: "Diário", ddmm: "17/11", cta: "EU QUERO" });
+  const h = montarHtml(c, { eyebrow: "Diário Saga · 17/11", eyebrowCurto: "Diário", ddmm: "17/11", cta: "SAGA" });
   assert.equal(h.carrossel.length, N_SLIDES + 1);
   assert.equal(h.stories.length, c.stories.length + 1);
   assert.ok(!h.carrossel.join("").includes("<script>x"));
-  assert.match(h.carrossel.at(-1), /EU QUERO/);
+  assert.match(h.carrossel.at(-1), /SAGA/);
 });
 
 test("relatório ranqueia por leads e conta qualificados", () => {
