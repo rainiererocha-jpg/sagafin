@@ -52,6 +52,7 @@ jobs:
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
           APROVADOR_EMAIL: ${{ secrets.APROVADOR_EMAIL }}
           SITE_URL: https://sagafin.com.br
+          AUTO_PUBLICAR: 'true'
           PILAR: ${{ inputs.pilar }}
           FORCE_RUN: ${{ inputs.force && 'true' || 'false' }}
           DRY_RUN: ${{ inputs.dry_run && 'true' || 'false' }}
