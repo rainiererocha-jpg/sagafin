@@ -3,8 +3,8 @@
 // um tema evergreen da Biblioteca e o resumo dos Destaques de Trading.
 // Os temas evergreen seguem o que mais converteu no histórico (fiscal/PGBL, dolarização, organização da renda alta).
 
-export const CTA_KEYWORD = "EU QUERO";
-export const CTA_KEYWORDS_ACEITAS = ["eu quero", "quero", "manual", "guia"];
+export const CTA_KEYWORD = "SAGA";
+export const CTA_KEYWORDS_ACEITAS = ["saga", "eu quero", "quero", "manual", "guia"];
 
 /** Temas evergreen em rodízio (um por terça/quinta). Cada um aponta para um capítulo do manual. */
 export const EVERGREEN = [
@@ -45,7 +45,7 @@ export function linkManual(rede, utmContent, site = "https://sagafin.com.br") {
   const p = new URLSearchParams({
     utm_source: rede,
     utm_medium: "social",
-    utm_campaign: "eu-quero",
+    utm_campaign: "saga",
     utm_content: utmContent,
   });
   return `${site.replace(/\/$/, "")}/manual?${p.toString()}`;
@@ -57,6 +57,7 @@ export function detectarPalavraChave(texto) {
     .toLowerCase()
     .normalize("NFD")
     .replace(/[̀-ͯ]/g, "");
+  if (/\bsaga\b/.test(t)) return "saga";
   if (/\beu\s*quero\b/.test(t)) return "eu quero";
   for (const k of ["manual", "guia", "quero"]) if (new RegExp(`\\b${k}\\b`).test(t)) return k;
   return null;

@@ -59,10 +59,10 @@ export function legendasFinais(c, { utm, site }) {
   const tags = (c.hashtags || []).slice(0, 5).map((h) => `#${String(h).replace(/^#/, "").replace(/\s+/g, "")}`).join(" ");
   const aviso = "Conteúdo educacional. Não é recomendação de investimento.";
   const ctaIg =
-    `\n\n💬 Comente ${CTA_KEYWORD} que eu te mando no direct o Manual Completo do Investidor, grátis: da organização financeira ao mercado futuro.` +
+    `\n\n💬 Comente ${CTA_KEYWORD} aqui embaixo e o Manual Completo do Investidor chega no seu direct, grátis: da organização financeira ao mercado futuro.` +
     `\n📚 Ou acesse sagafin.com.br/manual\n\n${aviso}\n\n${tags}`;
   const ctaFb =
-    `\n\n💬 Comente ${CTA_KEYWORD} e receba o Manual Completo do Investidor, grátis.` +
+    `\n\n💬 Comente ${CTA_KEYWORD} e o Manual Completo do Investidor chega no seu direct, grátis.` +
     `\n📚 Link direto: ${linkManual("facebook", utm, site)}\n\n${aviso}`;
   const ctaLi =
     `\n\nPreparei um Manual Completo do Investidor, da organização financeira ao mercado futuro, gratuito: ${linkManual("linkedin", utm, site)}` +
