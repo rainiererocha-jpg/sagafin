@@ -1,10 +1,11 @@
 // Motor social diário: transforma o Diário Saga / Biblioteca / Destaques de Trading em carrossel + stories +
-// legendas (Instagram, Facebook, LinkedIn), coloca na fila `pending_approvals` e manda e-mail de aprovação.
-// Roda no GitHub Actions (.github/workflows/social-diario.yml) depois do Diário. Nada é publicado sem aprovação:
-// a publicação acontece em api/aprovar-post.js, pelo Blotato.
+// legendas (Instagram, Facebook, LinkedIn), grava na fila `pending_approvals` e PUBLICA sozinho pelo Blotato
+// (api/aprovar-post.js, que tem as chaves BLOTATO_* na Vercel). Depois manda um e-mail só de aviso.
+// AUTO_PUBLICAR=false volta ao modo antigo: manda e-mail de aprovação e nada sai sem o clique.
+// Roda no GitHub Actions (.github/workflows/social-diario.yml) depois do Diário.
 //
 // Env (secrets): ANTHROPIC_API_KEY, SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, RESEND_API_KEY, APROVADOR_EMAIL
-// Opcionais: SITE_URL, FORCE_RUN=true, DRY_RUN=true (gera e salva PNG/JSON em ./saida-social, não grava nem envia),
+// Opcionais: SITE_URL, AUTO_PUBLICAR=false (exige aprovação por e-mail), SOCIAL_MODEL (padrão claude-haiku-5-5), FORCE_RUN=true, DRY_RUN=true (gera e salva PNG/JSON em ./saida-social, não grava nem envia),
 //   FIXTURE=caminho.json (pula o Claude e usa um conteúdo pronto — para testar o visual), PILAR=mercado|evergreen|trading.
 
 import { mkdir, readFile, writeFile } from "node:fs/promises";
@@ -25,7 +26,8 @@ const require = createRequire(import.meta.url);
 const SITE_URL = (process.env.SITE_URL || "https://sagafin.com.br").replace(/\/$/, "");
 const FORCE_RUN = process.env.FORCE_RUN === "true";
 const DRY_RUN = process.env.DRY_RUN === "true";
-const MODEL = process.env.SOCIAL_MODEL || "claude-sonnet-5-5";
+const MODEL = process.env.SOCIAL_MODEL || "claude-haiku-5-5";
+const AUTO_PUBLICAR = process.env.AUTO_PUBLICAR !== "false";
 
 // ---------------------------------------------------------------- fontes
 
@@ -70,11 +72,12 @@ async function chamarClaude(prompt) {
     {
       method: "POST",
       headers: { "x-api-key": env("ANTHROPIC_API_KEY"), "anthropic-version": "2023-06-01", "content-type": "application/json" },
-      body: JSON.stringify({ model: MODEL, max_tokens: 5000, messages: [{ role: "user", content: prompt }] }),
+      body: JSON.stringify({ model: MODEL, max_tokens: 8000, messages: [{ role: "user", content: prompt }] }),
     },
     120000
   );
   if (!r.ok) fail(`Anthropic API HTTP ${r.status}: ${r.text.slice(0, 400)}`);
+  if (r.json?.stop_reason === "max_tokens") console.warn("⚠ Resposta cortada pelo limite de tokens (max_tokens); o JSON pode estar incompleto.");
   return extrairJson(r.json?.content?.map((c) => c.text || "").join("") || "");
 }
 
@@ -110,6 +113,21 @@ function emailAprovacao({ peca, link, fonte }) {
   <div style="margin:12px 0 6px;font-size:12px;color:#8b8476">Stories</div><div>${sthumbs}</div>
   <div style="margin:18px 0 6px;font-size:12px;color:#8b8476">Legenda Instagram</div>
   <pre style="white-space:pre-wrap;font-family:Arial,sans-serif;font-size:13px;color:#d8d1c2;background:#161512;padding:14px;border-radius:6px">${escapeHtml(peca.caption_instagram)}</pre>
+</div>`;
+}
+
+function emailAviso({ peca, link, fonte, publicou, status }) {
+  const thumbs = (peca.slides_urls || [])
+    .map((u) => `<img src="${u}" width="120" style="width:120px;height:150px;object-fit:cover;border-radius:4px;margin:0 6px 6px 0;border:1px solid #333">`)
+    .join("");
+  const titulo = publicou ? "Publicado automaticamente" : `Falhou ao publicar (HTTP ${status})`;
+  return `<div style="font-family:Arial,sans-serif;background:#0b0b0b;color:#e8e4dc;padding:24px">
+  <div style="font-size:11px;letter-spacing:3px;text-transform:uppercase;color:#d4a53c">Motor social · ${escapeHtml(fonte.pilar)}</div>
+  <h1 style="font-family:Georgia,serif;font-weight:400;color:#fff;font-size:24px;margin:8px 0 8px">${escapeHtml(peca.hook || peca.title)}</h1>
+  <p style="color:${publicou ? "#7bd88f" : "#ff8a80"};font-weight:bold">${titulo}</p>
+  <p style="font-size:13px;color:#b5b0a6">${publicou ? "O Blotato processa em alguns minutos. Confira no calendário do admin." : "Nada foi publicado. Abra o link para revisar e tentar de novo."}</p>
+  <p><a href="${link}" style="color:#d4a53c">Ver a peça</a></p>
+  <div>${thumbs}</div>
 </div>`;
 }
 
@@ -158,8 +176,11 @@ async function main() {
   const story_urls = [];
   for (let i = 0; i < png.stories.length; i++) story_urls.push(await sbUpload("social", `${pasta}/story-${i + 1}.png`, png.stories[i]));
 
-  // Conteúdo de mercado vence às 11h do mesmo dia; evergreen fica 3 dias na fila.
-  const expires_at = fonte.pilar === "evergreen" ? new Date(Date.now() + 3 * 86400000).toISOString() : `${hoje}T11:00:00-03:00`;
+  // Modo automático: publica logo em seguida, então a peça só precisa valer por algumas horas.
+  // Modo com aprovação: conteúdo de mercado vence às 11h do mesmo dia; evergreen fica 3 dias na fila.
+  const expires_at = AUTO_PUBLICAR
+    ? new Date(Date.now() + 3 * 3600000).toISOString()
+    : fonte.pilar === "evergreen" ? new Date(Date.now() + 3 * 86400000).toISOString() : `${hoje}T11:00:00-03:00`;
   const [peca] = await sbInsert("pending_approvals", [{
     id,
     topic_id: fonte.slug,
@@ -183,10 +204,32 @@ async function main() {
   console.log(`✓ Na fila: ${peca.id}`);
 
   const link = `${SITE_URL}/api/aprovar-post?token=${peca.approval_token}`;
-  await enviarResend(
-    [{ to: env("APROVADOR_EMAIL"), subject: `Aprovar post: ${peca.hook}`.slice(0, 140), html: emailAprovacao({ peca, link, fonte }) }],
-    { canal: "aprovacao-social" }
+
+  if (!AUTO_PUBLICAR) {
+    await enviarResend(
+      [{ to: env("APROVADOR_EMAIL"), subject: `Aprovar post: ${peca.hook}`.slice(0, 140), html: emailAprovacao({ peca, link, fonte }) }],
+      { canal: "aprovacao-social" }
+    );
+    return;
+  }
+
+  // Publicação automática: o endpoint trava duplo disparo (pending -> publishing) e registra posted/failed.
+  const resp = await fetchJson(
+    `${SITE_URL}/api/aprovar-post`,
+    { method: "POST", headers: { "content-type": "application/x-www-form-urlencoded" }, body: new URLSearchParams({ token: peca.approval_token, acao: "aprovar" }).toString() },
+    120000
   );
+  const publicou = resp.ok;
+  console.log(publicou ? "✓ Enviado para publicação (Blotato)." : `✖ Publicação falhou: HTTP ${resp.status}`);
+  await enviarResend(
+    [{
+      to: env("APROVADOR_EMAIL"),
+      subject: `${publicou ? "Publicado" : "FALHOU ao publicar"}: ${peca.hook}`.slice(0, 140),
+      html: emailAviso({ peca, link, fonte, publicou, status: resp.status }),
+    }],
+    { canal: "publicacao-social" }
+  );
+  if (!publicou) fail(`Publicação automática falhou (HTTP ${resp.status}). Veja ${link}`);
 }
 
 main().catch((e) => fail(e.stack || e.message));

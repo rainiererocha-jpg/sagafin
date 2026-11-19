@@ -26,7 +26,7 @@ Trading (sex) ───────┘                                      ─�
 | Ter, Qui | Tema evergreen da Biblioteca (rodízio de 13 temas, um capítulo do manual cada) | idem |
 | Sex | Resumo dos Destaques de Trading (cai para o Diário se não houver) | idem |
 
-Peças de mercado expiram às 11h do mesmo dia; evergreen fica 3 dias na fila. Nada vai ao ar sem aprovação.
+**Publicação automática (padrão desde 18/11/2026):** o motor grava a peça e chama `api/aprovar-post` sozinho; o Blotato publica e o e-mail para `APROVADOR_EMAIL` é só aviso ("Publicado" ou "FALHOU"). Para voltar a exigir clique, defina `AUTO_PUBLICAR: 'false'` em `.github/workflows/social-diario.yml`; nesse modo, peças de mercado expiram às 11h e evergreen fica 3 dias na fila. O modelo padrão é `claude-haiku-5-5` (troque com `SOCIAL_MODEL`).
 
 ## Configuração (uma vez)
 
