@@ -2,11 +2,12 @@ name: Diário Saga
 
 on:
   schedule:
-    # 12:10 UTC = 09:10 em Brasília (dias úteis): o agendador do GitHub costuma atrasar
-    # 5 a 20 min, então o e-mail chega perto das 9h30, antes da abertura da B3 (10h).
-    # E-mail único do dia: resumo do mercado + dólar (fechamento anterior) + proteção cambial.
-    # Feriados da B3 são pulados pelo próprio script (scripts/feriados-b3.json).
-    - cron: "10 12 * * 1-5"
+    # RESERVA. O disparo principal vem de uma tarefa agendada do Claude às 08:47 (Brasília),
+    # que chama esta workflow por API, porque o agendador do GitHub passou a atrasar horas
+    # (em nov/2026 o e-mail das 9h chegou às 19h). Estes horários ficam só de reserva:
+    # o script não repete se o post do dia já existe e não envia depois das 12h de Brasília.
+    # 11:10 e 12:10 UTC = 08:10 e 09:10 em Brasília (dias úteis).
+    - cron: "10 11,12 * * 1-5"
   workflow_dispatch:
     inputs:
       force:

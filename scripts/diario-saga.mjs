@@ -12,7 +12,7 @@ import path from "node:path";
 import { escolherFeature, blocoOfertaFeeFixo, blocoPost, EMAIL_HEAD_EXTRAS } from "./mesalva-ad.mjs";
 import {
   fail, env, hojeISO, dataExtenso, ddmm, fetchJson, stripHtml, contarPalavras,
-  escapeHtml, fmt, fmtVar, extrairJson,
+  escapeHtml, fmt, fmtVar, extrairJson, partesNoFuso,
 } from "./lib/util.mjs";
 import { sbHeaders } from "./lib/supabase.mjs";
 import { AVISO_LEGAL, PROIBIDAS } from "./lib/compliance.mjs";
@@ -30,6 +30,10 @@ const AVISO_UNIFICACAO_ATE = "2026-11-20";
 // Bloco publicitário do MeSalva (uma funcionalidade por dia, só no post do blog); MESALVA_AD=off desliga.
 const MESALVA_AD = process.env.MESALVA_AD !== "off";
 const MODEL = "claude-sonnet-5-5";
+// O Diário é matinal ("Bom dia", fechamento do dia anterior). Se o disparo atrasar
+// (o agendador do GitHub chegou a atrasar 10 h), passado este horário de Brasília
+// o envio do dia é cancelado em vez de chegar à noite com texto velho.
+const HORA_LIMITE = Number(process.env.HORA_LIMITE || 12);
 const MIN_WORDS = 200;
 // Remetente no domínio mesalva.app (verificado no Resend); sobrescrevível por env.
 
@@ -301,6 +305,12 @@ async function main() {
   const cal = await deveRodar(hoje);
   if (!cal.rodar && !FORCE_RUN) {
     console.log(`ℹ Sem pregão hoje (${cal.motivo}); nada a fazer.`);
+    return;
+  }
+
+  const { hora } = partesNoFuso("America/Sao_Paulo");
+  if (!FORCE_RUN && hora >= HORA_LIMITE) {
+    console.log(`ℹ Já passa das ${HORA_LIMITE}h em Brasília (${hora}h): o Diário de hoje perdeu a janela da manhã. Nada será publicado nem enviado.`);
     return;
   }
 
